@@ -29,10 +29,13 @@ dependencies:
   flutter_screenutil: ^1.0.2
   # 权限申请
   permission_handler: ^4.4.0+hotfix.2
+  # 用户消息
+  oktoast: ^2.3.2
   # 高德地图
   amap_map_fluttify: ^0.21.0
   decorated_flutter: ^0.12.0+1
   amap_core_fluttify: ^0.7.2-dev.0
+
 
 dev_dependencies:
   flutter_test:
