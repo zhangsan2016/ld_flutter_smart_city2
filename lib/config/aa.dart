@@ -103,14 +103,10 @@ class _LoginPageState extends State<LoginPage> {
     Widget logoImageArea = new Container(
       alignment: Alignment.topCenter,
       // 设置图片为圆形
-      child: ClipOval(
         child: Image.asset(
-          "images/logo.png",
-          height: 100,
-          width: 100,
+          "images/login_logo.png",
           fit: BoxFit.cover,
         ),
-      ),
     );
 
     //输入文本框区域
@@ -128,10 +124,10 @@ class _LoginPageState extends State<LoginPage> {
               controller: _userNameController,
               focusNode: _focusNodeUserName,
               //设置键盘类型
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.text,
               decoration: InputDecoration(
                 labelText: "用户名",
-                hintText: "请输入手机号",
+                hintText: "请输入帐号",
                 prefixIcon: Icon(Icons.person),
                 //尾部添加清除按钮
                 suffixIcon: (_isShowClear)
@@ -226,7 +222,6 @@ class _LoginPageState extends State<LoginPage> {
                 image: AssetImage("images/catalog_lighting_bg.png"),
                 fit: BoxFit.cover,
               ),
-              color: Color(0x6600ff00),
               borderRadius: BorderRadius.circular(10.0),
 
             ),
@@ -237,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
               child: new ListView(
                 children: <Widget>[
                   new SizedBox(
-                    height: ScreenUtil().setHeight(80),
+                    height: ScreenUtil().setHeight(160),
                   ),
                   logoImageArea,
                   new SizedBox(
