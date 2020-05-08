@@ -232,15 +232,18 @@ class _LoginPageState extends State<LoginPage> {
                 // 关闭加载框
                 ProgressDialog.hideProgress(context);
 
-                print('data1 = ' + val.toString());
+                // 解析 json
                 var data = json.decode(val.toString());
-
-
                 LoginInfo loginInfo = LoginInfo.fromJson(data);
-                print("loginInfo = " + loginInfo.toString());
-                print("loginInfo.data.token = " + loginInfo.data.token.token);
 
-
+                if(loginInfo.errno == 0){
+                      // 登录成功
+                  print("loginInfo = " + loginInfo.toString());
+                  print("loginInfo.data.token = " + loginInfo.data.token.token);
+                }else{
+                     // 登录失败
+                  showToast(loginInfo.errmsg, position: ToastPosition.bottom);
+                }
 
               });
             }else{
