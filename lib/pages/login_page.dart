@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:decorated_flutter/decorated_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ldfluttersmartcity2/dialog/progress_dialog.dart';
 import 'package:ldfluttersmartcity2/entity/login_Info.dart';
 import 'package:ldfluttersmartcity2/utils/http_util.dart';
 import 'package:oktoast/oktoast.dart';
@@ -209,6 +210,10 @@ class _LoginPageState extends State<LoginPage> {
         // 设置按钮圆角
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         onPressed: () {
+
+          // 显示加载框
+          ProgressDialog.showProgress(context);
+
           //点击登录按钮，解除焦点，回收键盘
           _focusNodePassWord.unfocus();
           _focusNodeUserName.unfocus();
@@ -224,6 +229,9 @@ class _LoginPageState extends State<LoginPage> {
               var formData = {'username': _username, 'password': _password};
               request('LOGIN_URl',formData: formData).then((val) {
 
+                // 关闭加载框
+                ProgressDialog.hideProgress(context);
+
                 print('data1 = ' + val.toString());
                 var data = json.decode(val.toString());
 
@@ -236,6 +244,8 @@ class _LoginPageState extends State<LoginPage> {
 
               });
             }else{
+              // 关闭加载框
+              ProgressDialog.hideProgress(context);
               showToast('用户名或密码不能为空！', position: ToastPosition.bottom);
            //   showToast("hello world");  // 可选属性看自己需求
              // toast('用户名或密码不能为空！');
