@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:decorated_flutter/decorated_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ldfluttersmartcity2/entity/login_Info.dart';
 import 'package:ldfluttersmartcity2/utils/http_util.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -19,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
 
   //用户名输入框控制器，此控制器可以监听用户名输入框操作
   TextEditingController _userNameController = new TextEditingController();
+  TextEditingController _userPassController = new TextEditingController();
 
   //表单状态
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -33,6 +35,11 @@ class _LoginPageState extends State<LoginPage> {
     //设置焦点监听
     _focusNodeUserName.addListener(_focusNodeListener);
     _focusNodePassWord.addListener(_focusNodeListener);
+
+    // 设置默认值
+    _userNameController.text = "ld";
+    _userPassController.text = "ld9102";
+
     //监听用户名框的输入改变
     _userNameController.addListener(() {
       print(_userNameController.text);
@@ -157,6 +164,7 @@ class _LoginPageState extends State<LoginPage> {
               },
             ),
             new TextFormField(
+              controller: _userPassController,
               focusNode: _focusNodePassWord,
               //设置键盘类型
               keyboardType: TextInputType.text,
@@ -212,14 +220,19 @@ class _LoginPageState extends State<LoginPage> {
 
             if(!_username.isEmpty && !_password.isEmpty){
               // 登录
-              print("用户： $_username + $_password");
 
               var formData = {'username': _username, 'password': _password};
               request('LOGIN_URl',formData: formData).then((val) {
-                
-                print('val = ' + val.toString());
+
+                print('data1 = ' + val.toString());
                 var data = json.decode(val.toString());
-                print('data = ' + data);
+
+
+                LoginInfo loginInfo = LoginInfo.fromJson(data);
+                print("loginInfo = " + loginInfo.toString());
+                print("loginInfo.data.token = " + loginInfo.data.token.token);
+
+
 
               });
             }else{

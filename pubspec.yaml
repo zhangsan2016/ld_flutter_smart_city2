@@ -31,6 +31,8 @@ dependencies:
   permission_handler: ^4.4.0+hotfix.2
   # 用户消息
   oktoast: ^2.3.2
+  # json 序列化框架
+  json_serializable: ^2.0.0
   # 高德地图
   amap_map_fluttify: ^0.21.0
   decorated_flutter: ^0.12.0+1

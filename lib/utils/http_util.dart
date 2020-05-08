@@ -18,7 +18,9 @@ Future request(url, {formData}) async {
     }
 
     if (response.statusCode == 200) {
-      return response.data;
+     // print('response = ' + response.toString());
+     // return response.data;
+      return  response.toString();
     } else {
       throw Exception('后端接口出现异常。');
     }
