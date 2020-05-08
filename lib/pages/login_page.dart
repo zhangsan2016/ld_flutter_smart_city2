@@ -10,7 +10,6 @@ import 'package:ldfluttersmartcity2/pages/amap_page.dart';
 import 'package:ldfluttersmartcity2/utils/http_util.dart';
 import 'package:oktoast/oktoast.dart';
 
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -85,9 +84,9 @@ class _LoginPageState extends State<LoginPage> {
   /**
    * 验证用户名
    */
- String validateUserName(value) {
+  String validateUserName(value) {
     // 正则匹配手机号
-  /*  RegExp exp = RegExp(r'^((13[0-9])|(14[0-9])|(15[0-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$');
+    /*  RegExp exp = RegExp(r'^((13[0-9])|(14[0-9])|(15[0-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\d{8}$');
     if (value.isEmpty) {
       return '用户名不能为空!';
     } else if (!exp.hasMatch(value)) {
@@ -151,16 +150,16 @@ class _LoginPageState extends State<LoginPage> {
                 //尾部添加清除按钮
                 suffixIcon: (_isShowClear)
                     ? IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: () {
-                    // 清空输入框内容
-                    _userNameController.clear();
-                  },
-                )
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          // 清空输入框内容
+                          _userNameController.clear();
+                        },
+                      )
                     : null,
               ),
               //验证用户名
-            //  validator: validateUserName,
+              //  validator: validateUserName,
               //保存数据
               onSaved: (String value) {
                 _username = value;
@@ -188,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                   )),
               obscureText: !_isShowPwd,
               //密码验证
-            //  validator: validatePassWord,
+              //  validator: validatePassWord,
               //保存数据
               onSaved: (String value) {
                 _password = value;
@@ -210,9 +209,9 @@ class _LoginPageState extends State<LoginPage> {
           style: Theme.of(context).primaryTextTheme.headline,
         ),
         // 设置按钮圆角
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         onPressed: () {
-
           // 显示加载框
           ProgressDialog.showProgress(context);
 
@@ -221,16 +220,14 @@ class _LoginPageState extends State<LoginPage> {
           _focusNodeUserName.unfocus();
 
           if (_formKey.currentState.validate()) {
-
             //只有输入通过验证，才会执行这里
             _formKey.currentState.save();
 
-            if(!_username.isEmpty && !_password.isEmpty){
+            if (!_username.isEmpty && !_password.isEmpty) {
               // 登录
 
               var formData = {'username': _username, 'password': _password};
-              request('LOGIN_URl',formData: formData).then((val) {
-
+              request('LOGIN_URl', formData: formData).then((val) {
                 // 关闭加载框
                 ProgressDialog.hideProgress(context);
 
@@ -238,31 +235,37 @@ class _LoginPageState extends State<LoginPage> {
                 var data = json.decode(val.toString());
                 LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-                if(loginInfo.errno == 0){
-                      // 登录成功
+                if (loginInfo.errno == 0) {
+                  // 登录成功
                   print("loginInfo = " + loginInfo.toString());
                   print("loginInfo.data.token = " + loginInfo.data.token.token);
 
                   //导航到新路由
-                  Navigator.push( context,
+                  /*  Navigator.push( context,
                       MaterialPageRoute(builder: (context) {
                         return AmapPage();
-                      }));
+                      }));*/
 
-                }else{
-                     // 登录失败
+                  //导航到新路由，并关闭当前界面
+                  //跳转并关闭当前页面
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    new MaterialPageRoute(builder: (context) => new AmapPage()),
+                        (route) => route == null,
+                  );
+
+                } else {
+                  // 登录失败
                   showToast(loginInfo.errmsg, position: ToastPosition.bottom);
                 }
-
               });
-            }else{
+            } else {
               // 关闭加载框
               ProgressDialog.hideProgress(context);
               showToast('用户名或密码不能为空！', position: ToastPosition.bottom);
-           //   showToast("hello world");  // 可选属性看自己需求
-             // toast('用户名或密码不能为空！');
+              //   showToast("hello world");  // 可选属性看自己需求
+              // toast('用户名或密码不能为空！');
             }
-
           }
         },
       ),
@@ -281,12 +284,11 @@ class _LoginPageState extends State<LoginPage> {
           },
           child: DecoratedBox(
             decoration: new BoxDecoration(
-              image:  DecorationImage(
+              image: DecorationImage(
                 image: AssetImage("images/catalog_lighting_bg.png"),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(10.0),
-
             ),
             position: DecorationPosition.background,
 //            position: DecorationPosition.background,
