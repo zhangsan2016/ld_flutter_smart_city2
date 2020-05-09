@@ -228,6 +228,14 @@ class _LoginPageState extends State<LoginPage> {
 
               var formData = {'username': _username, 'password': _password};
               request('LOGIN_URl', formData: formData).then((val) {
+
+                if(val == null){
+                  // 关闭加载框
+                  ProgressDialog.hideProgress(context);
+                  showToast('请检查您的网络设置！', position: ToastPosition.bottom);
+                  return;
+                }
+
                 // 关闭加载框
                 ProgressDialog.hideProgress(context);
 
