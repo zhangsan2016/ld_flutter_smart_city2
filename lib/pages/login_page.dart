@@ -212,6 +212,7 @@ class _LoginPageState extends State<LoginPage> {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         onPressed: () {
+
           // 显示加载框
           ProgressDialog.showProgress(context);
 
@@ -229,6 +230,7 @@ class _LoginPageState extends State<LoginPage> {
               var formData = {'username': _username, 'password': _password};
               request('LOGIN_URl', formData: formData).then((val) {
 
+                print("loginInfo = " + val.toString());
                 if(val == null){
                   // 关闭加载框
                   ProgressDialog.hideProgress(context);

@@ -45,6 +45,13 @@ class AmapPageState extends State<AmapPage> {
         /* if (await requestPermission()) {
           await controller.showMyLocation(MyLocationOption(show: true));
         }*/
+
+        // onMapMoveEnd
+        controller.setMapMoveListener(
+            onMapMoveEnd: (move) async {
+              print('结束移动: $move' + ' 当前缩放等级: ${await controller.getZoomLevel()}');
+            } ,
+        );
       },
     );
   }
