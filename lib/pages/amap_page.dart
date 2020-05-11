@@ -1,5 +1,10 @@
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:ldfluttersmartcity2/utils/misc.dart';
+
+final _assetsIcon1 = Uri.parse('images/test_icon.png');
+final _assetsIcon2 = Uri.parse('images/arrow.png');
 
 class AmapPage extends StatefulWidget {
   @override
@@ -7,12 +12,11 @@ class AmapPage extends StatefulWidget {
 }
 
 class AmapPageState extends State<AmapPage> {
+  AmapController _controller;
 
   @override
   void initState() {
     super.initState();
-
-
   }
 
   @override
@@ -46,12 +50,56 @@ class AmapPageState extends State<AmapPage> {
           await controller.showMyLocation(MyLocationOption(show: true));
         }*/
 
-        // onMapMoveEnd
-        controller.setMapMoveListener(
-            onMapMoveEnd: (move) async {
-              print('结束移动: $move' + ' 当前缩放等级: ${await controller.getZoomLevel()}');
-            } ,
+
+        _controller = controller;
+
+        final marker = await _controller?.addMarker(
+          MarkerOption(
+            latLng: LatLng(39.90960, 116.39722800),
+            title: '北京',
+            snippet: '描述',
+            iconUri: _assetsIcon1,
+            imageConfig: createLocalImageConfiguration(context),
+            width: 48,
+            height: 48,
+            object: '自定义数据',
+          ),
         );
+
+
+          final marke2r = await _controller?.addMarker(
+            MarkerOption(
+              latLng: LatLng(24.879994,105.571501),
+              title: '北京',
+              snippet: '描述',
+              iconUri: Uri.parse('images/bian.png'),
+              imageConfig: createLocalImageConfiguration(context),
+              width: 48,
+              height: 48,
+              object: '自定义数据',
+            ),
+          );
+
+          final marker4 = await _controller?.addMarker(
+            MarkerOption(
+        latLng: LatLng(28.953875,108.471891),
+              title: '北京',
+              snippet: '描述',
+              iconUri: Uri.parse('images/bian.png'),
+              imageConfig: createLocalImageConfiguration(context),
+              width: 48,
+              height: 48,
+              object: '自定义数据',
+            ),
+          );
+
+        controller?.setMarkerClickedListener((marker) async {
+          print(
+              '${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object}');
+          return true;
+        });
+
+        // _markers.add(marker);
       },
     );
   }

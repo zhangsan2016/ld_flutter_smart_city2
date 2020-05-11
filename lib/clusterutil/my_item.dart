@@ -7,12 +7,18 @@ import 'cluster_item.dart';
  */
  class MyItem extends  ClusterItem {
     final LatLng mPosition;
+    final String bitmapPath;
 
-  MyItem(this.mPosition);
+  MyItem(this.mPosition, this.bitmapPath);
 
   @override
   LatLng getPosition() {
     return  mPosition;
+  }
+
+  @override
+  String getBitmapPath() {
+    return bitmapPath;
   }
 
 

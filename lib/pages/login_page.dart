@@ -1,14 +1,13 @@
 import 'dart:convert';
 
-import 'package:decorated_flutter/decorated_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ldfluttersmartcity2/dialog/progress_dialog.dart';
 import 'package:ldfluttersmartcity2/entity/login_Info.dart';
-import 'package:ldfluttersmartcity2/main.dart';
 import 'package:ldfluttersmartcity2/pages/amap_page.dart';
 import 'package:ldfluttersmartcity2/utils/http_util.dart';
 import 'package:oktoast/oktoast.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override

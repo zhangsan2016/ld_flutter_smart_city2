@@ -5,5 +5,7 @@ abstract class ClusterItem {
 
   LatLng getPosition();
 
+  String getBitmapPath();
+
 
 }
