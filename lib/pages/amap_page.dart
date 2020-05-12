@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ldfluttersmartcity2/config/service_url.dart';
+import 'package:ldfluttersmartcity2/entity/login_Info.dart';
+import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/misc.dart';
+import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
 final _assetsIcon1 = Uri.parse('images/test_icon.png');
 final _assetsIcon2 = Uri.parse('images/arrow.png');
@@ -44,12 +50,32 @@ class AmapPageState extends State<AmapPage> {
       onMapClicked: (LatLng coord) {},
       // 地图创建完成回调 (可选)
       onMapCreated: (controller) async {
-        // requestPermission是权限请求方法, 需要你自己实现
-        // 如果不知道怎么处理, 可以参考example工程的实现, example工程依赖了`permission_handler`插件.
-        /* if (await requestPermission()) {
-          await controller.showMyLocation(MyLocationOption(show: true));
-        }*/
+        SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) {
+          // 解析 json
+          var data = json.decode(val);
+          LoginInfo loginInfo = LoginInfo.fromJson(data);
+         
+          print('shared get = $val' );
+          print('loginInfo = ${loginInfo.data.token.token}');
 
+
+
+
+          DioUtils.requestHttp(
+            servicePath['PROJECT_LIST_URL'],
+            parameters: null,
+            token: '996b8910-93fa-11ea-8b84-c590232fa40c',
+            method: DioUtils.POST,
+            onSuccess: (data) {
+              print(' DioUtils.requestHttp onSuccess = ${data.toString()}' );
+            },
+            onError: (error) { print(' DioUtils.requestHttp error = $error' );},
+          );
+
+          
+        });
+
+        // 获取数据
 
         _controller = controller;
 
@@ -66,32 +92,31 @@ class AmapPageState extends State<AmapPage> {
           ),
         );
 
+        final marke2r = await _controller?.addMarker(
+          MarkerOption(
+            latLng: LatLng(24.879994, 105.571501),
+            title: '北京',
+            snippet: '描述',
+            iconUri: Uri.parse('images/bian.png'),
+            imageConfig: createLocalImageConfiguration(context),
+            width: 48,
+            height: 48,
+            object: '自定义数据',
+          ),
+        );
 
-          final marke2r = await _controller?.addMarker(
-            MarkerOption(
-              latLng: LatLng(24.879994,105.571501),
-              title: '北京',
-              snippet: '描述',
-              iconUri: Uri.parse('images/bian.png'),
-              imageConfig: createLocalImageConfiguration(context),
-              width: 48,
-              height: 48,
-              object: '自定义数据',
-            ),
-          );
-
-          final marker4 = await _controller?.addMarker(
-            MarkerOption(
-        latLng: LatLng(28.953875,108.471891),
-              title: '北京',
-              snippet: '描述',
-              iconUri: Uri.parse('images/bian.png'),
-              imageConfig: createLocalImageConfiguration(context),
-              width: 48,
-              height: 48,
-              object: '自定义数据',
-            ),
-          );
+        final marker4 = await _controller?.addMarker(
+          MarkerOption(
+            latLng: LatLng(28.953875, 108.471891),
+            title: '北京',
+            snippet: '描述',
+            iconUri: Uri.parse('images/bian.png'),
+            imageConfig: createLocalImageConfiguration(context),
+            width: 48,
+            height: 48,
+            object: '自定义数据',
+          ),
+        );
 
         controller?.setMarkerClickedListener((marker) async {
           print(

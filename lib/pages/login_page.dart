@@ -6,6 +6,7 @@ import 'package:ldfluttersmartcity2/dialog/progress_dialog.dart';
 import 'package:ldfluttersmartcity2/entity/login_Info.dart';
 import 'package:ldfluttersmartcity2/pages/amap_page.dart';
 import 'package:ldfluttersmartcity2/utils/http_util.dart';
+import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
 
 
@@ -248,6 +249,10 @@ class _LoginPageState extends State<LoginPage> {
                   // 登录成功
                   print("loginInfo = " + loginInfo.toString());
                   print("loginInfo.data.token = " + loginInfo.data.token.token);
+
+                    SharedPreferenceUtil.set(SharedPreferenceUtil.LOGIN_INFO, val.toString()).then((val){
+                     print('登录信息保存 = $val' );
+                    });
 
                   //导航到新路由
                   /*  Navigator.push( context,

@@ -34,16 +34,16 @@ dependencies:
   # json 序列化框架
   json_serializable: ^2.0.0
   # 高德地图
- # amap_map_fluttify: ^0.21.0
- # decorated_flutter: ^0.12.0+1
- # amap_core_fluttify: ^0.7.2-dev.0
-
   decorated_flutter: ^0.12.0+1
   demo_widgets: ^0.0.3
   amap_core_fluttify: ^0.8.0
   url_launcher: ^5.4.2
   core_location_fluttify: ^0.1.0-dev.0
   amap_map_fluttify: ^0.22.0
+  # sp键值存储
+  shared_preferences: ^0.5.7+1
+
+
 
 
 dev_dependencies:
