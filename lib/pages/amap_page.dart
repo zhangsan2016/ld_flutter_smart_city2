@@ -64,10 +64,13 @@ class AmapPageState extends State<AmapPage> {
           DioUtils.requestHttp(
             servicePath['PROJECT_LIST_URL'],
             parameters: null,
-            token: '996b8910-93fa-11ea-8b84-c590232fa40c',
+            token: loginInfo.data.token.token,
             method: DioUtils.POST,
             onSuccess: (data) {
               print(' DioUtils.requestHttp onSuccess = ${data.toString()}' );
+
+
+
             },
             onError: (error) { print(' DioUtils.requestHttp error = $error' );},
           );
