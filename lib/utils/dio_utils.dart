@@ -58,7 +58,7 @@ class DioUtils {
     String url, {
     token,
     parameters,
-    Function(T) onSuccess,
+    Function(String) onSuccess,
     Function(String error) onError,
   }) async {
     ///定义请求参数
@@ -94,17 +94,18 @@ class DioUtils {
     String url, {
     token,
     parameters,
-    Function(T) onSuccess,
+    Function(String) onSuccess,
     Function(String error) onError,
   }) async {
-    ///定义请求参数
+
+  /*  ///定义请求参数
     parameters = parameters ?? {};
     //参数处理
     parameters.forEach((key, value) {
       if (url.indexOf(key) != -1) {
         url = url.replaceAll(':$key', value.toString());
       }
-    });
+    });*/
 
     try {
       Response response;
@@ -112,22 +113,17 @@ class DioUtils {
       print('createInstance 执行完成！');
 
       if (parameters != null && parameters.isNotEmpty){
-        response = await dio.post(url, queryParameters: parameters);
+        response = await dio.post(url, data: parameters);
       }else{
         response = await dio.post(url);
       }
-
-
-
-      var responseData = response.data;
-      if (responseData['erroCode'] == null) {
-        if (onSuccess != null) {
-          onSuccess(responseData['result']);
-        }
-      } else {
-        throw Exception('erroMsg:${responseData['erroMsg']}');
-      }
       print('响应数据：' + response.toString());
+      var responseData = response.data;
+        if (onSuccess != null) {
+         // onSuccess(responseData['result']);
+          onSuccess(response.toString());
+        }
+
     } catch (e) {
       print('请求出错：' + e.toString());
       onError(e.toString());
@@ -144,7 +140,7 @@ class DioUtils {
       {token,
       parameters,
       method,
-      Function(T t) onSuccess,
+      Function(String t) onSuccess,
       Function(String error) onError}) async {
     parameters = parameters ?? {};
     method = method ?? 'GET';

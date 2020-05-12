@@ -27,24 +27,24 @@ class Data {
   int totalPages;
   int pageSize;
   int currentPage;
-  List<Project> project;
+  List<Project> data;
 
   Data(
       {this.count,
         this.totalPages,
         this.pageSize,
         this.currentPage,
-        this.project});
+        this.data});
 
   Data.fromJson(Map<String, dynamic> json) {
     count = json['count'];
     totalPages = json['totalPages'];
     pageSize = json['pageSize'];
     currentPage = json['currentPage'];
-    if (json['project'] != null) {
-      project = new List<Project>();
-      json['project'].forEach((v) {
-        project.add(new Project.fromJson(v));
+    if (json['data'] != null) {
+      data = new List<Project>();
+      json['data'].forEach((v) {
+        data.add(new Project.fromJson(v));
       });
     }
   }
@@ -55,8 +55,8 @@ class Data {
     data['totalPages'] = this.totalPages;
     data['pageSize'] = this.pageSize;
     data['currentPage'] = this.currentPage;
-    if (this.project != null) {
-      data['project'] = this.project.map((v) => v.toJson()).toList();
+    if (this.data != null) {
+      data['project'] = this.data.map((v) => v.toJson()).toList();
     }
     return data;
   }

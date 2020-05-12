@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/login_Info.dart';
+import 'package:ldfluttersmartcity2/entity/project_info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/misc.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
@@ -55,19 +56,31 @@ class AmapPageState extends State<AmapPage> {
           var data = json.decode(val);
           LoginInfo loginInfo = LoginInfo.fromJson(data);
          
-          print('shared get = $val' );
-          print('loginInfo = ${loginInfo.data.token.token}');
+         /* print('shared get = $val' );
+          print('loginInfo = ${loginInfo.data.token.token}');*/
 
-
-
-
+          // 获取项目列表
           DioUtils.requestHttp(
             servicePath['PROJECT_LIST_URL'],
             parameters: null,
-            token: loginInfo.data.token.token,
+            token: loginInfo.data.token.token ,
             method: DioUtils.POST,
-            onSuccess: (data) {
+            onSuccess: (String data) async {
+
               print(' DioUtils.requestHttp onSuccess = ${data.toString()}' );
+
+              // 解析 json
+              var jsonstr = json.decode(data);
+              ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
+
+              for (var i = 0; i < projectInfo.data.data.length; ++i) {
+                Project project = projectInfo.data.data[i];
+                print(' projectInfo = ${project.title}');
+
+                // 获取路灯列表
+               await getDeviceLampList(project.title,loginInfo.data.token.token);
+
+              }
 
 
 
@@ -130,5 +143,31 @@ class AmapPageState extends State<AmapPage> {
         // _markers.add(marker);
       },
     );
+  }
+
+  /**
+   *  获取项目下的路灯列表
+   */
+  getDeviceLampList(String title, token) {
+
+    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":5000}";;
+
+    DioUtils.requestHttp(
+      servicePath['DEVICE_LAMP_LIST_URL'],
+      parameters: param,
+      token: token ,
+      method: DioUtils.POST,
+      onSuccess: (String data) async {
+
+        print(' DioUtils.requestHttp onSuccess = ${data.toString()}' );
+        // 解析 json
+        var jsonstr = json.decode(data);
+        ProjectInfo loginInfo = ProjectInfo.fromJson(jsonstr);
+
+
+      },
+      onError: (error) { print(' DioUtils.requestHttp error = $error' );},
+    );
+
   }
 }
