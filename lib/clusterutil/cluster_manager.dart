@@ -1,24 +1,18 @@
 import 'package:amap_core_fluttify/amap_core_fluttify.dart';
+import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 
-import 'cluster_item.dart';
+import 'overlay_item.dart';
 
-class ClusterManager<T extends ClusterItem>{
-  List<ClusterItem> item ;
+class ClusterManager<T extends OverlayItem>{
 
-  final LatLng mPosition;
-  final String bitmapPath;
+  List<T> _item ;
+  AmapController _controller;
 
-  ClusterManager(this.mPosition, this.bitmapPath);
 
-  @override
-  LatLng getPosition() {
-    return  mPosition;
+
+  List<T> get item => _item;
+
+  set item(List<T> value) {
+    _item = value;
   }
-
-  @override
-  String getBitmapPath() {
-    return bitmapPath;
-  }
-
-
 }
