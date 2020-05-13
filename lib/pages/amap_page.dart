@@ -4,6 +4,7 @@ import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
+import 'package:ldfluttersmartcity2/entity/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/project_info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
@@ -158,11 +159,11 @@ class AmapPageState extends State<AmapPage> {
       token: token ,
       method: DioUtils.POST,
       onSuccess: (String data) async {
-
-        print(' DioUtils.requestHttp onSuccess = ${data.toString()}' );
         // 解析 json
         var jsonstr = json.decode(data);
-        ProjectInfo loginInfo = ProjectInfo.fromJson(jsonstr);
+        LampInfo lampInfo = LampInfo.fromJson(jsonstr);
+
+        print('loginInfo = ${lampInfo.data.lamp[0].uUID}');
 
 
       },

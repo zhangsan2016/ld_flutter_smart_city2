@@ -1,13 +1,16 @@
 import 'dart:math';
 
 void main() {
-
   final random = Random();
 
+  var a = 5;
+  // double b = a is int  ;
+  print(a);
 
-  for (var i = 0; i <50; ++i) {
-    print('   random.nextDouble() = ' +  random.nextDouble().toString());
-  }
+  var c =null;
 
+  double gg = c;
+  int ll = 99;
+  print("xx $gg  $ll" );
 
 }
