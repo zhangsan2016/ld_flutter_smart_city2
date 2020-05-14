@@ -1,3 +1,5 @@
+import 'package:ldfluttersmartcity2/entity/lamp_info.dart';
+
 class ProjectInfo {
   int errno;
   String errmsg;
@@ -71,6 +73,13 @@ class Project {
   String subgroups;
   String admin;
   String code;
+  List<Lamp> lamps;
+
+
+
+   setLamps(List<Lamp> value) {
+     lamps = value;
+  }
 
   Project(
       {this.iId,
@@ -103,6 +112,7 @@ class Project {
     data['subgroups'] = this.subgroups;
     data['admin'] = this.admin;
     data['code'] = this.code;
+   // data['lamps'] = this.code;
     return data;
   }
 }

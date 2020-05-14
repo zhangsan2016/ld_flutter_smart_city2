@@ -93,7 +93,7 @@ class Lamp {
   var power;
   int leakCurt;
   int gprsCsq;
-  int illu;
+  var illu;
   var powerFactor;
   var temp;
   int energy;

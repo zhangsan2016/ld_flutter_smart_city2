@@ -18,7 +18,7 @@ class DioUtils {
 
   /// default options
   static const int CONNECT_TIMEOUT = 10000;
-  static const int RECEIVE_TIMEOUT = 3000;
+  static const int RECEIVE_TIMEOUT = 30000;
 
   /// http request methods
   static const String GET = 'get';

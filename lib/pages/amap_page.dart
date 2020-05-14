@@ -27,7 +27,7 @@ class AmapPage extends StatefulWidget {
 
 class AmapPageState extends State<AmapPage> {
   AmapController _controller;
-  ClusterManager<ProjectOverlay> clusterManager;
+  ClusterManager clusterManager;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class AmapPageState extends State<AmapPage> {
           _controller = controller;
 
           // 定义点聚合管理类ClusterManager
-          clusterManager = new ClusterManager<ProjectOverlay>(context,_controller);
+          clusterManager = new ClusterManager(context,_controller);
 
 
           // 解析 json
@@ -75,8 +75,6 @@ class AmapPageState extends State<AmapPage> {
           // 获取项目列表
           getProject(loginInfo.data.token.token);
 
-          /* print('shared get = $val' );
-          print('loginInfo = ${loginInfo.data.token.token}');*/
 
 
         });
@@ -144,6 +142,7 @@ class AmapPageState extends State<AmapPage> {
         // 解析 json
         var jsonstr = json.decode(data);
         LampInfo lampInfo = LampInfo.fromJson(jsonstr);
+        project.setLamps(lampInfo.data.lamp);
 
       },
       onError: (error) {
@@ -169,7 +168,7 @@ class AmapPageState extends State<AmapPage> {
         var jsonstr = json.decode(data);
         ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
 
-        clusterManager.addItem(projectInfo.data.data);
+        clusterManager.addItems(projectInfo.data.data);
 
         for (var i = 0; i < projectInfo.data.data.length; ++i) {
           Project project = projectInfo.data.data[i];
