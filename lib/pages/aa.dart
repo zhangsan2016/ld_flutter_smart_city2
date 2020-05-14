@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'dart:math';
+
+import 'package:ldfluttersmartcity2/entity/project_info.dart';
 
 void main() {
   final random = Random();
@@ -7,10 +10,24 @@ void main() {
   // double b = a is int  ;
   print(a);
 
-  var c =null;
+  var c = null;
 
   double gg = c;
   int ll = 99;
-  print("xx $gg  $ll" );
+  print("xx $gg  $ll");
+
+  Project project = new Project();
+  project.title = 'sdfdsf';
+
+  String str = project.toJson().toString();
+
+  print('str = ' + str);
+
+
+  Map<String, dynamic> map = project.toJson();
+
+  print(json.encode(map));
+
+
 
 }

@@ -6,7 +6,9 @@ import 'package:amap_core_fluttify/amap_core_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ldfluttersmartcity2/clusterutil/cluster_manager.dart';
 import 'package:ldfluttersmartcity2/clusterutil/overlay_item.dart';
+import 'package:ldfluttersmartcity2/clusterutil/project_overlay.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/login_Info.dart';
@@ -25,6 +27,7 @@ class AmapPage extends StatefulWidget {
 
 class AmapPageState extends State<AmapPage> {
   AmapController _controller;
+  ClusterManager<ProjectOverlay> clusterManager;
 
   @override
   void initState() {
@@ -58,47 +61,29 @@ class AmapPageState extends State<AmapPage> {
       onMapCreated: (controller) async {
         SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) {
 
-          // 获取数据
+
           _controller = controller;
+
+          // 定义点聚合管理类ClusterManager
+          clusterManager = new ClusterManager<ProjectOverlay>(context,_controller);
+
 
           // 解析 json
           var data = json.decode(val);
           LoginInfo loginInfo = LoginInfo.fromJson(data);
 
+          // 获取项目列表
+          getProject(loginInfo.data.token.token);
+
           /* print('shared get = $val' );
           print('loginInfo = ${loginInfo.data.token.token}');*/
 
-          // 获取项目列表
-          DioUtils.requestHttp(
-            servicePath['PROJECT_LIST_URL'],
-            parameters: null,
-            token: loginInfo.data.token.token,
-            method: DioUtils.POST,
-            onSuccess: (String data) async {
-              print(' DioUtils.requestHttp onSuccess = ${data.toString()}');
 
-              // 解析 json
-              var jsonstr = json.decode(data);
-              ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
-
-              for (var i = 0; i < projectInfo.data.data.length; ++i) {
-                Project project = projectInfo.data.data[i];
-                print(' projectInfo = ${project.title}');
-
-                // 获取路灯列表
-                await getDeviceLampList(
-                    project.title, loginInfo.data.token.token);
-              }
-            },
-            onError: (error) {
-              print(' DioUtils.requestHttp error = $error');
-            },
-          );
         });
 
 
 
-        final marker = await _controller?.addMarker(
+        /*final marker = await _controller?.addMarker(
           MarkerOption(
             latLng: LatLng(39.90960, 116.39722800),
             title: '北京',
@@ -135,13 +120,9 @@ class AmapPageState extends State<AmapPage> {
             height: 48,
             object: '自定义数据',
           ),
-        );
+        );*/
 
-        controller?.setMarkerClickedListener((marker) async {
-          print(
-              '${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object}');
-          return true;
-        });
+
 
         // _markers.add(marker);
       },
@@ -151,9 +132,8 @@ class AmapPageState extends State<AmapPage> {
   /**
    *  获取项目下的路灯列表
    */
-  getDeviceLampList(String title, token) {
+   getDeviceLampList(String title, token, Project project) {
     var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":5000}";
-    ;
 
     DioUtils.requestHttp(
       servicePath['DEVICE_LAMP_LIST_URL'],
@@ -165,12 +145,45 @@ class AmapPageState extends State<AmapPage> {
         var jsonstr = json.decode(data);
         LampInfo lampInfo = LampInfo.fromJson(jsonstr);
 
-        print('loginInfo = ${lampInfo.data.lamp[0].uUID}');
       },
       onError: (error) {
         print(' DioUtils.requestHttp error = $error');
       },
     );
+  }
+
+  /**
+   *  获取当前用户下的所有项目
+   */
+  void getProject(String token) {
+
+    DioUtils.requestHttp(
+      servicePath['PROJECT_LIST_URL'],
+      parameters: null,
+      token: token,
+      method: DioUtils.POST,
+      onSuccess: (String data) async {
+        print(' DioUtils.requestHttp onSuccess = ${data.toString()}');
+
+        // 解析 json
+        var jsonstr = json.decode(data);
+        ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
+
+        clusterManager.addItem(projectInfo.data.data);
+
+        for (var i = 0; i < projectInfo.data.data.length; ++i) {
+          Project project = projectInfo.data.data[i];
+
+          // 获取路灯列表
+          await getDeviceLampList(project.title, token,project);
+
+        }
+      },
+      onError: (error) {
+        print(' DioUtils.requestHttp error = $error');
+      },
+    );
+
   }
 }
 
