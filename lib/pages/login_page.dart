@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ldfluttersmartcity2/dialog/progress_dialog.dart';
-import 'package:ldfluttersmartcity2/entity/login_Info.dart';
+import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/pages/amap_page.dart';
 import 'package:ldfluttersmartcity2/utils/http_util.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';

@@ -1,20 +1,15 @@
 import 'dart:convert';
 
 import 'package:amap_core_fluttify/amap_core_fluttify.dart';
-import 'package:amap_core_fluttify/amap_core_fluttify.dart';
-import 'package:amap_core_fluttify/amap_core_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/clusterutil/cluster_manager.dart';
-import 'package:ldfluttersmartcity2/clusterutil/overlay_item.dart';
-import 'package:ldfluttersmartcity2/clusterutil/project_overlay.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
-import 'package:ldfluttersmartcity2/entity/lamp_info.dart';
-import 'package:ldfluttersmartcity2/entity/login_Info.dart';
-import 'package:ldfluttersmartcity2/entity/project_info.dart';
+import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
+import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
+import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
-import 'package:ldfluttersmartcity2/utils/misc.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
 final _assetsIcon1 = Uri.parse('images/test_icon.png');
@@ -60,13 +55,10 @@ class AmapPageState extends State<AmapPage> {
       // 地图创建完成回调 (可选)
       onMapCreated: (controller) async {
         SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) {
-
-
           _controller = controller;
 
           // 定义点聚合管理类ClusterManager
-          clusterManager = new ClusterManager(context,_controller);
-
+          clusterManager = new ClusterManager(context, _controller);
 
           // 解析 json
           var data = json.decode(val);
@@ -74,12 +66,7 @@ class AmapPageState extends State<AmapPage> {
 
           // 获取项目列表
           getProject(loginInfo.data.token.token);
-
-
-
         });
-
-
 
         /*final marker = await _controller?.addMarker(
           MarkerOption(
@@ -120,8 +107,6 @@ class AmapPageState extends State<AmapPage> {
           ),
         );*/
 
-
-
         // _markers.add(marker);
       },
     );
@@ -130,7 +115,7 @@ class AmapPageState extends State<AmapPage> {
   /**
    *  获取项目下的路灯列表
    */
-   getDeviceLampList(String title, token, Project project) {
+  getDeviceLampList(String title, token) {
     var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":5000}";
 
     DioUtils.requestHttp(
@@ -138,16 +123,15 @@ class AmapPageState extends State<AmapPage> {
       parameters: param,
       token: token,
       method: DioUtils.POST,
-      onSuccess: (String data) {
+      onSuccess: (String data) async {
         // 解析 json
         var jsonstr = json.decode(data);
         print('getDeviceLampList title $title = $data');
 
         LampInfo lampInfo = LampInfo.fromJson(jsonstr);
-        project.setLamps(lampInfo.data.lamp);
+     //  project.setLamps(lampInfo.data.lamp);
 
-        clusterManager.addItem(project);
-
+        // clusterManager.addItem(project);
       },
       onError: (error) {
         print(' DioUtils.requestHttp error = $error');
@@ -159,7 +143,6 @@ class AmapPageState extends State<AmapPage> {
    *  获取当前用户下的所有项目
    */
   void getProject(String token) {
-
     DioUtils.requestHttp(
       servicePath['PROJECT_LIST_URL'],
       parameters: null,
@@ -172,22 +155,17 @@ class AmapPageState extends State<AmapPage> {
         var jsonstr = json.decode(data);
         ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
 
-
         for (var i = 0; i < projectInfo.data.data.length; ++i) {
           Project project = projectInfo.data.data[i];
           // 获取路灯列表
-          await getDeviceLampList(project.title, token,project);
-
-
+          await getDeviceLampList(project.title, token);
         }
 
-       // clusterManager.addItems(projectInfo.data.data);
+         clusterManager.addItems(projectInfo.data.data);
       },
       onError: (error) {
         print(' DioUtils.requestHttp error = $error');
       },
     );
-
   }
 }
-

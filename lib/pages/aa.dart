@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:ldfluttersmartcity2/entity/project_info.dart';
+import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
 
 void main() {
   final random = Random();

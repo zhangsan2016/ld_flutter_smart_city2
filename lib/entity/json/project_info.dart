@@ -1,4 +1,4 @@
-import 'package:ldfluttersmartcity2/entity/lamp_info.dart';
+import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 
 class ProjectInfo {
   int errno;

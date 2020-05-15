@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
-import 'package:ldfluttersmartcity2/entity/login_Info.dart';
 
 /*
  * 封装 restful 请求
@@ -17,7 +16,7 @@ class DioUtils {
   static Dio dio;
 
   /// default options
-  static const int CONNECT_TIMEOUT = 30000;
+  static const int CONNECT_TIMEOUT = 10000;
   static const int RECEIVE_TIMEOUT = 30000;
 
   /// http request methods
