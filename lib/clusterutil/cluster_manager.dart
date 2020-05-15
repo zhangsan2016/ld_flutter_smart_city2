@@ -117,6 +117,47 @@ class ClusterManager {
     }
   }
 
+
+
+  void addItem(var item) async {
+      if (item is Project) {
+          Project project = item;
+          final marker = await _controller?.addMarker(
+            MarkerOption(
+              latLng:
+              LatLng(double.parse(project.lat), double.parse(project.lng)),
+              title: project.title,
+              snippet: '描述',
+              iconUri: Uri.parse('images/bian.png'),
+              imageConfig: createLocalImageConfiguration(_context),
+              width: 48,
+              height: 48,
+              object: json.encode(project.lamps),
+            ),
+          );
+          _markers.add(marker);
+        } else if (item is Lamp) {
+          Lamp lamp = item;
+          final marker = await _controller?.addMarker(
+            MarkerOption(
+              latLng: LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
+              title: lamp.tYPE.toString(),
+              snippet: '描述',
+              iconUri: selectImagesByType(lamp.tYPE),
+              imageConfig: createLocalImageConfiguration(_context),
+              width: 48,
+              height: 48,
+              //  object: json.encode(lamp),
+            ),
+          );
+          _markers.add(marker);
+      }
+  }
+
+
+
+
+
   Uri selectImagesByType(int tYPE) {
     if (tYPE == 1) {
       return Uri.parse('images/light_on.png');

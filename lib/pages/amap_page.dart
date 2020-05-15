@@ -138,11 +138,15 @@ class AmapPageState extends State<AmapPage> {
       parameters: param,
       token: token,
       method: DioUtils.POST,
-      onSuccess: (String data) async {
+      onSuccess: (String data) {
         // 解析 json
         var jsonstr = json.decode(data);
+        print('getDeviceLampList title $title = $data');
+
         LampInfo lampInfo = LampInfo.fromJson(jsonstr);
         project.setLamps(lampInfo.data.lamp);
+
+        clusterManager.addItem(project);
 
       },
       onError: (error) {
@@ -168,15 +172,16 @@ class AmapPageState extends State<AmapPage> {
         var jsonstr = json.decode(data);
         ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
 
-        clusterManager.addItems(projectInfo.data.data);
 
         for (var i = 0; i < projectInfo.data.data.length; ++i) {
           Project project = projectInfo.data.data[i];
-
           // 获取路灯列表
           await getDeviceLampList(project.title, token,project);
 
+
         }
+
+       // clusterManager.addItems(projectInfo.data.data);
       },
       onError: (error) {
         print(' DioUtils.requestHttp error = $error');

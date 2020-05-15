@@ -1,5 +1,5 @@
 class LampInfo {
-  int errno;
+  var errno;
   String errmsg;
   Data data;
 
@@ -23,10 +23,10 @@ class LampInfo {
 }
 
 class Data {
-  int count;
-  int totalPages;
-  int pageSize;
-  int currentPage;
+  var count;
+  var totalPages;
+  var pageSize;
+  var currentPage;
   List<Lamp> lamp;
 
   Data(
@@ -67,10 +67,10 @@ class Lamp {
   String lAT;
   String lNG;
   String nAME;
-  int tYPE;
+  var tYPE;
   String pROJECT;
   String sUBGROUP;
-  int iId;
+  var iId;
   String fUUID;
   String smsphone;
   String subgroups;
@@ -88,72 +88,72 @@ class Lamp {
   String poleHeight;
   String ratedPower;
   String subcommunicateMode;
-  int sTATE;
+  var sTATE;
   var current;
   var power;
-  int leakCurt;
-  int gprsCsq;
+  var leakCurt;
+  var gprsCsq;
   var illu;
   var powerFactor;
   var temp;
-  int energy;
+  var energy;
   var voltage;
-  int tsMqtt;
-  int rESETCOUNT;
+  var tsMqtt;
+  var rESETCOUNT;
   String version;
   double lbsLongitude;
   double lbsLatitude;
-  int firDimming;
-  int dimmingLock;
-  int secDimming;
-  int dimming;
-  int angleCalibrate;
-  int warningState;
-  int senserFault;
+  var firDimming;
+  var dimmingLock;
+  var secDimming;
+  var dimming;
+  var angleCalibrate;
+  var warningState;
+  var senserFault;
   String alarmLightMode;
   String sUBID1;
   double longitude;
   double latitude;
-  int secTpFir;
-  int thirTpFir;
+  var secTpFir;
+  var thirTpFir;
   String firTtFir;
   String secTtFir;
-  int fifTpFir;
-  int firTpFir;
+  var fifTpFir;
+  var firTpFir;
   String fifTtFir;
-  int fourTpFir;
+  var fourTpFir;
   String fourTtFir;
   String sixTtFir;
   String thirTtFir;
-  int sixTpFir;
+  var sixTpFir;
   String secTtSec;
-  int fourTpSec;
-  int thirTpSec;
+  var fourTpSec;
+  var thirTpSec;
   String fourTtSec;
   String thirTtSec;
   String firTtSec;
   String sixTtSec;
-  int firTpSec;
-  int sixTpSec;
+  var firTpSec;
+  var sixTpSec;
   String fifTtSec;
-  int fifTpSec;
-  int secTpSec;
-  int vDownthreshold;
+  var fifTpSec;
+  var secTpSec;
+  var vDownthreshold;
   var cDownthreshold;
   var cUpthreshold;
-  int vUpthreshold;
-  int leakCThreshold;
-  int leakCEnable;
-  int overCurrentEnable;
-  int illuLightEnable;
-  int degWarningEnable;
-  int alarmEnable;
+  var vUpthreshold;
+  var leakCThreshold;
+  var leakCEnable;
+  var overCurrentEnable;
+  var illuLightEnable;
+  var degWarningEnable;
+  var alarmEnable;
   String msg;
   String time;
   String voc;
   String pm25;
-  int hum;
-  int iRDimmingEn;
+  var hum;
+  var iRDimmingEn;
 
   Lamp(
       {this.uUID,

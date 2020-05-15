@@ -17,7 +17,7 @@ class DioUtils {
   static Dio dio;
 
   /// default options
-  static const int CONNECT_TIMEOUT = 10000;
+  static const int CONNECT_TIMEOUT = 30000;
   static const int RECEIVE_TIMEOUT = 30000;
 
   /// http request methods
