@@ -38,22 +38,18 @@ class ClusterManager {
     /*  var jsonstr = json.decode(await marker.object);
       print('setMarkerClickedListener jsonstr = ${jsonstr}  $jsonstr');*/
 
-      var jsonstr = json.decode(await marker.object);
+  /*    var jsonstr = json.decode(await marker.object);
       List<Lamp> lamp = new List<Lamp>();
       jsonstr.forEach((v) {
         lamp.add(new Lamp.fromJson(v));
-      });
+      });*/
 
 
-  /*    List  jsonstr = json.decode(await marker.object);
-      List<Lamp> cardbeanList = jsonstr.map((m) => new Lamp.fromJson(m)).toList();*/
+     List  jsonstr = json.decode(await marker.object);
+      List<Lamp> lamps = jsonstr.map((m) => new Lamp.fromJson(m)).toList();
 
 
-     /* if (jsonstr['data'] != null) {
-        lamps = new List<Lamp>();
-        json['data'].forEach((v) {
-          lamp.add(new Lamp.fromJson(v));
-        });*/
+     print('xxxx');
 
       return true;
     });
