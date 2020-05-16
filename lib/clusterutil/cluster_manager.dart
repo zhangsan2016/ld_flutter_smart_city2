@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:amap_core_fluttify/amap_core_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
@@ -67,7 +66,7 @@ class ClusterManager {
         print('MapMoveListener move = ${move.zoom}');
 
         if (move.zoom > 6) {
-          if (!isUnfold) {
+          if (isUnfold) {
             addItems(projects);
           }
         }
@@ -106,6 +105,7 @@ class ClusterManager {
           );
           _markers.add(marker);
         }
+        isUnfold = false;
         // 获取项目中的路灯
         SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
             .then((val) async {
@@ -125,7 +125,7 @@ class ClusterManager {
         _controller.clearMarkers(_markers);
         for (int i = 0; i < items.length; ++i) {
           Lamp lamp = items[i];
-          if(lamp.lAT == "" || lamp.lNG == ""){
+          if (lamp.lAT == "" || lamp.lNG == "") {
             print('xxxxxxxxxxxxxxxxxxxxxxx   ${lamp.nAME} 坐标为空');
             continue;
           }
@@ -143,8 +143,26 @@ class ClusterManager {
           );
           _markers.add(marker);
         }
+        isUnfold = !isUnfold;
+        // 重新定位
+        relocation();
       }
     }
+  }
+
+  void relocation() async {
+    Stream.fromIterable(_markers)
+        .asyncMap((marker) => marker.location)
+        .toList()
+        .then((boundary) {
+      debugPrint('boundary: $boundary');
+      return _controller?.zoomToSpan(
+        boundary,
+        padding: EdgeInsets.only(
+          top: 10,
+        ),
+      );
+    });
   }
 
   addItem(var item) async {
