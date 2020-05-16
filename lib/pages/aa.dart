@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
 
 void main() {
-  final random = Random();
+/*  final random = Random();
 
   var a = 5;
   // double b = a is int  ;
@@ -26,8 +26,21 @@ void main() {
 
   Map<String, dynamic> map = project.toJson();
 
-  print(json.encode(map));
+  print(json.encode(map));*/
+
+/*  List testList3 = List<String>();
+  testList3.add("哈哈哈");
+print('${  testList3.length}');
+
+  var morePlanets = new List<String>.from(testList3);
+
+  print('morePlanets $morePlanets');
+  testList3[0] = "sdfjdskf";
+  print('morePlanets $morePlanets');
+  print('testList3 $testList3');*/
 
 
+var a = "";
+print('${a== null } ${a== ""} ');
 
 }

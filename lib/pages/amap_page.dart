@@ -112,32 +112,6 @@ class AmapPageState extends State<AmapPage> {
     );
   }
 
-  /**
-   *  获取项目下的路灯列表
-   */
-  getDeviceLampList(String title, token) {
-    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":5000}";
-
-    DioUtils.requestHttp(
-      servicePath['DEVICE_LAMP_LIST_URL'],
-      parameters: param,
-      token: token,
-      method: DioUtils.POST,
-      onSuccess: (String data) async {
-        // 解析 json
-        var jsonstr = json.decode(data);
-        print('getDeviceLampList title $title = $data');
-
-        LampInfo lampInfo = LampInfo.fromJson(jsonstr);
-     //  project.setLamps(lampInfo.data.lamp);
-
-        // clusterManager.addItem(project);
-      },
-      onError: (error) {
-        print(' DioUtils.requestHttp error = $error');
-      },
-    );
-  }
 
   /**
    *  获取当前用户下的所有项目
@@ -155,11 +129,11 @@ class AmapPageState extends State<AmapPage> {
         var jsonstr = json.decode(data);
         ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
 
-        for (var i = 0; i < projectInfo.data.data.length; ++i) {
+       /* for (var i = 0; i < projectInfo.data.data.length; ++i) {
           Project project = projectInfo.data.data[i];
           // 获取路灯列表
           await getDeviceLampList(project.title, token);
-        }
+        }*/
 
          clusterManager.addItems(projectInfo.data.data);
       },

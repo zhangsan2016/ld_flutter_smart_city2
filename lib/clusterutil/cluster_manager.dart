@@ -4,17 +4,22 @@ import 'dart:ffi';
 import 'package:amap_core_fluttify/amap_core_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
+import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
+import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
+import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
 import 'overlay_item.dart';
 
 class ClusterManager {
   AmapController _controller;
   BuildContext _context;
+
   // 是否展开
   bool isUnfold = false;
-  var lamp = <String,Lamp>{};
+  var lampMap = <String, List<Lamp>>{};
 
   ClusterManager(BuildContext context, AmapController controller) {
     this._context = context;
@@ -27,7 +32,7 @@ class ClusterManager {
     // marker 点击事件
     _controller?.setMarkerClickedListener((marker) async {
       print(
-          '${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object}');
+          '${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');
       // _controller.clearMarkers(_markers);
 
       /*  if(!isUnfold ){
@@ -45,10 +50,10 @@ class ClusterManager {
         lamp.add(new Lamp.fromJson(v));
       });*/
 
-      List jsonstr = json.decode(await marker.object);
-      List<Lamp> lamps = jsonstr.map((m) => new Lamp.fromJson(m)).toList();
-
-      print('xxxx');
+      if (!isUnfold) {
+        List<Lamp> lamp = lampMap[await marker.title];
+        addItems(lamp);
+      }
 
       return true;
     });
@@ -72,12 +77,17 @@ class ClusterManager {
 
   // 当前显示的 marker 列表
   List<Marker> _markers = [];
+
   // 项目列表
   List<Project> projects;
 
   void addItems(List items) async {
+    List temporary;
     if (items != null && items.length > 0) {
       if (items[0] is Project) {
+        // 克隆一份列表
+        temporary = new List<Project>.from(items);
+        _controller.clearMarkers(_markers);
         projects = items;
         for (int i = 0; i < items.length; ++i) {
           Project project = items[i];
@@ -96,9 +106,29 @@ class ClusterManager {
           );
           _markers.add(marker);
         }
+        // 获取项目中的路灯
+        SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+            .then((val) async {
+          if (temporary != null && temporary.length > 0) {
+            // 解析 json
+            var data = json.decode(val);
+            LoginInfo loginInfo = LoginInfo.fromJson(data);
+
+            for (var i = 0; i < temporary.length; ++i) {
+              Project project = temporary[i];
+              await getDeviceLampList(
+                  project.title, loginInfo.data.token.token);
+            }
+          }
+        });
       } else if (items[0] is Lamp) {
+        _controller.clearMarkers(_markers);
         for (int i = 0; i < items.length; ++i) {
           Lamp lamp = items[i];
+          if(lamp.lAT == "" || lamp.lNG == ""){
+            print('xxxxxxxxxxxxxxxxxxxxxxx   ${lamp.nAME} 坐标为空');
+            continue;
+          }
           final marker = await _controller?.addMarker(
             MarkerOption(
               latLng: LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
@@ -146,9 +176,34 @@ class ClusterManager {
     if (tYPE == 1) {
       return Uri.parse('images/light_on.png');
     } else if (tYPE == 2) {
-      return Uri.parse('images/ebox.png');
-    } else {
       return Uri.parse('images/light_on.png');
+    } else {
+      return Uri.parse('images/ebox.png');
     }
+  }
+
+  /**
+   *  获取项目下的路灯列表
+   */
+  getDeviceLampList(String title, token) {
+    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":5000}";
+
+    DioUtils.requestHttp(
+      servicePath['DEVICE_LAMP_LIST_URL'],
+      parameters: param,
+      token: token,
+      method: DioUtils.POST,
+      onSuccess: (String data) {
+        // 解析 json
+        var jsonstr = json.decode(data);
+        print('getDeviceLampList title $title = $data');
+
+        LampInfo lampInfo = LampInfo.fromJson(jsonstr);
+        lampMap[title] = lampInfo.data.lamp;
+      },
+      onError: (error) {
+        print(' DioUtils.requestHttp error = $error');
+      },
+    );
   }
 }
