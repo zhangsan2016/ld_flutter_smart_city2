@@ -21,6 +21,21 @@ class AmapPage extends StatefulWidget {
 }
 
 class AmapPageState extends State<AmapPage> {
+  final List<Tab> _mTabs = <Tab>[
+    Tab(
+      text: 'Tab1',
+      icon: Icon(Icons.airline_seat_flat_angled),
+    ),
+    Tab(
+      text: 'Tab2',
+      icon: Icon(Icons.airline_seat_flat_angled),
+    ),
+    Tab(
+      text: 'Tab3',
+      icon: Icon(Icons.airline_seat_flat_angled),
+    ),
+  ];
+
   AmapController _controller;
   ClusterManager clusterManager;
 
@@ -31,6 +46,109 @@ class AmapPageState extends State<AmapPage> {
 
   @override
   Widget build(BuildContext context) {
+    return new MaterialApp(
+        title: '洛丁智慧照明',
+        home: new Scaffold(
+          appBar: new AppBar(
+            //自定义Drawer的按钮
+            leading: Builder(builder: (BuildContext context) {
+              return IconButton(
+                  icon: Icon(Icons.wifi_tethering),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  });
+            }),
+            title: new Text('洛丁智慧照明'),
+            backgroundColor: Colors.cyan,
+          ),
+          body: initAMap(),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                Container(
+                  height: 200,
+                  child: UserAccountsDrawerHeader(
+
+                      //设置当前用户的头像
+                      /*          currentAccountPicture: new CircleAvatar(
+                        backgroundImage: new AssetImage('images/test_icon.jpg'),
+                      ),*/
+                      //回调事件
+                      /*   onDetailsPressed: (){
+                      },*/
+                      ),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                  // leading: Icon(Icons.wifi),
+                  title: new Text('地图'),
+                  onTap: () {
+                    print('ssss');
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                  title: new Text('路灯'),
+                  onTap: () {
+                    print('ssss');
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                  title: new Text('电箱'),
+                  onTap: () {
+                    print('ssss');
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                  title: new Text('项目'),
+                  onTap: () {
+                    print('ssss');
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                  title: new Text('报警'),
+                  onTap: () {
+                    print('ssss');
+                  },
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  /**
+   *  获取当前用户下的所有项目
+   */
+  void getProject(String token) {
+    DioUtils.requestHttp(
+      servicePath['PROJECT_LIST_URL'],
+      parameters: null,
+      token: token,
+      method: DioUtils.POST,
+      onSuccess: (String data) async {
+        print(' DioUtils.requestHttp onSuccess = ${data.toString()}');
+
+        // 解析 json
+        var jsonstr = json.decode(data);
+        ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
+
+        clusterManager.addItems(projectInfo.data.data);
+      },
+      onError: (error) {
+        print(' DioUtils.requestHttp error = $error');
+      },
+    );
+  }
+
+  /**
+   *  初始化地图
+   */
+  Widget initAMap() {
     return AmapView(
       // 地图类型 (可选)
       mapType: MapType.Standard,
@@ -67,39 +185,6 @@ class AmapPageState extends State<AmapPage> {
           // 获取项目列表
           getProject(loginInfo.data.token.token);
         });
-
-
-      },
-    );
-  }
-
-
-  /**
-   *  获取当前用户下的所有项目
-   */
-  void getProject(String token) {
-    DioUtils.requestHttp(
-      servicePath['PROJECT_LIST_URL'],
-      parameters: null,
-      token: token,
-      method: DioUtils.POST,
-      onSuccess: (String data) async {
-        print(' DioUtils.requestHttp onSuccess = ${data.toString()}');
-
-        // 解析 json
-        var jsonstr = json.decode(data);
-        ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
-
-       /* for (var i = 0; i < projectInfo.data.data.length; ++i) {
-          Project project = projectInfo.data.data[i];
-          // 获取路灯列表
-          await getDeviceLampList(project.title, token);
-        }*/
-
-         clusterManager.addItems(projectInfo.data.data);
-      },
-      onError: (error) {
-        print(' DioUtils.requestHttp error = $error');
       },
     );
   }
