@@ -81,7 +81,6 @@ class ClusterManager {
 
   // 当前显示的 marker 列表
   List<Marker> _markers = [];
-
   // 项目列表
   List<Project> projects;
 

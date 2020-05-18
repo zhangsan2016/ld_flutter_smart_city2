@@ -69,7 +69,9 @@ class AmapPageState extends State<AmapPage> {
                 Container(
                   height: 200,
                   child: UserAccountsDrawerHeader(
-
+                      decoration:  BoxDecoration(
+                        color: Colors.lightBlueAccent,
+                      ),
                       //设置当前用户的头像
                       /*          currentAccountPicture: new CircleAvatar(
                         backgroundImage: new AssetImage('images/test_icon.jpg'),
