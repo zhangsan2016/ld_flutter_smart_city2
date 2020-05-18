@@ -81,7 +81,7 @@ class DioUtils {
       } else {
         throw Exception('erroMsg:${responseData['erroMsg']}');
       }
-      print('响应数据：' + response.toString());
+  //    print('响应数据：' + response.toString());
     } catch (e) {
       print('请求出错：' + e.toString());
       onError(e.toString());

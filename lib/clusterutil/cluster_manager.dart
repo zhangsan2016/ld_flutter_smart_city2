@@ -51,8 +51,9 @@ class ClusterManager {
         lamp.add(new Lamp.fromJson(v));
       });*/
 
+      _controller.clear();
+
       if (!isUnfold) {
-        _controller.clear(keepMyLocation: false);
         List<Lamp> lamp = lampMap[await marker.title];
         addItems(lamp);
       }
@@ -69,7 +70,7 @@ class ClusterManager {
         MapMove mapMove = move;
         print('MapMoveListener move = ${move.zoom}');
 
-        if (move.zoom > 6) {
+        if (move.zoom < 5) {
           if (isUnfold) {
             addItems(projects);
           }
@@ -120,7 +121,7 @@ class ClusterManager {
 
             for (var i = 0; i < temporary.length; ++i) {
               Project project = temporary[i];
-              await getDeviceLampList(
+               getDeviceLampList(
                   project.title, loginInfo.data.token.token);
             }
           }
@@ -179,14 +180,14 @@ class ClusterManager {
             );
 
 
-        await _controller?.setMultiPointClickedListener(
+       /* await _controller?.setMultiPointClickedListener(
           (id, title, snippet, object) async {
             print(
               'id: $id, title: $title, snippet: $snippet, object: $object',
             );
           },
-        );
-        isUnfold = !isUnfold;
+        );*/
+        isUnfold = true;
         // 重新定位
         relocation();
 
@@ -280,7 +281,8 @@ class ClusterManager {
       onSuccess: (String data) {
         // 解析 json
         var jsonstr = json.decode(data);
-        print('getDeviceLampList title $title = $data');
+       // print('getDeviceLampList title $title = $data');
+        print('getDeviceLampList title $title ');
 
         LampInfo lampInfo = LampInfo.fromJson(jsonstr);
         lampMap[title] = lampInfo.data.lamp;
