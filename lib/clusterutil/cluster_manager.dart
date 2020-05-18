@@ -51,7 +51,7 @@ class ClusterManager {
         lamp.add(new Lamp.fromJson(v));
       });*/
 
-      _controller.clear();
+
 
       if (!isUnfold) {
         List<Lamp> lamp = lampMap[await marker.title];
@@ -92,6 +92,7 @@ class ClusterManager {
         // 克隆一份列表
         temporary = new List<Project>.from(items);
         _controller.clearMarkers(_markers);
+        await _controller.clear();
         projects = items;
         for (int i = 0; i < items.length; ++i) {
           Project project = items[i];
