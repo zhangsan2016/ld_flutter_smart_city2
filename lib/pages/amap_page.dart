@@ -68,46 +68,7 @@ class AmapPageState extends State<AmapPage> {
           getProject(loginInfo.data.token.token);
         });
 
-        /*final marker = await _controller?.addMarker(
-          MarkerOption(
-            latLng: LatLng(39.90960, 116.39722800),
-            title: '北京',
-            snippet: '描述',
-            iconUri: _assetsIcon1,
-            imageConfig: createLocalImageConfiguration(context),
-            width: 48,
-            height: 48,
-            object: '自定义数据',
-          ),
-        );
 
-        final marke2r = await _controller?.addMarker(
-          MarkerOption(
-            latLng: LatLng(24.879994, 105.571501),
-            title: '北京',
-            snippet: '描述',
-            iconUri: Uri.parse('images/bian.png'),
-            imageConfig: createLocalImageConfiguration(context),
-            width: 48,
-            height: 48,
-            object: '自定义数据',
-          ),
-        );
-
-        final marker4 = await _controller?.addMarker(
-          MarkerOption(
-            latLng: LatLng(28.953875, 108.471891),
-            title: '北京',
-            snippet: '描述',
-            iconUri: Uri.parse('images/bian.png'),
-            imageConfig: createLocalImageConfiguration(context),
-            width: 48,
-            height: 48,
-            object: '自定义数据',
-          ),
-        );*/
-
-        // _markers.add(marker);
       },
     );
   }
