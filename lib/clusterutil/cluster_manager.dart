@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:amap_core_fluttify/amap_core_fluttify.dart';
+import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
@@ -50,9 +52,11 @@ class ClusterManager {
       });*/
 
       if (!isUnfold) {
+        _controller.clear(keepMyLocation: false);
         List<Lamp> lamp = lampMap[await marker.title];
         addItems(lamp);
       }
+
 
       return true;
     });
@@ -123,13 +127,14 @@ class ClusterManager {
         });
       } else if (items[0] is Lamp) {
         _controller.clearMarkers(_markers);
-        for (int i = 0; i < items.length; ++i) {
+        /*  for (int i = 0; i < items.length; ++i) {
           Lamp lamp = items[i];
           if (lamp.lAT == "" || lamp.lNG == "") {
-            print('xxxxxxxxxxxxxxxxxxxxxxx   ${lamp.nAME} 坐标为空');
+            print('   ${lamp.nAME} 坐标为空');
             continue;
           }
-          final marker = await _controller?.addMarker(
+
+         final marker = await _controller?.addMarker(
             MarkerOption(
               latLng: LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
               title: lamp.tYPE.toString(),
@@ -141,14 +146,54 @@ class ClusterManager {
               //  object: json.encode(lamp),
             ),
           );
-          _markers.add(marker);
-        }
+
+         // _markers.add(marker);
+        }*/
+
+
+
+       /* List pointOptions = await getPointOverlayList(items);
+        await _controller?.addMultiPointOverlay(
+          MultiPointOption(
+            pointList: pointOptions,
+            iconUri: null,
+            imageConfiguration: createLocalImageConfiguration(_context),
+            size: Size(48, 48),
+          ),
+        );
+        await _controller?.setMultiPointClickedListener(
+          (id, title, snippet, object) async {
+            print(
+              'id: $id, title: $title, snippet: $snippet, object: $object',
+            );
+          },
+        );*/
+        await _controller
+            ?.addMultiPointOverlay(
+              MultiPointOption(
+                pointList: await getPointOverlayList(items),
+                iconUri: selectImagesByType(2),
+                imageConfiguration: createLocalImageConfiguration(_context),
+                size: Size(48, 48),
+              ),
+            );
+
+
+        await _controller?.setMultiPointClickedListener(
+          (id, title, snippet, object) async {
+            print(
+              'id: $id, title: $title, snippet: $snippet, object: $object',
+            );
+          },
+        );
         isUnfold = !isUnfold;
         // 重新定位
         relocation();
+
       }
     }
   }
+
 
   void relocation() async {
     Stream.fromIterable(_markers)
@@ -188,6 +233,27 @@ class ClusterManager {
         // other types of Exceptions
       }
     }
+  }
+
+  List<PointOption> getPointOverlayList(items) {
+    List<PointOption> pointList = List();
+    for (int i = 0; i < items.length; ++i) {
+      Lamp lamp = items[i];
+      if (lamp.lAT == "" || lamp.lNG == "") {
+        print('   ${lamp.nAME} 坐标为空');
+        continue;
+      }
+
+      pointList.add(PointOption(
+        latLng: LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
+        id: i.toString(),
+        title: '${lamp.tYPE}',
+        snippet: 'Snippet$i',
+        object: 'Object$i',
+      ));
+    }
+
+    return pointList;
   }
 
   Uri selectImagesByType(int tYPE) {
