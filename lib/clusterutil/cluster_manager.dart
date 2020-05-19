@@ -211,8 +211,10 @@ class ClusterManager {
       return Uri.parse('images/light_on.png');
     } else if (tYPE == 2) {
       return Uri.parse('images/light_on.png');
-    } else {
+    } else if (tYPE == 3){
       return Uri.parse('images/ebox.png');
+    } else {
+      return Uri.parse('images/test_icon.png');
     }
   }
 
