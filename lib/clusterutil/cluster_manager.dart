@@ -34,45 +34,11 @@ class ClusterManager {
     _controller?.setMarkerClickedListener((marker) async {
       print(
           '${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');
-      // _controller.clearMarkers(_markers);
-
-      /*  if(!isUnfold ){
-        var jsonstr = json.decode(await marker.object);
-        Project project = Project.fromJson(jsonstr);
-        print('project = ${project.title}   ${project is Project}   ${project is Lamp} ');
-      }*/
-
-      /*  var jsonstr = json.decode(await marker.object);
-      print('setMarkerClickedListener jsonstr = ${jsonstr}  $jsonstr');*/
-
-      /*    var jsonstr = json.decode(await marker.object);
-      List<Lamp> lamp = new List<Lamp>();
-      jsonstr.forEach((v) {
-        lamp.add(new Lamp.fromJson(v));
-      });*/
-
-
 
       if (!isUnfold) {
         List<Lamp> lamp = lampMap[await marker.title];
         await addItems(lamp);
-
       }
-
-     /* _controller?.setCenterCoordinate(
-          await marker.location,);*/
-     // _controller?.setZoomLevel(15);
-
-
-    /*  List<LatLng> list = [await marker.location, await marker.location];
-      _controller?.zoomToSpan(
-        list,
-        padding: EdgeInsets.only(
-          top: 200,
-        ),
-      );*/
- /*    await _controller.setZoomLevel(19);
-      await _controller?.setCenterCoordinate(await marker.location,);*/
 
       return true;
     });
@@ -99,7 +65,6 @@ class ClusterManager {
   List<Marker> _markers = [];
   // 项目列表
   List<Project> projects;
-
   void addItems(List items) async {
     List temporary;
     if (items != null && items.length > 0) {
@@ -137,24 +102,21 @@ class ClusterManager {
 
             for (var i = 0; i < temporary.length; ++i) {
               Project project = temporary[i];
-               getDeviceLampList(
-                  project.title, loginInfo.data.token.token);
+              getDeviceLampList(project.title, loginInfo.data.token.token);
             }
           }
         });
       } else if (items[0] is Lamp) {
         _controller.clearMarkers(_markers);
 
-        await _controller
-            ?.addMultiPointOverlay(
-              MultiPointOption(
-                pointList: await getPointOverlayList(items),
-                iconUri: selectImagesByType(2),
-                imageConfiguration: createLocalImageConfiguration(_context),
-                size: Size(48, 48),
-              ),
-            );
-
+        await _controller?.addMultiPointOverlay(
+          MultiPointOption(
+            pointList: await getPointOverlayList(items),
+            iconUri: selectImagesByType(2),
+            imageConfiguration: createLocalImageConfiguration(_context),
+            size: Size(48, 48),
+          ),
+        );
 
         // 子布局点击事件
         await _controller?.setMultiPointClickedListener(
@@ -165,23 +127,23 @@ class ClusterManager {
           },
         );
 
-
         // 修改展开状态
         isUnfold = true;
         // 重新定位
         //   relocation();
         // 缩放中心点位置
         _controller?.zoomToSpan(
-          [new LatLng(double.parse((items[0] as Lamp).lAT), double.parse((items[0] as Lamp).lNG))],
+          [
+            new LatLng(double.parse((items[0] as Lamp).lAT),
+                double.parse((items[0] as Lamp).lNG))
+          ],
           padding: EdgeInsets.only(
             top: 100,
           ),
         );
-
       }
     }
   }
-
 
   void relocation() async {
     Stream.fromIterable(_markers)
@@ -268,7 +230,7 @@ class ClusterManager {
       onSuccess: (String data) {
         // 解析 json
         var jsonstr = json.decode(data);
-       // print('getDeviceLampList title $title = $data');
+        // print('getDeviceLampList title $title = $data');
         print('getDeviceLampList title $title ');
 
         LampInfo lampInfo = LampInfo.fromJson(jsonstr);
