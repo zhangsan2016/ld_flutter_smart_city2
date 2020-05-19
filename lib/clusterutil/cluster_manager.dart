@@ -235,9 +235,9 @@ class ClusterManager {
       pointList.add(PointOption(
         latLng: LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
         id: i.toString(),
-        title: '${lamp.tYPE}',
-        snippet: 'Snippet$i',
-        object: 'Object$i',
+        title: '${lamp.nAME}',
+        snippet: '${lamp.pROJECT}',
+        object: json.encode(lamp),
       ));
     }
 
