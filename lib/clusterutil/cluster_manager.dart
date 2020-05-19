@@ -55,13 +55,32 @@ class ClusterManager {
 
       if (!isUnfold) {
         List<Lamp> lamp = lampMap[await marker.title];
-        addItems(lamp);
+        await addItems(lamp);
+
+        await _controller.setZoomLevel(19);
+        await _controller?.setCenterCoordinate(await marker.location,);
+
       }
 
+     /* _controller?.setCenterCoordinate(
+          await marker.location,);*/
+     // _controller?.setZoomLevel(15);
+
+
+    /*  List<LatLng> list = [await marker.location, await marker.location];
+      _controller?.zoomToSpan(
+        list,
+        padding: EdgeInsets.only(
+          top: 200,
+        ),
+      );*/
+ /*    await _controller.setZoomLevel(19);
+      await _controller?.setCenterCoordinate(await marker.location,);*/
 
       return true;
     });
 
+    // 地图移动监听
     _controller?.setMapMoveListener(
       onMapMoveStart: (move) async {
         MapMove mapMove = move;
@@ -189,7 +208,7 @@ class ClusterManager {
         );*/
         isUnfold = true;
         // 重新定位
-        relocation();
+     //   relocation();
 
       }
     }
