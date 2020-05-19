@@ -57,9 +57,6 @@ class ClusterManager {
         List<Lamp> lamp = lampMap[await marker.title];
         await addItems(lamp);
 
-        await _controller.setZoomLevel(19);
-        await _controller?.setCenterCoordinate(await marker.location,);
-
       }
 
      /* _controller?.setCenterCoordinate(
@@ -147,47 +144,7 @@ class ClusterManager {
         });
       } else if (items[0] is Lamp) {
         _controller.clearMarkers(_markers);
-        /*  for (int i = 0; i < items.length; ++i) {
-          Lamp lamp = items[i];
-          if (lamp.lAT == "" || lamp.lNG == "") {
-            print('   ${lamp.nAME} 坐标为空');
-            continue;
-          }
 
-         final marker = await _controller?.addMarker(
-            MarkerOption(
-              latLng: LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
-              title: lamp.tYPE.toString(),
-              snippet: '描述',
-              iconUri: selectImagesByType(lamp.tYPE),
-              imageConfig: createLocalImageConfiguration(_context),
-              width: 48,
-              height: 48,
-              //  object: json.encode(lamp),
-            ),
-          );
-
-         // _markers.add(marker);
-        }*/
-
-
-
-       /* List pointOptions = await getPointOverlayList(items);
-        await _controller?.addMultiPointOverlay(
-          MultiPointOption(
-            pointList: pointOptions,
-            iconUri: null,
-            imageConfiguration: createLocalImageConfiguration(_context),
-            size: Size(48, 48),
-          ),
-        );
-        await _controller?.setMultiPointClickedListener(
-          (id, title, snippet, object) async {
-            print(
-              'id: $id, title: $title, snippet: $snippet, object: $object',
-            );
-          },
-        );*/
         await _controller
             ?.addMultiPointOverlay(
               MultiPointOption(
@@ -199,16 +156,27 @@ class ClusterManager {
             );
 
 
-       /* await _controller?.setMultiPointClickedListener(
+        // 子布局点击事件
+        await _controller?.setMultiPointClickedListener(
           (id, title, snippet, object) async {
             print(
               'id: $id, title: $title, snippet: $snippet, object: $object',
             );
           },
-        );*/
+        );
+
+
+        // 修改展开状态
         isUnfold = true;
         // 重新定位
-     //   relocation();
+        //   relocation();
+        // 缩放中心点位置
+        _controller?.zoomToSpan(
+          [new LatLng(double.parse((items[0] as Lamp).lAT), double.parse((items[0] as Lamp).lNG))],
+          padding: EdgeInsets.only(
+            top: 100,
+          ),
+        );
 
       }
     }
