@@ -62,7 +62,7 @@ class ClusterManager {
   }
 
   // 当前显示的 marker 列表
-  List<Marker> _markers = new List();
+  List<Marker> _markers = [];
   // 项目列表
   List<Project> projects;
   void addItems(List items) async {
@@ -72,7 +72,7 @@ class ClusterManager {
         // 克隆一份列表
         temporary = new List<Project>.from(items);
         _controller.clearMarkers(_markers);
-      //  await _controller.clear();
+        await _controller.clear();
         projects = items;
         for (int i = 0; i < items.length; ++i) {
           Project project = items[i];
@@ -109,7 +109,6 @@ class ClusterManager {
       } else if (items[0] is Lamp) {
         _controller.clearMarkers(_markers);
 
-        /*  // 地图覆盖物使用海量的方式添加
         await _controller?.addMultiPointOverlay(
           MultiPointOption(
             pointList: await getPointOverlayList(items),
@@ -118,6 +117,7 @@ class ClusterManager {
             size: Size(48, 48),
           ),
         );
+
         // 子布局点击事件
         await _controller?.setMultiPointClickedListener(
           (id, title, snippet, object) async {
@@ -125,33 +125,7 @@ class ClusterManager {
               'id: $id, title: $title, snippet: $snippet, object: $object',
             );
           },
-        );*/
-
-        // 批量添加覆盖物
-        List<MarkerOption> markerOptions = List();
-        for (int i = 0; i < items.length; ++i) {
-          Lamp lamp = items[i];
-          if (lamp.lAT == "" || lamp.lNG == "") {
-            print('   ${lamp.nAME} 坐标为空');
-            continue;
-          }
-
-          MarkerOption markerOption = new MarkerOption(
-            latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
-            title: '${lamp.nAME}',
-            snippet: '${lamp.pROJECT}',
-            iconUri: selectImagesByType(2),
-            imageConfig: createLocalImageConfiguration(_context),
-            width: 40,
-            height: 40,
-            object:  json.encode(lamp),
-          );
-
-          markerOptions.add(markerOption);
-        }
-
-       await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
-
+        );
 
         // 修改展开状态
         isUnfold = true;
@@ -211,9 +185,6 @@ class ClusterManager {
     }
   }
 
-  /**
-   *  海量添加方式调用
-   */
   List<PointOption> getPointOverlayList(items) {
     List<PointOption> pointList = List();
     for (int i = 0; i < items.length; ++i) {
@@ -240,7 +211,7 @@ class ClusterManager {
       return Uri.parse('images/light_on.png');
     } else if (tYPE == 2) {
       return Uri.parse('images/light_on.png');
-    } else if (tYPE == 3) {
+    } else if (tYPE == 3){
       return Uri.parse('images/ebox.png');
     } else {
       return Uri.parse('images/test_icon.png');
