@@ -136,14 +136,13 @@ class ClusterManager {
             continue;
           }
 
+          print('lamp.firDimming = ${lamp.firDimming}');
           MarkerOption markerOption = new MarkerOption(
             latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
             title: '${lamp.nAME}',
             snippet: '${lamp.pROJECT}',
-            iconUri: selectImagesByType(2),
+            iconUri: selectImagesByType(int.parse('${lamp.tYPE}'),double.parse('${lamp.firDimming??0}')),
             imageConfig: createLocalImageConfiguration(_context),
-            width: 40,
-            height: 40,
             object:  json.encode(lamp),
           );
 
@@ -235,14 +234,22 @@ class ClusterManager {
     return pointList;
   }
 
-  Uri selectImagesByType(int tYPE) {
+  Uri selectImagesByType(int tYPE, double brightness) {
     if (tYPE == 1) {
-      return Uri.parse('images/light_on.png');
+      // 电箱
+      return Uri.parse('images/ebox.png');
     } else if (tYPE == 2) {
-      return Uri.parse('images/light_on.png');
+      // 路灯
+      if(brightness != 0){
+        return Uri.parse('images/light_on.png');
+      }else{
+        return Uri.parse('images/light_off.png');
+      }
     } else if (tYPE == 3) {
+      // 未知
       return Uri.parse('images/ebox.png');
     } else {
+      // 报警器
       return Uri.parse('images/test_icon.png');
     }
   }

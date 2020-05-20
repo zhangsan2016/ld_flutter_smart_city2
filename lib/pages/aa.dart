@@ -40,8 +40,10 @@ print('${  testList3.length}');
   print('testList3 $testList3');*/
 
 
-var a = "";
-print('${a== null } ${a== ""} ');
+var a =23.558920237814238;
+String cc ='${a??0}'.toString();
+print('cc = $cc');
+print(int.parse(cc));
 
 
 }
