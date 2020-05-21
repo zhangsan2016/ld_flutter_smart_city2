@@ -258,7 +258,7 @@ class ClusterManager {
    *  获取项目下的路灯列表
    */
   getDeviceLampList(String title, token) {
-    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":5000}";
+    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
 
     DioUtils.requestHttp(
       servicePath['DEVICE_LAMP_LIST_URL'],
@@ -272,6 +272,7 @@ class ClusterManager {
         print('getDeviceLampList title $title ');
 
         LampInfo lampInfo = LampInfo.fromJson(jsonstr);
+        print('lampInfo length = ${lampInfo.data.lamp.length}' );
         lampMap[title] = lampInfo.data.lamp;
       },
       onError: (error) {

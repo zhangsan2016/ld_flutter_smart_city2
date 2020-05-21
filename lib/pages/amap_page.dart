@@ -11,6 +11,7 @@ import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
+import 'package:oktoast/oktoast.dart';
 
 final _assetsIcon1 = Uri.parse('images/test_icon.png');
 final _assetsIcon2 = Uri.parse('images/arrow.png');
@@ -93,6 +94,7 @@ class AmapPageState extends State<AmapPage> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                   title: new Text('路灯'),
                   onTap: () {
+                    showToast('路灯');
                     print('ssss');
                   },
                 ),
@@ -100,6 +102,7 @@ class AmapPageState extends State<AmapPage> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                   title: new Text('电箱'),
                   onTap: () {
+                    showToast('电箱');
                     print('ssss');
                   },
                 ),
@@ -107,6 +110,7 @@ class AmapPageState extends State<AmapPage> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                   title: new Text('项目'),
                   onTap: () {
+                    showToast('项目');
                     print('ssss');
                   },
                 ),
@@ -114,6 +118,7 @@ class AmapPageState extends State<AmapPage> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                   title: new Text('报警'),
                   onTap: () {
+                    showToast('报警');
                     print('ssss');
                   },
                 ),
