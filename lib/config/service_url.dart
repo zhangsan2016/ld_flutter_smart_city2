@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 
 // base 地址
 const String URL_BASE = "https://iot.sz-luoding.com:888/api/";
@@ -14,6 +14,8 @@ const String DEVICE_EBOX = "v_device_ebox/list";
 const String REPORT_CONFIG = "device/reportConfig";
 // content-type 单个设备信息
 const String VIEW_BY_UUID = "device/viewByUUID";
+// content-type 获取断缆报警器列表
+const String DEVICE_WIRESAFE_LIST ="v_device_wiresafe/list";
 
 
 const ServiceUrl = 'http://test.baixingliangfan.cn/baixing/';
@@ -24,6 +26,7 @@ const servicePath = {
   'DEVICE_EBOX_URL':URL_BASE + DEVICE_EBOX, // 获取电箱列表地址
   'REPORT_CONFIG_URL': URL_BASE + REPORT_CONFIG, // 获取汇报设备配置地址
   'VIEW_BY_UUID_URL': URL_BASE + VIEW_BY_UUID, // 获取获取单个设备信息
+  'DEVICE_WIRESAFE_LIST_URL': URL_BASE + DEVICE_WIRESAFE_LIST, // 获取断缆报警器列表
 };
 
 

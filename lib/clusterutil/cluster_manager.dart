@@ -6,6 +6,7 @@ import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
+import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
@@ -20,7 +21,10 @@ class ClusterManager {
 
   // 是否展开
   bool isUnfold = false;
+  // 项目路灯集合
   var lampMap = <String, List<Lamp>>{};
+  // 项目电箱集合
+  var eboxMap = <String, List<Ebox>>{};
 
   ClusterManager(BuildContext context, AmapController controller) {
     this._context = context;
@@ -36,8 +40,13 @@ class ClusterManager {
           '${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');
 
       if (!isUnfold) {
+        // 获取项目对应的路灯列表
         List<Lamp> lamp = lampMap[await marker.title];
-        await addItems(lamp);
+        // 获取项目对应的电箱
+        List<Ebox> ebox = eboxMap[await marker.title];
+        // 添加覆盖物
+        print('xxxxxxxxxxxxxxxxxxxxxxxxxx eboxMap = ${eboxMap.length}');
+        await addItems(lamp,eboxs:ebox);
       }
 
       return true;
@@ -65,7 +74,7 @@ class ClusterManager {
   List<Marker> _markers = new List();
   // 项目列表
   List<Project> projects;
-  void addItems(List items) async {
+  void addItems(List items,{eboxs}) async {
     List temporary;
     if (items != null && items.length > 0) {
       if (items[0] is Project) {
@@ -91,7 +100,9 @@ class ClusterManager {
           );
           _markers.add(marker);
         }
+        // 展开状态为 false
         isUnfold = false;
+
         // 获取项目中的路灯
         SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
             .then((val) async {
@@ -102,32 +113,18 @@ class ClusterManager {
 
             for (var i = 0; i < temporary.length; ++i) {
               Project project = temporary[i];
-              getDeviceLampList(project.title, loginInfo.data.token.token);
+              // 获取项目下的路灯
+              await getDeviceLampList(project.title, loginInfo.data.token.token);
+              // 获取项目下的电箱
+              await  getDeviceEbox(project.title, loginInfo.data.token.token);
             }
           }
         });
+
       } else if (items[0] is Lamp) {
         _controller.clearMarkers(_markers);
 
-        /*  // 地图覆盖物使用海量的方式添加
-        await _controller?.addMultiPointOverlay(
-          MultiPointOption(
-            pointList: await getPointOverlayList(items),
-            iconUri: selectImagesByType(2),
-            imageConfiguration: createLocalImageConfiguration(_context),
-            size: Size(48, 48),
-          ),
-        );
-        // 子布局点击事件
-        await _controller?.setMultiPointClickedListener(
-          (id, title, snippet, object) async {
-            print(
-              'id: $id, title: $title, snippet: $snippet, object: $object',
-            );
-          },
-        );*/
-
-        // 批量添加覆盖物
+        // 批量添加路灯覆盖物
         List<MarkerOption> markerOptions = List();
         for (int i = 0; i < items.length; ++i) {
           Lamp lamp = items[i];
@@ -147,6 +144,30 @@ class ClusterManager {
           );
 
           markerOptions.add(markerOption);
+        }
+
+        // 批量添加电箱覆盖物
+        if (eboxs != null && eboxs.length > 0) {
+
+          for (var i = 0; i < eboxs.length; ++i) {
+            Ebox ebox = eboxs[i];
+            if (ebox.lAT == "" || ebox.lNG == "") {
+              print('   ${ebox.nAME} 坐标为空');
+              continue;
+            }
+
+            MarkerOption markerOption = new MarkerOption(
+              latLng: new LatLng(double.parse(ebox.lAT), double.parse(ebox.lNG)),
+              title: '${ebox.nAME}',
+              snippet: '${ebox.pROJECT}',
+              iconUri: selectImagesByType(int.parse('${ebox.tYPE}'),double.parse('${ebox.firDimming??0}')),
+              imageConfig: createLocalImageConfiguration(_context),
+              object:  json.encode(ebox),
+            );
+            markerOptions.add(markerOption);
+          }
+        }else{
+          print('xxxxxxxxxxxxxxxxxxxxx  eboxs = null');
         }
 
        await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
@@ -272,7 +293,6 @@ class ClusterManager {
         print('getDeviceLampList title $title ');
 
         LampInfo lampInfo = LampInfo.fromJson(jsonstr);
-        print('lampInfo length = ${lampInfo.data.lamp.length}' );
         lampMap[title] = lampInfo.data.lamp;
       },
       onError: (error) {
@@ -280,4 +300,31 @@ class ClusterManager {
       },
     );
   }
+
+
+  /**
+   *  获取项目下的电箱
+   */
+  getDeviceEbox(String title, token)  {
+    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
+
+      DioUtils.requestHttp(
+      servicePath['DEVICE_EBOX_URL'],
+      parameters: param,
+      token: token,
+      method: DioUtils.POST,
+      onSuccess: (String data) {
+        // 解析 json
+        var jsonstr = json.decode(data);
+        EboxInfo lampInfo = EboxInfo.fromJson(jsonstr);
+        eboxMap[title] = lampInfo.data.ebox;
+      },
+      onError: (error) {
+        print(' DioUtils.requestHttp error = $error');
+      },
+    );
+  }
+
 }
+
+

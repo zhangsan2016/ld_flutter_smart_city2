@@ -70,24 +70,50 @@ class AmapPageState extends State<AmapPage> {
                 Container(
                   height: 200,
                   child: UserAccountsDrawerHeader(
-                      decoration:  BoxDecoration(
-                        color: Colors.lightBlueAccent,
-                      ),
-                      //设置当前用户的头像
-                      /*          currentAccountPicture: new CircleAvatar(
+                    decoration: BoxDecoration(
+                      color: Colors.lightBlueAccent,
+                    ),
+                    //设置当前用户的头像
+                    /*          currentAccountPicture: new CircleAvatar(
                         backgroundImage: new AssetImage('images/test_icon.jpg'),
                       ),*/
-                      //回调事件
-                      /*   onDetailsPressed: (){
+                    //回调事件
+                    /*   onDetailsPressed: (){
                       },*/
-                      ),
+                  ),
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.symmetric(horizontal: 20),
                   // leading: Icon(Icons.wifi),
                   title: new Text('地图'),
                   onTap: () {
-                    print('ssss');
+                    // 获取项目中的路灯
+                    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                        .then((val) async {
+                      // 解析 json
+                      var data = json.decode(val);
+                      LoginInfo loginInfo = LoginInfo.fromJson(data);
+
+                      var param = "{\"where\":{\"PROJECT\":\"" + "中科洛丁展示项目/深圳展厅" + "\"},\"size\":1000}";
+
+                      DioUtils.requestHttp(
+                        servicePath['DEVICE_EBOX_URL'],
+                        parameters: param,
+                        token: loginInfo.data.token.token,
+                        method: DioUtils.POST,
+                        onSuccess: (String data) {
+                          // 解析 json
+                          var jsonstr = json.decode(data);
+                          // print('getDeviceLampList title $title = $data');
+                          print('get jsonstr = $jsonstr ');
+
+                        },
+                        onError: (error) {
+                          print(' DioUtils.requestHttp error = $error');
+                        },
+                      );
+
+                    });
                   },
                 ),
                 ListTile(

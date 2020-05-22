@@ -109,7 +109,6 @@ class DioUtils {
     try {
       Response response;
       Dio dio = createInstance(token: token);
-      print('createInstance 执行完成！');
 
       if (parameters != null && parameters.isNotEmpty){
         response = await dio.post(url, data: parameters);
