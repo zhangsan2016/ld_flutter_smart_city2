@@ -63,146 +63,145 @@ class Data {
 }
 
 class Ebox {
-  String uUID;
-  String lAT;
-  String lNG;
-  String nAME;
+  var uUID;
+  var lAT;
+  var lNG;
+  var nAME;
   int tYPE;
-  String pROJECT;
-  String sUBGROUP;
+  var pROJECT;
+  var sUBGROUP;
   int iId;
-  String fUUID;
-  String smsphone;
-  String subgroups;
-  String admin;
-  String info;
+  var fUUID;
+  var smsphone;
+  var subgroups;
+  var admin;
+  var info;
   int sTATE;
-  String aV;
-  String bV;
-  String cV;
-  String aC;
-  String bC;
-  String cC;
+  var aV;
+  var bV;
+  var cV;
+  var aC;
+  var bC;
+  var cC;
   int tsMqtt;
-  String frequency;
-  String totPFac;
-  String totViewP;
-  String totActDeg;
-  String totReactDeg;
-  String aActP;
-  String bActP;
-  String cActP;
-  String totActP;
-  String aReactP;
-  String bReactP;
-  String cReactP;
-  String totReactP;
+  var frequency;
+  var totPFac;
+  var totViewP;
+  var totActDeg;
+  var totReactDeg;
+  var aActP;
+  var bActP;
+  var cActP;
+  var totActP;
+  var aReactP;
+  var bReactP;
+  var cReactP;
+  var totReactP;
   int warningEnable;
   int rollParameterEnable;
-  String version;
+  var version;
   int firDimming;
   int secDimming;
   int firIllu;
   int secIllu;
   int relState;
-  String time;
+  var time;
   int gprsCsq;
   int illu;
-  String firTtFir;
+  var firTtFir;
   int firTpFir;
-  String secTtFir;
+  var secTtFir;
   int secTpFir;
-  String thirTtFir;
+  var thirTtFir;
   int thirTpFir;
-  String fourTtFir;
+  var fourTtFir;
   int fourTpFir;
-  String fifTtFir;
+  var fifTtFir;
   int fifTpFir;
-  String sixTtFir;
+  var sixTtFir;
   int sixTpFir;
-  String firTtSec;
+  var firTtSec;
   int firTpSec;
-  String secTtSec;
+  var secTtSec;
   int secTpSec;
-  String thirTtSec;
+  var thirTtSec;
   int thirTpSec;
-  String fourTtSec;
+  var fourTtSec;
   int fourTpSec;
-  String fifTtSec;
+  var fifTtSec;
   int fifTpSec;
-  String sixTtSec;
+  var sixTtSec;
   int sixTpSec;
 
-  Ebox(
-      {this.uUID,
-        this.lAT,
-        this.lNG,
-        this.nAME,
-        this.tYPE,
-        this.pROJECT,
-        this.sUBGROUP,
-        this.iId,
-        this.fUUID,
-        this.smsphone,
-        this.subgroups,
-        this.admin,
-        this.info,
-        this.sTATE,
-        this.aV,
-        this.bV,
-        this.cV,
-        this.aC,
-        this.bC,
-        this.cC,
-        this.tsMqtt,
-        this.frequency,
-        this.totPFac,
-        this.totViewP,
-        this.totActDeg,
-        this.totReactDeg,
-        this.aActP,
-        this.bActP,
-        this.cActP,
-        this.totActP,
-        this.aReactP,
-        this.bReactP,
-        this.cReactP,
-        this.totReactP,
-        this.warningEnable,
-        this.rollParameterEnable,
-        this.version,
-        this.firDimming,
-        this.secDimming,
-        this.firIllu,
-        this.secIllu,
-        this.relState,
-        this.time,
-        this.gprsCsq,
-        this.illu,
-        this.firTtFir,
-        this.firTpFir,
-        this.secTtFir,
-        this.secTpFir,
-        this.thirTtFir,
-        this.thirTpFir,
-        this.fourTtFir,
-        this.fourTpFir,
-        this.fifTtFir,
-        this.fifTpFir,
-        this.sixTtFir,
-        this.sixTpFir,
-        this.firTtSec,
-        this.firTpSec,
-        this.secTtSec,
-        this.secTpSec,
-        this.thirTtSec,
-        this.thirTpSec,
-        this.fourTtSec,
-        this.fourTpSec,
-        this.fifTtSec,
-        this.fifTpSec,
-        this.sixTtSec,
-        this.sixTpSec});
+  Ebox({this.uUID,
+    this.lAT,
+    this.lNG,
+    this.nAME,
+    this.tYPE,
+    this.pROJECT,
+    this.sUBGROUP,
+    this.iId,
+    this.fUUID,
+    this.smsphone,
+    this.subgroups,
+    this.admin,
+    this.info,
+    this.sTATE,
+    this.aV,
+    this.bV,
+    this.cV,
+    this.aC,
+    this.bC,
+    this.cC,
+    this.tsMqtt,
+    this.frequency,
+    this.totPFac,
+    this.totViewP,
+    this.totActDeg,
+    this.totReactDeg,
+    this.aActP,
+    this.bActP,
+    this.cActP,
+    this.totActP,
+    this.aReactP,
+    this.bReactP,
+    this.cReactP,
+    this.totReactP,
+    this.warningEnable,
+    this.rollParameterEnable,
+    this.version,
+    this.firDimming,
+    this.secDimming,
+    this.firIllu,
+    this.secIllu,
+    this.relState,
+    this.time,
+    this.gprsCsq,
+    this.illu,
+    this.firTtFir,
+    this.firTpFir,
+    this.secTtFir,
+    this.secTpFir,
+    this.thirTtFir,
+    this.thirTpFir,
+    this.fourTtFir,
+    this.fourTpFir,
+    this.fifTtFir,
+    this.fifTpFir,
+    this.sixTtFir,
+    this.sixTpFir,
+    this.firTtSec,
+    this.firTpSec,
+    this.secTtSec,
+    this.secTpSec,
+    this.thirTtSec,
+    this.thirTpSec,
+    this.fourTtSec,
+    this.fourTpSec,
+    this.fifTtSec,
+    this.fifTpSec,
+    this.sixTtSec,
+    this.sixTpSec});
 
   Ebox.fromJson(Map<String, dynamic> json) {
     uUID = json['UUID'];

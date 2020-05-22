@@ -133,7 +133,6 @@ class ClusterManager {
             continue;
           }
 
-          print('lamp.firDimming = ${lamp.firDimming}');
           MarkerOption markerOption = new MarkerOption(
             latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
             title: '${lamp.nAME}',
@@ -314,10 +313,19 @@ class ClusterManager {
       token: token,
       method: DioUtils.POST,
       onSuccess: (String data) {
-        // 解析 json
-        var jsonstr = json.decode(data);
-        EboxInfo lampInfo = EboxInfo.fromJson(jsonstr);
-        eboxMap[title] = lampInfo.data.ebox;
+
+        try{
+          // 解析 json
+          var jsonstr = json.decode(data);
+          EboxInfo lampInfo = EboxInfo.fromJson(jsonstr);
+          if(!lampInfo.data.ebox?.isEmpty){
+            eboxMap[title] = lampInfo.data.ebox;
+          }
+        }catch(e){
+          print('解析出错 ${e.toString()}');
+        }
+
+
       },
       onError: (error) {
         print(' DioUtils.requestHttp error = $error');

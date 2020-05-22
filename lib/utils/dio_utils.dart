@@ -115,8 +115,8 @@ class DioUtils {
       }else{
         response = await dio.post(url);
       }
-      print('响应数据：' + response.toString());
-      var responseData = response.data;
+      print('响应数据：$response');
+   //   var responseData = response.data;
         if (onSuccess != null) {
          // onSuccess(responseData['result']);
           onSuccess(response.toString());
@@ -125,6 +125,7 @@ class DioUtils {
     } catch (e) {
       print('请求出错：' + e.toString());
       onError(e.toString());
+      throw e;
     }
   }
 
