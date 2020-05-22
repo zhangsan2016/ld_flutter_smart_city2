@@ -45,7 +45,6 @@ class ClusterManager {
         // 获取项目对应的电箱
         List<Ebox> ebox = eboxMap[await marker.title];
         // 添加覆盖物
-        print('xxxxxxxxxxxxxxxxxxxxxxxxxx eboxMap = ${eboxMap.length}');
         await addItems(lamp,eboxs:ebox);
       }
 

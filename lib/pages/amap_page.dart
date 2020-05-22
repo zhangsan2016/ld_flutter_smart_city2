@@ -9,6 +9,7 @@ import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
+import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
@@ -22,21 +23,6 @@ class AmapPage extends StatefulWidget {
 }
 
 class AmapPageState extends State<AmapPage> {
-  final List<Tab> _mTabs = <Tab>[
-    Tab(
-      text: 'Tab1',
-      icon: Icon(Icons.airline_seat_flat_angled),
-    ),
-    Tab(
-      text: 'Tab2',
-      icon: Icon(Icons.airline_seat_flat_angled),
-    ),
-    Tab(
-      text: 'Tab3',
-      icon: Icon(Icons.airline_seat_flat_angled),
-    ),
-  ];
-
   AmapController _controller;
   ClusterManager clusterManager;
 
@@ -121,7 +107,22 @@ class AmapPageState extends State<AmapPage> {
                   title: new Text('路灯'),
                   onTap: () {
                     showToast('路灯');
-                    print('ssss');
+                    //跳转
+                  /*  Navigator.pushAndRemoveUntil(
+                      context,
+                      new MaterialPageRoute(builder: (context) => new LampPage()),
+                          (route) => route == null,
+                    );*/
+
+                    Navigator.push<String>(
+                      context,
+                      new MaterialPageRoute(
+                        builder: (BuildContext context) {
+                        //  return new OtherPage(pwd: "123456");
+                          return new LampPage();
+                        },
+                      ),
+                    );
                   },
                 ),
                 ListTile(
