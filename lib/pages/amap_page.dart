@@ -59,13 +59,6 @@ class AmapPageState extends State<AmapPage> {
                     decoration: BoxDecoration(
                       color: Colors.lightBlueAccent,
                     ),
-                    //设置当前用户的头像
-                    /*          currentAccountPicture: new CircleAvatar(
-                        backgroundImage: new AssetImage('images/test_icon.jpg'),
-                      ),*/
-                    //回调事件
-                    /*   onDetailsPressed: (){
-                      },*/
                   ),
                 ),
                 ListTile(
@@ -107,13 +100,6 @@ class AmapPageState extends State<AmapPage> {
                   title: new Text('路灯'),
                   onTap: () {
                     showToast('路灯');
-                    //跳转
-                  /*  Navigator.pushAndRemoveUntil(
-                      context,
-                      new MaterialPageRoute(builder: (context) => new LampPage()),
-                          (route) => route == null,
-                    );*/
-
                     Navigator.push<String>(
                       context,
                       new MaterialPageRoute(
@@ -130,7 +116,6 @@ class AmapPageState extends State<AmapPage> {
                   title: new Text('电箱'),
                   onTap: () {
                     showToast('电箱');
-                    print('ssss');
                   },
                 ),
                 ListTile(
@@ -138,7 +123,6 @@ class AmapPageState extends State<AmapPage> {
                   title: new Text('项目'),
                   onTap: () {
                     showToast('项目');
-                    print('ssss');
                   },
                 ),
                 ListTile(
@@ -146,7 +130,6 @@ class AmapPageState extends State<AmapPage> {
                   title: new Text('报警'),
                   onTap: () {
                     showToast('报警');
-                    print('ssss');
                   },
                 ),
               ],
@@ -212,6 +195,12 @@ class AmapPageState extends State<AmapPage> {
           // 定义点聚合管理类ClusterManager
           clusterManager = new ClusterManager(context, _controller);
 
+          // 设置自定义地图
+      /*    _controller?.setCustomMapStyle(
+            styleDataPath: 'raw/style.data',
+            styleExtraPath: 'raw/style_extra.data',
+          );*/
+
           // 解析 json
           var data = json.decode(val);
           LoginInfo loginInfo = LoginInfo.fromJson(data);
@@ -222,4 +211,32 @@ class AmapPageState extends State<AmapPage> {
       },
     );
   }
+
+
+  /**
+   *  搜索
+   */
+  Widget search() {
+    new Center(
+      child: new Column(                  // 列布局
+        children: <Widget>[
+          new Row(
+              children: <Widget>[
+                new Container(
+                  color: Colors.yellow,
+                  width: 100.0,
+                  height: 100.0,
+                ),
+                new Container(
+                  color: Colors.red,
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ]
+          ),
+        ],
+      ),
+    );
+  }
+
 }
