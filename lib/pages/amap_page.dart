@@ -16,6 +16,8 @@ import 'package:oktoast/oktoast.dart';
 
 final _assetsIcon1 = Uri.parse('images/test_icon.png');
 final _assetsIcon2 = Uri.parse('images/arrow.png');
+final uuidController = TextEditingController(); // uuid输入监听
+final projectController = TextEditingController(); // project输入监听
 
 class AmapPage extends StatefulWidget {
   @override
@@ -48,7 +50,12 @@ class AmapPageState extends State<AmapPage> {
             title: new Text('洛丁智慧照明'),
             backgroundColor: Colors.cyan,
           ),
-          body: initAMap(),
+          body: Stack(
+            children: <Widget>[
+              initAMap(),
+              search(),
+            ],
+          ),
           drawer: Drawer(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -213,29 +220,65 @@ class AmapPageState extends State<AmapPage> {
   }
 
 
+
   /**
    *  搜索
    */
   Widget search() {
-    new Center(
-      child: new Column(                  // 列布局
-        children: <Widget>[
-          new Row(
-              children: <Widget>[
-                new Container(
-                  color: Colors.yellow,
-                  width: 100.0,
-                  height: 100.0,
-                ),
-                new Container(
-                  color: Colors.red,
-                  width: 100.0,
-                  height: 100.0,
-                ),
-              ]
+    return new Row(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.fromLTRB(15.0, 0, 5.0, 0),
+          width: 120,
+          //  color: Colors.blue.shade100,
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: TextField(
+              controller: uuidController,
+              decoration: InputDecoration(
+                  hintText: "UUID",
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 0, 0, 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  )),
+            ),
           ),
-        ],
-      ),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(5.0, 0, 10.0, 0),
+          width: 120,
+          //  color: Colors.blue.shade100,
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: TextField(
+              controller: projectController,
+              decoration: InputDecoration(
+                hintText: "项目名称",
+                contentPadding: EdgeInsets.fromLTRB(10.0, 0, 0, 10),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                // labelStyle: TextStyle(color: Colors.blue, fontSize: 24.0),
+              ),
+            ),
+          ),
+        ),
+        Container(
+          child: RaisedButton(
+            child: Text('搜索'),
+            color: Colors.red,
+            textColor: Colors.white,
+            onPressed: () {
+              print('提交');
+              if (uuidController.text.length > 0) {
+                print('提交${uuidController.text}');
+              } else {
+                print('提交失败');
+              }
+            },
+          ),
+        )
+      ],
     );
   }
 
