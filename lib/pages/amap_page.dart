@@ -4,6 +4,7 @@ import 'package:amap_core_fluttify/amap_core_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:ldfluttersmartcity2/clusterutil/cluster_manager.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
@@ -35,6 +36,7 @@ class AmapPageState extends State<AmapPage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     return new MaterialApp(
         title: '洛丁智慧照明',
         home: new Scaffold(
@@ -229,7 +231,8 @@ class AmapPageState extends State<AmapPage> {
       children: <Widget>[
         Container(
           margin: EdgeInsets.fromLTRB(15.0, 0, 5.0, 0),
-          width: 120,
+          height: ScreenUtil().setHeight(90),
+          width: ScreenUtil().setWidth(200),
           //  color: Colors.blue.shade100,
           child: Padding(
             padding: const EdgeInsets.all(2.0),
@@ -240,13 +243,19 @@ class AmapPageState extends State<AmapPage> {
                   contentPadding: EdgeInsets.fromLTRB(10.0, 0, 0, 10),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
-                  )),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.orangeAccent, //边框颜色为绿色
+                        width: 1, //宽度为5
+                      ))),
             ),
           ),
         ),
         Container(
           margin: EdgeInsets.fromLTRB(5.0, 0, 10.0, 0),
-          width: 120,
+          height: ScreenUtil().setHeight(90),
+          width: ScreenUtil().setWidth(200),
           //  color: Colors.blue.shade100,
           child: Padding(
             padding: const EdgeInsets.all(2.0),
@@ -258,12 +267,21 @@ class AmapPageState extends State<AmapPage> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.orangeAccent, //边框颜色为绿色
+                      width: 1, //宽度为5
+                    )),
+
                 // labelStyle: TextStyle(color: Colors.blue, fontSize: 24.0),
               ),
             ),
           ),
         ),
         Container(
+          margin: EdgeInsets.all(5.0),
+          height: ScreenUtil().setHeight(80),
+          width: ScreenUtil().setWidth(200),
           child: RaisedButton(
             child: Text('搜索'),
             color: Colors.red,
