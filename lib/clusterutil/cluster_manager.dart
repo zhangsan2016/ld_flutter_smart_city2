@@ -5,11 +5,13 @@ import 'package:amap_core_fluttify/amap_core_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
+import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
@@ -36,6 +38,7 @@ class ClusterManager {
   Future init() async {
     // marker 点击事件
     _controller?.setMarkerClickedListener((marker) async {
+      print('isUnfold = $isUnfold');
       print(
           '${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');
 
@@ -46,6 +49,18 @@ class ClusterManager {
         List<Ebox> ebox = eboxMap[await marker.title];
         // 添加覆盖物
         await addItems(lamp,eboxs:ebox);
+      }else{
+        // 展开状态
+        // 跳转到路灯控制界面
+        Navigator.push<String>(
+          _context,
+          new MaterialPageRoute(
+            builder: (BuildContext context) {
+              //  return new OtherPage(pwd: "123456");
+              return new LampPage();
+            },
+          ),
+        );
       }
 
       return true;

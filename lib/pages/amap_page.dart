@@ -203,7 +203,7 @@ class AmapPageState extends State<AmapPage> {
           clusterManager = new ClusterManager(context, _controller);
 
           // 设置自定义地图
-      /*    _controller?.setCustomMapStyle(
+          /* _controller?.setCustomMapStyle(
             styleDataPath: 'raw/style.data',
             styleExtraPath: 'raw/style_extra.data',
           );*/
