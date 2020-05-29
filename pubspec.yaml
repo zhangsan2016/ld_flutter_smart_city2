@@ -42,7 +42,9 @@ dependencies:
   amap_map_fluttify: ^0.22.0
   # sp键值存储
   shared_preferences: ^0.5.7+1
-
+  # 可拖动进度条
+  flutter_seekbar:
+    git: https://github.com/LiuC520/flutter_seekbar.git
 
 
 
