@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
@@ -17,11 +15,9 @@ class _LampControlPageState extends State<LampControlPage> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: _controlView(),
-    );;
+    );
+    ;
   }
-
-
-
 
   final uuidController = TextEditingController(); //输入监听
   final projectController = TextEditingController(); //输入监听
@@ -302,6 +298,8 @@ class _LampControlPageState extends State<LampControlPage> {
                     cursorColor: Colors.purple,
                     cursorWidth: 6,
                     cursorRadius: Radius.elliptical(2, 8),
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(26), color: Colors.white),
                   ),
                 ),
                 new Container(
@@ -341,6 +339,8 @@ class _LampControlPageState extends State<LampControlPage> {
                     cursorColor: Colors.purple,
                     cursorWidth: 6,
                     cursorRadius: Radius.elliptical(2, 8),
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(26), color: Colors.white),
                   ),
                 ),
               ],
@@ -357,30 +357,36 @@ class _LampControlPageState extends State<LampControlPage> {
                 ),
                 Container(
                   width: 200,
-                  child: new TextField(
-                    maxLines: 5, //最大行数
+                  child: TextField(
+                    maxLines: 8,
                     decoration: InputDecoration(
-                      hintText: '',
-                      hintStyle: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
+                        contentPadding: EdgeInsets.all(5.0),
+                        enabledBorder: OutlineInputBorder(
+                          /*边角*/
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5), //边角为5
+                          ),
+                          borderSide: BorderSide(
+                            color: Colors.white, //边线颜色为白色
+                            width: 1, //边线宽度为2
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        )),
                     style: TextStyle(
-                        fontSize: ScreenUtil().setSp(26), color: Colors.white),
-                    //输入文本的样式
-                    cursorColor: Colors.purple,
+                        fontSize: ScreenUtil().setSp(25), color: Colors.white),
+                    cursorColor: Colors.blue,
                   ),
                 ),
               ],
             ),
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               new Container(
-                margin:  EdgeInsets.fromLTRB(0.0, 10, 50.0, 0),
+                margin: EdgeInsets.fromLTRB(0.0, 10, 50.0, 0),
                 alignment: Alignment.centerRight,
                 height: ScreenUtil().setHeight(50),
                 width: ScreenUtil().setWidth(180),
@@ -399,9 +405,6 @@ class _LampControlPageState extends State<LampControlPage> {
               ),
             ],
           ),
-
-
-
         ],
       ),
     );
@@ -415,7 +418,3 @@ class _LampControlPageState extends State<LampControlPage> {
             color: Colors.white));
   }
 }
-
-
-
-

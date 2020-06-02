@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/material.dart';
-import 'package:ldfluttersmartcity2/pages/amap_page.dart';
 import 'package:ldfluttersmartcity2/pages/login_page.dart';
-import 'package:ldfluttersmartcity2/utils/http_util.dart';
 import 'package:oktoast/oktoast.dart';
 
 void main() async {
