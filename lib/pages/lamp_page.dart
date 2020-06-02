@@ -1,13 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 
+import 'lamppags/check_lamp_page.dart';
 import 'lamppags/lamp_control_page.dart';
 
 class LampPage extends StatelessWidget {
-  const LampPage({Key key}) : super(key: key);
+  final String lampInfo;
+
+  const LampPage(this.lampInfo, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+
     return MaterialApp(
         home: DefaultTabController(
       length: 4, // tab个数
@@ -31,17 +39,13 @@ class LampPage extends StatelessWidget {
           ],
         )),
         body: TabBarView(
+          physics: new NeverScrollableScrollPhysics(),
           // 类似ViewPage
           children: <Widget>[
-            ListView(
-              children: <Widget>[
-                ListTile(title: Text("查看 tab")),
-                ListTile(title: Text("查看 tab")),
-                ListTile(title: Text("查看 tab"))
-              ],
-            ),
 
-            LampControlPage(),
+            CheckLampPage(lampInfo),  // 查看路灯信息界面
+
+            LampControlPage(),  // 路灯控制界面
 
             ListView(
               children: <Widget>[

@@ -5,19 +5,22 @@ import 'package:flutter_seekbar/seekbar/seekbar.dart';
 
 import 'area_type_view.dart';
 
-class LampControlPage extends StatefulWidget {
+class LampControlPage extends StatefulWidget  {
   @override
   _LampControlPageState createState() => _LampControlPageState();
 }
 
-class _LampControlPageState extends State<LampControlPage> {
+class _LampControlPageState extends State<LampControlPage>  with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: _controlView(),
     );
-    ;
   }
+
+  // 让新界面重新点击不刷新
+  @override
+  bool get wantKeepAlive => true;
 
   final uuidController = TextEditingController(); //输入监听
   final projectController = TextEditingController(); //输入监听
@@ -30,15 +33,16 @@ class _LampControlPageState extends State<LampControlPage> {
     String radioalue = '普通';
     return new Container(
       width: ScreenUtil().setWidth(double.infinity),
-      height: ScreenUtil().setHeight(2000),
-      padding: EdgeInsets.all(20),
+     // height: ScreenUtil().setHeight(2000),
+      padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 50.0),
       decoration: new BoxDecoration(
         color: Color.fromARGB(240, 11, 29, 77),
       ),
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.fromLTRB(0, childTopSpace, 0, 0),
+            margin: EdgeInsets.fromLTRB(0, childTopSpace, 0, ScreenUtil().setHeight(20)),
+          //  margin: EdgeInsets.fromLTRB(0, childTopSpace, 0, 0),
             child: Row(
               children: <Widget>[
                 _getText('预警状态     ', textSzie),

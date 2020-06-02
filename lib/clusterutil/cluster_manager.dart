@@ -36,6 +36,7 @@ class ClusterManager {
   }
 
   Future init() async {
+
     // marker 点击事件
     _controller?.setMarkerClickedListener((marker) async {
       print('isUnfold = $isUnfold');
@@ -52,12 +53,13 @@ class ClusterManager {
       }else{
         // 展开状态
         // 跳转到路灯控制界面
+        String lampInfo = await marker.object;
         Navigator.push<String>(
           _context,
           new MaterialPageRoute(
             builder: (BuildContext context) {
               //  return new OtherPage(pwd: "123456");
-              return new LampPage();
+              return new LampPage(lampInfo);
             },
           ),
         );

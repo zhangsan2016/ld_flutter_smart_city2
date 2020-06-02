@@ -114,7 +114,7 @@ class AmapPageState extends State<AmapPage> {
                       new MaterialPageRoute(
                         builder: (BuildContext context) {
                         //  return new OtherPage(pwd: "123456");
-                          return new LampPage();
+                          return new LampPage("");
                         },
                       ),
                     );
