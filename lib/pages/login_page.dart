@@ -302,7 +302,7 @@ class _LoginPageState extends State<LoginPage> {
                 image: AssetImage("images/catalog_lighting_bg.png"),
                 fit: BoxFit.cover,
               ),
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(0.0),
             ),
             position: DecorationPosition.background,
 //            position: DecorationPosition.background,

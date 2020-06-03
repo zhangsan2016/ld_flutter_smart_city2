@@ -53,7 +53,7 @@ class ClusterManager {
       }else{
         // 展开状态
         // 跳转到路灯控制界面
-        String lampInfo = await marker.object;
+      /*  String lampInfo = await marker.object;
         Navigator.push<String>(
           _context,
           new MaterialPageRoute(
@@ -62,7 +62,26 @@ class ClusterManager {
               return new LampPage(lampInfo);
             },
           ),
+        );*/
+
+       String lampInfo = await marker.object;
+           Navigator.push<String>(
+          _context,
+          new CupertinoPageRoute(
+            builder: (BuildContext context) {
+              return new LampPage(lampInfo);
+            },
+          ),
         );
+
+         /* Navigator.of(_context).push(
+              CupertinoPageRoute(builder: (BuildContext context){
+                return new LampPage(lampInfo);
+              })
+          );*/
+
+
+
       }
 
       return true;
