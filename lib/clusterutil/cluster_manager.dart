@@ -225,6 +225,7 @@ class ClusterManager {
     }
   }
 
+
   void relocation() async {
     Stream.fromIterable(_markers)
         .asyncMap((marker) => marker.location)

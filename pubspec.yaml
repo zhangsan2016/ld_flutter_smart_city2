@@ -66,6 +66,7 @@ flutter:
 
   assets:
     - raw/
+    - images/
     - images/catalog_lighting_bg.png
     - images/login_logo.png
     - images/bian.png
@@ -81,6 +82,7 @@ flutter:
     - images/light_warning.png
     - images/v-logo.png
     - images/test_icon.png
+    - images/restoration.png
 
 
 

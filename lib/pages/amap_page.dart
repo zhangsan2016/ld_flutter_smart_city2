@@ -38,7 +38,7 @@ class AmapPageState extends State<AmapPage> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     return new MaterialApp(
-      // 去掉运行时 debug 的提示
+        // 去掉运行时 debug 的提示
         debugShowCheckedModeBanner: false,
         title: '洛丁智慧照明',
         home: new Scaffold(
@@ -58,6 +58,7 @@ class AmapPageState extends State<AmapPage> {
             children: <Widget>[
               initAMap(),
               search(),
+              mapBar(),
             ],
           ),
           drawer: Drawer(
@@ -84,7 +85,9 @@ class AmapPageState extends State<AmapPage> {
                       var data = json.decode(val);
                       LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-                      var param = "{\"where\":{\"PROJECT\":\"" + "中科洛丁展示项目/深圳展厅" + "\"},\"size\":1000}";
+                      var param = "{\"where\":{\"PROJECT\":\"" +
+                          "中科洛丁展示项目/深圳展厅" +
+                          "\"},\"size\":1000}";
 
                       DioUtils.requestHttp(
                         servicePath['DEVICE_EBOX_URL'],
@@ -96,13 +99,11 @@ class AmapPageState extends State<AmapPage> {
                           var jsonstr = json.decode(data);
                           // print('getDeviceLampList title $title = $data');
                           print('get jsonstr = $jsonstr ');
-
                         },
                         onError: (error) {
                           print(' DioUtils.requestHttp error = $error');
                         },
                       );
-
                     });
                   },
                 ),
@@ -115,7 +116,7 @@ class AmapPageState extends State<AmapPage> {
                       context,
                       new MaterialPageRoute(
                         builder: (BuildContext context) {
-                        //  return new OtherPage(pwd: "123456");
+                          //  return new OtherPage(pwd: "123456");
                           return new LampPage("");
                         },
                       ),
@@ -223,8 +224,6 @@ class AmapPageState extends State<AmapPage> {
     );
   }
 
-
-
   /**
    *  搜索
    */
@@ -248,9 +247,9 @@ class AmapPageState extends State<AmapPage> {
                   ),
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color.fromARGB(255, 1, 188, 213), //边框颜色为绿色
-                        width: 1, //宽度为5
-                      ))),
+                    color: Color.fromARGB(255, 1, 188, 213), //边框颜色为绿色
+                    width: 1, //宽度为5
+                  ))),
             ),
           ),
         ),
@@ -271,9 +270,9 @@ class AmapPageState extends State<AmapPage> {
                 ),
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color.fromARGB(255, 1, 188, 213), //边框颜色为绿色
-                      width: 1, //宽度为5
-                    )),
+                  color: Color.fromARGB(255, 1, 188, 213), //边框颜色为绿色
+                  width: 1, //宽度为5
+                )),
 
                 // labelStyle: TextStyle(color: Colors.blue, fontSize: 24.0),
               ),
@@ -302,4 +301,30 @@ class AmapPageState extends State<AmapPage> {
     );
   }
 
+  /**
+   * 地图功能栏
+   */
+  Widget mapBar() {
+    return Positioned(
+      bottom: 15,
+      left: 50,
+      right: 15,
+      child: Row(
+        children: <Widget>[
+          Spacer(),
+          //Expanded(child: SizedBox()),//自动扩展挤压
+          Container(
+            child: IconButton(
+              icon: Image.asset('images/restoration.png'),
+              onPressed: () {
+                print('IconButton onclick');
+                clusterManager.relocation();
+              },
+            ),
+            // Image.asset('images/restoration.png', fit: BoxFit.fill),
+          ),
+        ],
+      ),
+    );
+  }
 }
