@@ -40,10 +40,32 @@ print('${  testList3.length}');
   print('testList3 $testList3');*/
 
 
-var a =23.558920237814238;
-String cc ='${a??0}'.toString();
-print('cc = $cc');
-print(int.parse(cc));
 
+
+
+  print('(aa?.isEmpty?aa:'' )');
+String aa = null;
+
+print((aa?.substring(1)));
+
+
+
+
+
+
+
+
+  /// 检查对象或 List 或 Map 是否为空
+  bool isEmpty(Object object) {
+    if (object == null) return true;
+    if (object is String && object.isEmpty) {
+      return true;
+    } else if (object is List && object.isEmpty) {
+      return true;
+    } else if (object is Map && object.isEmpty) {
+      return true;
+    }
+    return false;
+  }
 
 }
