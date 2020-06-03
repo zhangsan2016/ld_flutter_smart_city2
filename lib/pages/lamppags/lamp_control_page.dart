@@ -360,7 +360,7 @@ class _LampControlPageState extends State<LampControlPage>  with AutomaticKeepAl
                   child: _getText('      指令        ', textSzie),
                 ),
                 Container(
-                  width: 200,
+                  width: ScreenUtil().setWidth(460),
                   child: TextField(
                     maxLines: 8,
                     decoration: InputDecoration(
@@ -390,7 +390,7 @@ class _LampControlPageState extends State<LampControlPage>  with AutomaticKeepAl
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               new Container(
-                margin: EdgeInsets.fromLTRB(0.0, 10, 50.0, 0),
+                margin: EdgeInsets.fromLTRB(0.0, 10, ScreenUtil().setWidth(70), 0),
                 alignment: Alignment.centerRight,
                 height: ScreenUtil().setHeight(50),
                 width: ScreenUtil().setWidth(180),
