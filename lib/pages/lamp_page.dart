@@ -16,6 +16,8 @@ class LampPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // 去掉运行时 debug 的提示
+        debugShowCheckedModeBanner: false,
       /*  theme: ThemeData(
             platform: TargetPlatform.iOS,
             primaryColor: Colors.blue

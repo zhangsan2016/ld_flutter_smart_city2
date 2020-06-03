@@ -53,8 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),*/
 
-        body:
-            LoginPage() // This trailing comma makes auto-formatting nicer for build methods.
+        body: LoginPage() // This trailing comma makes auto-formatting nicer for build methods.
         );
   }
 }

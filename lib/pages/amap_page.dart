@@ -38,6 +38,8 @@ class AmapPageState extends State<AmapPage> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     return new MaterialApp(
+      // 去掉运行时 debug 的提示
+        debugShowCheckedModeBanner: false,
         title: '洛丁智慧照明',
         home: new Scaffold(
           appBar: new AppBar(
@@ -246,7 +248,7 @@ class AmapPageState extends State<AmapPage> {
                   ),
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.orangeAccent, //边框颜色为绿色
+                        color: Color.fromARGB(255, 1, 188, 213), //边框颜色为绿色
                         width: 1, //宽度为5
                       ))),
             ),
@@ -269,7 +271,7 @@ class AmapPageState extends State<AmapPage> {
                 ),
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.orangeAccent, //边框颜色为绿色
+                      color: Color.fromARGB(255, 1, 188, 213), //边框颜色为绿色
                       width: 1, //宽度为5
                     )),
 
@@ -284,7 +286,7 @@ class AmapPageState extends State<AmapPage> {
           width: ScreenUtil().setWidth(200),
           child: RaisedButton(
             child: Text('搜索'),
-            color: Colors.red,
+            color: Color.fromARGB(255, 1, 188, 213),
             textColor: Colors.white,
             onPressed: () {
               print('提交');
