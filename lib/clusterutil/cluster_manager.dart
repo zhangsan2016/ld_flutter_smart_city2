@@ -242,7 +242,6 @@ class ClusterManager {
         ),
       );
     });*/
-
     if (projects != null) {
       List<LatLng> bounds = new List();
       for (int i = 0; i < projects.length; ++i) {
@@ -254,7 +253,7 @@ class ClusterManager {
         padding: EdgeInsets.all(100),
       );
     }else{
-      showToast('当前没有项目列表,请检查网络！');
+      showToast('当前没有项目列表,请检查网络！',position: ToastPosition.bottom);
     }
 
   }
