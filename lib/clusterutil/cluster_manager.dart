@@ -14,6 +14,7 @@ import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
 import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
+import 'package:oktoast/oktoast.dart';
 
 import 'overlay_item.dart';
 
@@ -23,8 +24,10 @@ class ClusterManager {
 
   // 是否展开
   bool isUnfold = false;
+
   // 项目路灯集合
   var lampMap = <String, List<Lamp>>{};
+
   // 项目电箱集合
   var eboxMap = <String, List<Ebox>>{};
 
@@ -36,7 +39,6 @@ class ClusterManager {
   }
 
   Future init() async {
-
     // marker 点击事件
     _controller?.setMarkerClickedListener((marker) async {
       print('isUnfold = $isUnfold');
@@ -49,11 +51,11 @@ class ClusterManager {
         // 获取项目对应的电箱
         List<Ebox> ebox = eboxMap[await marker.title];
         // 添加覆盖物
-        await addItems(lamp,eboxs:ebox);
-      }else{
+        await addItems(lamp, eboxs: ebox);
+      } else {
         // 展开状态
         // 跳转到路灯控制界面
-      /*  String lampInfo = await marker.object;
+        /*  String lampInfo = await marker.object;
         Navigator.push<String>(
           _context,
           new MaterialPageRoute(
@@ -64,8 +66,8 @@ class ClusterManager {
           ),
         );*/
 
-       String lampInfo = await marker.object;
-           Navigator.push<String>(
+        String lampInfo = await marker.object;
+        Navigator.push<String>(
           _context,
           new CupertinoPageRoute(
             builder: (BuildContext context) {
@@ -74,13 +76,11 @@ class ClusterManager {
           ),
         );
 
-         /* Navigator.of(_context).push(
+        /* Navigator.of(_context).push(
               CupertinoPageRoute(builder: (BuildContext context){
                 return new LampPage(lampInfo);
               })
           );*/
-
-
 
       }
 
@@ -109,17 +109,22 @@ class ClusterManager {
   List<Marker> _markers = new List();
   // 项目列表
   List<Project> projects;
-  void addItems(List items,{eboxs}) async {
+
+  void addItems(List items, {eboxs}) async {
     List temporary;
     if (items != null && items.length > 0) {
       if (items[0] is Project) {
         // 克隆一份列表
         temporary = new List<Project>.from(items);
         _controller.clearMarkers(_markers);
-      //  await _controller.clear();
+        _markers.clear();
+        //  await _controller.clear();
         projects = items;
         for (int i = 0; i < items.length; ++i) {
           Project project = items[i];
+
+          print('loginInfo = ${project.title}  ${project.lng}  ${project.lat}');
+
           final marker = await _controller?.addMarker(
             MarkerOption(
               latLng:
@@ -149,13 +154,13 @@ class ClusterManager {
             for (var i = 0; i < temporary.length; ++i) {
               Project project = temporary[i];
               // 获取项目下的路灯
-              await getDeviceLampList(project.title, loginInfo.data.token.token);
+              await getDeviceLampList(
+                  project.title, loginInfo.data.token.token);
               // 获取项目下的电箱
-              await  getDeviceEbox(project.title, loginInfo.data.token.token);
+              await getDeviceEbox(project.title, loginInfo.data.token.token);
             }
           }
         });
-
       } else if (items[0] is Lamp) {
         _controller.clearMarkers(_markers);
 
@@ -172,9 +177,10 @@ class ClusterManager {
             latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
             title: '${lamp.nAME}',
             snippet: '${lamp.pROJECT}',
-            iconUri: selectImagesByType(int.parse('${lamp.tYPE}'),double.parse('${lamp.firDimming??0}')),
+            iconUri: selectImagesByType(int.parse('${lamp.tYPE}'),
+                double.parse('${lamp.firDimming ?? 0}')),
             imageConfig: createLocalImageConfiguration(_context),
-            object:  json.encode(lamp),
+            object: json.encode(lamp),
           );
 
           markerOptions.add(markerOption);
@@ -182,7 +188,6 @@ class ClusterManager {
 
         // 批量添加电箱覆盖物
         if (eboxs != null && eboxs.length > 0) {
-
           for (var i = 0; i < eboxs.length; ++i) {
             Ebox ebox = eboxs[i];
             if (ebox.lAT == "" || ebox.lNG == "") {
@@ -191,21 +196,20 @@ class ClusterManager {
             }
 
             MarkerOption markerOption = new MarkerOption(
-              latLng: new LatLng(double.parse(ebox.lAT), double.parse(ebox.lNG)),
+              latLng:
+                  new LatLng(double.parse(ebox.lAT), double.parse(ebox.lNG)),
               title: '${ebox.nAME}',
               snippet: '${ebox.pROJECT}',
-              iconUri: selectImagesByType(int.parse('${ebox.tYPE}'),double.parse('${ebox.firDimming??0}')),
+              iconUri: selectImagesByType(int.parse('${ebox.tYPE}'),
+                  double.parse('${ebox.firDimming ?? 0}')),
               imageConfig: createLocalImageConfiguration(_context),
-              object:  json.encode(ebox),
+              object: json.encode(ebox),
             );
             markerOptions.add(markerOption);
           }
-        }else{
-          print('xxxxxxxxxxxxxxxxxxxxx  eboxs = null');
-        }
+        } else {}
 
-       await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
-
+        await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
 
         // 修改展开状态
         isUnfold = true;
@@ -225,9 +229,8 @@ class ClusterManager {
     }
   }
 
-
   void relocation() async {
-    Stream.fromIterable(_markers)
+    /* Stream.fromIterable(_markers)
         .asyncMap((marker) => marker.location)
         .toList()
         .then((boundary) {
@@ -238,7 +241,22 @@ class ClusterManager {
           top: 10,
         ),
       );
-    });
+    });*/
+
+    if (projects != null) {
+      List<LatLng> bounds = new List();
+      for (int i = 0; i < projects.length; ++i) {
+        Project project = projects[i];
+        bounds.add(new LatLng(double.parse(project.lat), double.parse(project.lng)));
+      }
+      return _controller?.zoomToSpan(
+        bounds,
+        padding: EdgeInsets.all(100),
+      );
+    }else{
+      showToast('当前没有项目列表,请检查网络！');
+    }
+
   }
 
   addItem(var item) async {
@@ -296,9 +314,9 @@ class ClusterManager {
       return Uri.parse('images/ebox.png');
     } else if (tYPE == 2) {
       // 路灯
-      if(brightness != 0){
+      if (brightness != 0) {
         return Uri.parse('images/light_on.png');
-      }else{
+      } else {
         return Uri.parse('images/light_off.png');
       }
     } else if (tYPE == 3) {
@@ -336,39 +354,32 @@ class ClusterManager {
     );
   }
 
-
   /**
    *  获取项目下的电箱
    */
-  getDeviceEbox(String title, token)  {
+  getDeviceEbox(String title, token) {
     var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
 
-      DioUtils.requestHttp(
+    DioUtils.requestHttp(
       servicePath['DEVICE_EBOX_URL'],
       parameters: param,
       token: token,
       method: DioUtils.POST,
       onSuccess: (String data) {
-
-        try{
+        try {
           // 解析 json
           var jsonstr = json.decode(data);
           EboxInfo lampInfo = EboxInfo.fromJson(jsonstr);
-          if(!lampInfo.data.ebox?.isEmpty){
+          if (!lampInfo.data.ebox?.isEmpty) {
             eboxMap[title] = lampInfo.data.ebox;
           }
-        }catch(e){
+        } catch (e) {
           print('解析出错 ${e.toString()}');
         }
-
-
       },
       onError: (error) {
         print(' DioUtils.requestHttp error = $error');
       },
     );
   }
-
 }
-
-

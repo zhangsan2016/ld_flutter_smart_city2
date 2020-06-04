@@ -160,7 +160,6 @@ class AmapPageState extends State<AmapPage> {
       token: token,
       method: DioUtils.POST,
       onSuccess: (String data) async {
-        print(' DioUtils.requestHttp onSuccess = ${data.toString()}');
 
         // 解析 json
         var jsonstr = json.decode(data);
