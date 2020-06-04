@@ -7,6 +7,7 @@ import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
+import 'package:ldfluttersmartcity2/entity/json/alarm_apparatus_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
@@ -31,6 +32,9 @@ class ClusterManager {
   // 项目电箱集合
   var eboxMap = <String, List<Ebox>>{};
 
+  // 报警器集合
+  var alarmApparatusMap = <String, List<AlarmApparatus>>{};
+
   ClusterManager(BuildContext context, AmapController controller) {
     this._context = context;
     this._controller = controller;
@@ -50,8 +54,10 @@ class ClusterManager {
         List<Lamp> lamp = lampMap[await marker.title];
         // 获取项目对应的电箱
         List<Ebox> ebox = eboxMap[await marker.title];
+        // 获取项目对应的报警器
+        List<AlarmApparatus> alarmApparatus = alarmApparatusMap[await marker.title];
         // 添加覆盖物
-        await addItems(lamp, eboxs: ebox);
+        await addItems(lamp, eboxs: ebox, alarmApparatus: alarmApparatus);
       } else {
         // 展开状态
         // 跳转到路灯控制界面
@@ -110,7 +116,13 @@ class ClusterManager {
   // 项目列表
   List<Project> projects;
 
-  void addItems(List items, {eboxs}) async {
+  /**
+   * 添加覆盖物
+   * items : 覆盖物列表
+   * eboxs ： 当前项目的电箱列表
+   * alarmApparatus ：当前项目的报警器列表
+   */
+  void addItems(List items, {eboxs,alarmApparatus}) async {
     List temporary;
     if (items != null && items.length > 0) {
       if (items[0] is Project) {
@@ -158,6 +170,8 @@ class ClusterManager {
                   project.title, loginInfo.data.token.token);
               // 获取项目下的电箱
               await getDeviceEbox(project.title, loginInfo.data.token.token);
+              // 获取项目下的报警器
+              await getAlarmApparatus(project.title, loginInfo.data.token.token);
             }
           }
         });
@@ -204,6 +218,28 @@ class ClusterManager {
                   double.parse('${ebox.firDimming ?? 0}')),
               imageConfig: createLocalImageConfiguration(_context),
               object: json.encode(ebox),
+            );
+            markerOptions.add(markerOption);
+          }
+          } else {}
+
+        // 批量添加报警器覆盖物
+        if (alarmApparatus != null && alarmApparatus.length > 0) {
+          for (var i = 0; i < alarmApparatus.length; ++i) {
+            AlarmApparatus alarm = alarmApparatus[i];
+            if (alarm.lAT == "" || alarm.lNG == "") {
+              print('   ${alarm.nAME} 坐标为空');
+              continue;
+            }
+
+            MarkerOption markerOption = new MarkerOption(
+              latLng:
+              new LatLng(double.parse(alarm.lAT), double.parse(alarm.lNG)),
+              title: '${alarm.nAME}',
+              snippet: '${alarm.pROJECT}',
+              iconUri: Uri.parse('images/test_icon.png'),
+              imageConfig: createLocalImageConfiguration(_context),
+              object: json.encode(alarm),
             );
             markerOptions.add(markerOption);
           }
@@ -371,6 +407,37 @@ class ClusterManager {
           EboxInfo lampInfo = EboxInfo.fromJson(jsonstr);
           if (!lampInfo.data.ebox?.isEmpty) {
             eboxMap[title] = lampInfo.data.ebox;
+          }
+        } catch (e) {
+          print('解析出错 ${e.toString()}');
+        }
+      },
+      onError: (error) {
+        print(' DioUtils.requestHttp error = $error');
+      },
+    );
+  }
+
+
+  /**
+   *  获取项目下的报警器
+   */
+  getAlarmApparatus(String title, token) {
+    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
+
+    DioUtils.requestHttp(
+      servicePath['DEVICE_WIRESAFE_LIST_URL'],
+      parameters: param,
+      token: token,
+      method: DioUtils.POST,
+      onSuccess: (String data) {
+        try {
+          // 解析 json
+          print('getAlarmApparatus = ${data.toString()}');
+          var jsonstr = json.decode(data);
+          AlarmApparatusInfo alarmApparatusInfo = AlarmApparatusInfo.fromJson(jsonstr);
+          if (!alarmApparatusInfo.data.alarmApparatus?.isEmpty) {
+            alarmApparatusMap[title] = alarmApparatusInfo.data.alarmApparatus;
           }
         } catch (e) {
           print('解析出错 ${e.toString()}');
