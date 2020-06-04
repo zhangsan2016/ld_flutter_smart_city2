@@ -47,6 +47,7 @@ class _CheckLampPageState extends State<CheckLampPage> {
           Row(
             children: <Widget>[
               Container(
+                margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                 alignment: Alignment.centerRight,
                 width: ScreenUtil().setWidth(150),
                 child: _getText('UUID', textSzie),
