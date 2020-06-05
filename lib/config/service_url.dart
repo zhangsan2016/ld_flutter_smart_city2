@@ -16,6 +16,8 @@ const String REPORT_CONFIG = "device/reportConfig";
 const String VIEW_BY_UUID = "device/viewByUUID";
 // content-type 获取断缆报警器列表
 const String DEVICE_WIRESAFE_LIST ="v_device_wiresafe/list";
+// content-type 设备控制
+const String DEVICE_CONTROL ="device/control";
 
 
 const ServiceUrl = 'http://test.baixingliangfan.cn/baixing/';
@@ -27,6 +29,7 @@ const servicePath = {
   'REPORT_CONFIG_URL': URL_BASE + REPORT_CONFIG, // 获取汇报设备配置地址
   'VIEW_BY_UUID_URL': URL_BASE + VIEW_BY_UUID, // 获取获取单个设备信息
   'DEVICE_WIRESAFE_LIST_URL': URL_BASE + DEVICE_WIRESAFE_LIST, // 获取断缆报警器列表
+  'DEVICE_CONTROL_URL': URL_BASE + DEVICE_CONTROL, // 设备控制
 };
 
 

@@ -344,21 +344,19 @@ class ClusterManager {
   }
 
   Uri selectImagesByType(int tYPE, double brightness) {
-    if (tYPE == 1) {
-      // 电箱
+    if (tYPE == 1) { // 电箱
       return Uri.parse('images/ebox.png');
-    } else if (tYPE == 2) {
-      // 路灯
+    } else if (tYPE == 2) { // 路灯
+      // 检查报警
+      // 检查亮灯
       if (brightness != 0) {
         return Uri.parse('images/light_on.png');
       } else {
         return Uri.parse('images/light_off.png');
       }
-    } else if (tYPE == 3) {
-      // 未知
+    } else if (tYPE == 3) {   // 未知
       return Uri.parse('images/ebox.png');
-    } else {
-      // 报警器
+    } else {  // 报警器
       return Uri.parse('images/test_icon.png');
     }
   }

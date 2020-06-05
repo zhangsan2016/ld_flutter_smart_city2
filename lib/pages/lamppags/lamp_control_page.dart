@@ -1,18 +1,39 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:flutter_seekbar/seekbar/seekbar.dart';
+import 'package:ldfluttersmartcity2/config/service_url.dart';
+import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
+import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
+import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
+import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
 import 'area_type_view.dart';
 
-class LampControlPage extends StatefulWidget  {
+class LampControlPage extends StatefulWidget {
+  final String lampInfo;
+
+  LampControlPage(this.lampInfo);
+
   @override
-  _LampControlPageState createState() => _LampControlPageState();
+  _LampControlPageState createState() => _LampControlPageState(lampInfo);
 }
 
-class _LampControlPageState extends State<LampControlPage>  with AutomaticKeepAliveClientMixin{
+class _LampControlPageState extends State<LampControlPage>
+    with AutomaticKeepAliveClientMixin {
+  String lampInfo;
+  Lamp _lamp;
+
+  _LampControlPageState(this.lampInfo);
+
   @override
   Widget build(BuildContext context) {
+    if (lampInfo != null) {
+      _lamp = Lamp.fromJson(json.decode(lampInfo));
+      print('EditLampPage _lamp= ${_lamp.toString()}');
+    }
     return SingleChildScrollView(
       child: _controlView(),
     );
@@ -33,7 +54,7 @@ class _LampControlPageState extends State<LampControlPage>  with AutomaticKeepAl
     String radioalue = '普通';
     return new Container(
       width: ScreenUtil().setWidth(double.infinity),
-     // height: ScreenUtil().setHeight(2000),
+      // height: ScreenUtil().setHeight(2000),
       padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 50.0),
       decoration: new BoxDecoration(
         color: Color.fromARGB(240, 11, 29, 77),
@@ -41,8 +62,9 @@ class _LampControlPageState extends State<LampControlPage>  with AutomaticKeepAl
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.fromLTRB(0, childTopSpace, 0, ScreenUtil().setHeight(20)),
-          //  margin: EdgeInsets.fromLTRB(0, childTopSpace, 0, 0),
+            margin: EdgeInsets.fromLTRB(
+                0, childTopSpace, 0, ScreenUtil().setHeight(20)),
+            //  margin: EdgeInsets.fromLTRB(0, childTopSpace, 0, 0),
             child: Row(
               children: <Widget>[
                 _getText('预警状态     ', textSzie),
@@ -126,7 +148,39 @@ class _LampControlPageState extends State<LampControlPage>  with AutomaticKeepAl
                         max: 100,
                         hideBubble: false,
                         onValueChanged: (v) {
-                          print('当前进度：${v.progress} ，当前的取值：${v.value.ceil()}');
+
+
+                          // 获取项目中的路灯
+                          SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+
+                            // 解析 json
+                            var data = json.decode(val);
+                            LoginInfo loginInfo = LoginInfo.fromJson(data);
+
+                            var param = "{\"UUID\": \"" + _lamp?.uUID + "\", \"Confirm\": 11, \"options\": {\"FirDimming\", 100} }";
+
+                              print('param = ${param.toString()}');
+
+                            DioUtils.requestHttp(
+                              servicePath['DEVICE_CONTROL_URL'],
+                              parameters: param,
+                              token: loginInfo.data.token.token,
+                              method: DioUtils.POST,
+                              onSuccess: (String data) {
+                                // 解析 json
+                                var jsonstr = json.decode(data);
+                                // print('getDeviceLampList title $title = $data');
+                                print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx DEVICE_CONTROL_URL $data ');
+
+                              },
+                              onError: (error) {
+                                print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                              },
+                            );
+
+                              });
+
+
                         })),
               ],
             ),
@@ -390,7 +444,8 @@ class _LampControlPageState extends State<LampControlPage>  with AutomaticKeepAl
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               new Container(
-                margin: EdgeInsets.fromLTRB(0.0, 10, ScreenUtil().setWidth(70), 0),
+                margin:
+                    EdgeInsets.fromLTRB(0.0, 10, ScreenUtil().setWidth(70), 0),
                 alignment: Alignment.centerRight,
                 height: ScreenUtil().setHeight(50),
                 width: ScreenUtil().setWidth(180),

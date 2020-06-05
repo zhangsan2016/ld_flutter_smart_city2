@@ -69,7 +69,7 @@ class LampPage extends StatelessWidget {
               children: <Widget>[
                 CheckLampPage(lampInfo), // 路灯查看信息界面
 
-                LampControlPage(), // 路灯控制界面
+                LampControlPage(lampInfo), // 路灯控制界面
 
                 EditLampPage(lampInfo), // 路灯编辑界面
 
