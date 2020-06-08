@@ -9,6 +9,7 @@ import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
+import 'package:oktoast/oktoast.dart';
 
 import 'area_type_view.dart';
 
@@ -149,6 +150,7 @@ class _LampControlPageState extends State<LampControlPage>
                         hideBubble: false,
                         onValueChanged: (v) {
 
+                           // 主灯控制
 
                           // 获取项目中的路灯
                           SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
@@ -157,7 +159,8 @@ class _LampControlPageState extends State<LampControlPage>
                             var data = json.decode(val);
                             LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-                            var param = "{\"UUID\": \"" + _lamp?.uUID + "\", \"Confirm\": 11, \"options\": {\"FirDimming\", 100} }";
+                              //     var param =  "{\"UUID\": \"83140000862285035977879\",\"Confirm\": 260,\"options\": {\"FirDimming\": 0}}";
+                                var param =  "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"FirDimming\": ${v.value.ceil()}}}";
 
                               print('param = ${param.toString()}');
 
@@ -167,11 +170,20 @@ class _LampControlPageState extends State<LampControlPage>
                               token: loginInfo.data.token.token,
                               method: DioUtils.POST,
                               onSuccess: (String data) {
-                                // 解析 json
+
+                                       
+
+                                print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx data = ${data.toString()}');
+
+                                if(data.toString() == 'OK'){
+                                  showToast('指令发送成功！',position: ToastPosition.bottom);
+                                }
+
+                             /*   // 解析 json
                                 var jsonstr = json.decode(data);
                                 // print('getDeviceLampList title $title = $data');
                                 print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx DEVICE_CONTROL_URL $data ');
-
+*/
                               },
                               onError: (error) {
                                 print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
