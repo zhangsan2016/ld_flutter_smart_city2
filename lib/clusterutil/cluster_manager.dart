@@ -187,12 +187,14 @@ class ClusterManager {
             continue;
           }
 
+print('${lamp.nAME}   lamp.warningState = ${lamp.warningState} ');
+
           MarkerOption markerOption = new MarkerOption(
             latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
             title: '${lamp.nAME}',
             snippet: '${lamp.pROJECT}',
             iconUri: selectImagesByType(int.parse('${lamp.tYPE}'),
-                double.parse('${lamp.firDimming ?? 0}')),
+                double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
             imageConfig: createLocalImageConfiguration(_context),
             object: json.encode(lamp),
           );
@@ -215,7 +217,7 @@ class ClusterManager {
               title: '${ebox.nAME}',
               snippet: '${ebox.pROJECT}',
               iconUri: selectImagesByType(int.parse('${ebox.tYPE}'),
-                  double.parse('${ebox.firDimming ?? 0}')),
+                  double.parse('${ebox.firDimming ?? 0}'),0),
               imageConfig: createLocalImageConfiguration(_context),
               object: json.encode(ebox),
             );
@@ -343,11 +345,14 @@ class ClusterManager {
     return pointList;
   }
 
-  Uri selectImagesByType(int tYPE, double brightness) {
+  Uri selectImagesByType(int tYPE, double brightness, int warningState) {
     if (tYPE == 1) { // 电箱
       return Uri.parse('images/ebox.png');
     } else if (tYPE == 2) { // 路灯
       // 检查报警
+      if(warningState != 0){
+        return Uri.parse('images/light_warning.png');
+      }
       // 检查亮灯
       if (brightness != 0) {
         return Uri.parse('images/light_on.png');
