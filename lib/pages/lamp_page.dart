@@ -9,6 +9,7 @@ import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'lamppags/check_lamp_page.dart';
 import 'lamppags/edit_lamp_page.dart';
 import 'lamppags/lamp_control_page.dart';
+import 'lamppags/lamp_history_page.dart';
 
 class LampPage extends StatelessWidget {
   final String lampInfo;
@@ -73,11 +74,8 @@ class LampPage extends StatelessWidget {
 
                 EditLampPage(lampInfo), // 路灯编辑界面
 
-                Container(
-                  decoration: new BoxDecoration(
-                    color: Color.fromARGB(240, 11, 29, 77),
-                  ),
-                ),
+                LampHistoryPage(lampInfo),
+
 
                 /*  ListView(
               children: <Widget>[

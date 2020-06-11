@@ -17,7 +17,7 @@ class SharedPreferenceUtil {
   static Future<Object> get(String str) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String counter = prefs.getString(str);
-    print('------获得结果 $counter-----');
+    // print('------获得结果 $counter-----');
     return counter;
   }
 

@@ -20,6 +20,8 @@ const String DEVICE_WIRESAFE_LIST ="v_device_wiresafe/list";
 const String DEVICE_CONTROL ="device/control";
 // content-type 清除报警
 const String CLEAN_ALARM ="device/cleanAlarm";
+// content-type 历史记录
+const String HISTORY_METRICS ="device/historyMetrics";
 
 
 const ServiceUrl = 'http://test.baixingliangfan.cn/baixing/';
@@ -33,6 +35,7 @@ const servicePath = {
   'DEVICE_WIRESAFE_LIST_URL': URL_BASE + DEVICE_WIRESAFE_LIST, // 获取断缆报警器列表
   'DEVICE_CONTROL_URL': URL_BASE + DEVICE_CONTROL, // 设备控制
   'CLEAN_ALARM_URL': URL_BASE + DEVICE_CONTROL, // 清除报警
+  'HISTORY_METRICS_URL': URL_BASE + HISTORY_METRICS, // 历史记录
 };
 
 

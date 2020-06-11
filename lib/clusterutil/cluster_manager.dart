@@ -187,7 +187,6 @@ class ClusterManager {
             continue;
           }
 
-print('${lamp.nAME}   lamp.warningState = ${lamp.warningState} ');
 
           MarkerOption markerOption = new MarkerOption(
             latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
