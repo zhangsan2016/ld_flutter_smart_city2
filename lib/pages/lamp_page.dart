@@ -74,7 +74,7 @@ class LampPage extends StatelessWidget {
 
                 EditLampPage(lampInfo), // 路灯编辑界面
 
-                LampHistoryPage(lampInfo),
+                LampHistoryPage(lampInfo),  // 历史记录界面
 
 
                 /*  ListView(

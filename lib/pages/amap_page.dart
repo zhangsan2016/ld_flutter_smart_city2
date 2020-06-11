@@ -316,7 +316,6 @@ class AmapPageState extends State<AmapPage> {
             child: IconButton(
               icon: Image.asset('images/restoration.png'),
               onPressed: () {
-                print('IconButton onclick');
                 clusterManager.relocation();
               },
             ),
