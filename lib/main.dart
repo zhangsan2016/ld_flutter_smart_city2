@@ -11,8 +11,10 @@ void main() async {
   // 初始化地图
   await enableFluttifyLog(false);
   await AmapService.init(
-    iosKey: '7a04506d15fdb7585707f7091d715ef4',
-    androidKey: '4cac4b9b55cf85b94437655ff3a14543',
+   /* iosKey: '7a04506d15fdb7585707f7091d715ef4',
+    androidKey: '4cac4b9b55cf85b94437655ff3a14543',*/
+    iosKey: '2691a1ff880a31cc519476070f38e69e',
+    androidKey: '2691a1ff880a31cc519476070f38e69e',
   );
 
 }
