@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:amap_core_fluttify/amap_core_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
+import 'package:decorated_flutter/decorated_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
@@ -189,11 +190,20 @@ class ClusterManager {
 
 
           MarkerOption markerOption = new MarkerOption(
+            widget: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text('使用Widget作为Marker'),
+            Image.asset(
+              "${selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0)}",
+              fit: BoxFit.cover,
+            ),
+              ],
+            ),
             latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
             title: '${lamp.nAME}',
             snippet: '${lamp.pROJECT}',
-            iconUri: selectImagesByType(int.parse('${lamp.tYPE}'),
-                double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
+           // iconUri: selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
             imageConfig: createLocalImageConfiguration(_context),
             object: json.encode(lamp),
           );
