@@ -435,7 +435,8 @@ class ClusterManager {
       onSuccess: (String data) {
         try {
           // 解析 json
-          print('getAlarmApparatus = ${data.toString()}');
+         // print('getAlarmApparatus = ${data.toString()}');
+
           var jsonstr = json.decode(data);
           AlarmApparatusInfo alarmApparatusInfo = AlarmApparatusInfo.fromJson(jsonstr);
           if (!alarmApparatusInfo.data.alarmApparatus?.isEmpty) {

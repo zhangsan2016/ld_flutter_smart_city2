@@ -101,7 +101,8 @@ class HomePage22 extends StatelessWidget {
       onSuccess: (String data) {
         try {
           // 解析 json
-          print('getAlarmApparatus = ${data.toString()}');
+        //  print('getAlarmApparatus = ${data.toString()}');
+
           /*  var jsonstr = json.decode(data);
           EboxInfo lampInfo = EboxInfo.fromJson(jsonstr);
           if (!lampInfo.data.ebox?.isEmpty) {

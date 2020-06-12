@@ -52,7 +52,7 @@ class ClusterManager {
       },
       onMapMoveEnd: (move) async {
         MapMove mapMove = move;
-        print('MapMoveListener move = ${move.zoom}');
+      //  print('MapMoveListener move = ${move.zoom}');
 
         if (move.zoom < 5) {
           if (isUnfold) {
