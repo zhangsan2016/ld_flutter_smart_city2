@@ -154,9 +154,12 @@ class AmapPageState extends State<AmapPage> {
    *  获取当前用户下的所有项目
    */
   void getProject(String token) {
+
+    var param = "{\"size\":1000}";
+
     DioUtils.requestHttp(
       servicePath['PROJECT_LIST_URL'],
-      parameters: null,
+      parameters: param,
       token: token,
       method: DioUtils.POST,
       onSuccess: (String data) async {
