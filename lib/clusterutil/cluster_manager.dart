@@ -27,6 +27,9 @@ class ClusterManager {
   // 是否展开
   bool isUnfold = false;
 
+  // 当前被选中（点击）的项目
+  String currentTitle;
+
   // 项目路灯集合
   var lampMap = <String, List<Lamp>>{};
 
@@ -46,33 +49,23 @@ class ClusterManager {
   Future init() async {
     // marker 点击事件
     _controller?.setMarkerClickedListener((marker) async {
-      print('isUnfold = $isUnfold');
-      print(
-          '${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');
+    //  print('${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');
 
       if (!isUnfold) {
+        String title = await marker.title;
         // 获取项目对应的路灯列表
-        List<Lamp> lamp = lampMap[await marker.title];
+        List<Lamp> lamp = lampMap[title];
         // 获取项目对应的电箱
-        List<Ebox> ebox = eboxMap[await marker.title];
+        List<Ebox> ebox = eboxMap[title];
         // 获取项目对应的报警器
-        List<AlarmApparatus> alarmApparatus = alarmApparatusMap[await marker.title];
+        List<AlarmApparatus> alarmApparatus = alarmApparatusMap[title];
         // 添加覆盖物
         await addItems(lamp, eboxs: ebox, alarmApparatus: alarmApparatus);
+        currentTitle= title;
       } else {
         // 展开状态
-        // 跳转到路灯控制界面
-        /*  String lampInfo = await marker.object;
-        Navigator.push<String>(
-          _context,
-          new MaterialPageRoute(
-            builder: (BuildContext context) {
-              //  return new OtherPage(pwd: "123456");
-              return new LampPage(lampInfo);
-            },
-          ),
-        );*/
 
+        // 跳转到路灯控制界面
         String lampInfo = await marker.object;
         Navigator.push<String>(
           _context,
@@ -83,11 +76,6 @@ class ClusterManager {
           ),
         );
 
-        /* Navigator.of(_context).push(
-              CupertinoPageRoute(builder: (BuildContext context){
-                return new LampPage(lampInfo);
-              })
-          );*/
 
       }
 
@@ -107,6 +95,17 @@ class ClusterManager {
           if (isUnfold) {
             addItems(projects);
           }
+        }else{
+         /* // 地图缩放到指定大小后显示灯杆名称
+          if(move.zoom >= 19.5 && currentTitle != null){
+            // 获取项目对应的路灯列表
+            List<Lamp> lamp = lampMap[currentTitle];
+            // 获取项目对应的电箱
+            List<Ebox> ebox = eboxMap[currentTitle];
+            // 获取项目对应的报警器
+            List<AlarmApparatus> alarmApparatus = alarmApparatusMap[currentTitle];
+            displayMarkersText(lamp,  ebox, alarmApparatus);
+          }*/
         }
       },
     );
@@ -114,6 +113,7 @@ class ClusterManager {
 
   // 当前显示的 marker 列表
   List<Marker> _markers = new List();
+
   // 项目列表
   List<Project> projects;
 
@@ -123,7 +123,7 @@ class ClusterManager {
    * eboxs ： 当前项目的电箱列表
    * alarmApparatus ：当前项目的报警器列表
    */
-  void addItems(List items, {eboxs,alarmApparatus}) async {
+  void addItems(List items, {eboxs, alarmApparatus}) async {
     List temporary;
     if (items != null && items.length > 0) {
       if (items[0] is Project) {
@@ -172,108 +172,212 @@ class ClusterManager {
               // 获取项目下的电箱
               await getDeviceEbox(project.title, loginInfo.data.token.token);
               // 获取项目下的报警器
-              await getAlarmApparatus(project.title, loginInfo.data.token.token);
+              await getAlarmApparatus(
+                  project.title, loginInfo.data.token.token);
             }
           }
         });
       } else if (items[0] is Lamp) {
-        _controller.clearMarkers(_markers);
-
-        // 批量添加路灯覆盖物
-        List<MarkerOption> markerOptions = List();
-        for (int i = 0; i < items.length; ++i) {
-          Lamp lamp = items[i];
-          if (lamp.lAT == "" || lamp.lNG == "") {
-            print('   ${lamp.nAME} 坐标为空');
-            continue;
-          }
-
-
-          MarkerOption markerOption = new MarkerOption(
-            widget: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text('使用Widget作为Marker'),
-            Image.asset(
-              "${selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0)}",
-              fit: BoxFit.cover,
-            ),
-              ],
-            ),
-            latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
-            title: '${lamp.nAME}',
-            snippet: '${lamp.pROJECT}',
-           // iconUri: selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
-            imageConfig: createLocalImageConfiguration(_context),
-            object: json.encode(lamp),
-          );
-
-          markerOptions.add(markerOption);
-        }
-
-        // 批量添加电箱覆盖物
-        if (eboxs != null && eboxs.length > 0) {
-          for (var i = 0; i < eboxs.length; ++i) {
-            Ebox ebox = eboxs[i];
-            if (ebox.lAT == "" || ebox.lNG == "") {
-              print('   ${ebox.nAME} 坐标为空');
-              continue;
-            }
-
-            MarkerOption markerOption = new MarkerOption(
-              latLng:
-                  new LatLng(double.parse(ebox.lAT), double.parse(ebox.lNG)),
-              title: '${ebox.nAME}',
-              snippet: '${ebox.pROJECT}',
-              iconUri: selectImagesByType(int.parse('${ebox.tYPE}'),
-                  double.parse('${ebox.firDimming ?? 0}'),0),
-              imageConfig: createLocalImageConfiguration(_context),
-              object: json.encode(ebox),
-            );
-            markerOptions.add(markerOption);
-          }
-          } else {}
-
-        // 批量添加报警器覆盖物
-        if (alarmApparatus != null && alarmApparatus.length > 0) {
-          for (var i = 0; i < alarmApparatus.length; ++i) {
-            AlarmApparatus alarm = alarmApparatus[i];
-            if (alarm.lAT == "" || alarm.lNG == "") {
-              print('   ${alarm.nAME} 坐标为空');
-              continue;
-            }
-
-            MarkerOption markerOption = new MarkerOption(
-              latLng:
-              new LatLng(double.parse(alarm.lAT), double.parse(alarm.lNG)),
-              title: '${alarm.nAME}',
-              snippet: '${alarm.pROJECT}',
-              iconUri: Uri.parse('images/test_icon.png'),
-              imageConfig: createLocalImageConfiguration(_context),
-              object: json.encode(alarm),
-            );
-            markerOptions.add(markerOption);
-          }
-        } else {}
-
-        await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
-
-        // 修改展开状态
-        isUnfold = true;
-        // 重新定位
-        //   relocation();
-        // 缩放中心点位置
-        _controller?.zoomToSpan(
-          [
-            new LatLng(double.parse((items[0] as Lamp).lAT),
-                double.parse((items[0] as Lamp).lNG))
-          ],
-          padding: EdgeInsets.only(
-            top: 100,
-          ),
-        );
+        // 添加地图路灯覆盖物
+        await addLampMarkers(items, eboxs, alarmApparatus);
       }
     }
+  }
+
+  /**
+   *  添加地图路灯覆盖物
+   *  item 路灯列表
+   *  ebox 电箱列表
+   *  alarmApparatus 报警器列表
+   */
+  Future addLampMarkers(List items, eboxs, alarmApparatus) async {
+     _controller.clearMarkers(_markers);
+
+    // 批量添加路灯覆盖物
+    List<MarkerOption> markerOptions = List();
+    for (int i = 0; i < items.length; ++i) {
+      Lamp lamp = items[i];
+      if (lamp.lAT == "" || lamp.lNG == "") {
+        print('   ${lamp.nAME} 坐标为空');
+        continue;
+      }
+
+      MarkerOption markerOption = new MarkerOption(
+     /*   widget: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('${(level <= 19.5 ? lamp.nAME:null)}'),
+            Image.asset(
+              "${selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'), lamp.warningState ?? 0)}",
+              fit: BoxFit.cover,
+            ),
+          ],
+        ),*/
+        latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
+        title: '${lamp.nAME}',
+        snippet: '${lamp.pROJECT}',
+         iconUri: selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
+        imageConfig: createLocalImageConfiguration(_context),
+        object: json.encode(lamp),
+      );
+
+      markerOptions.add(markerOption);
+    }
+
+    // 批量添加电箱覆盖物
+    if (eboxs != null && eboxs.length > 0) {
+      for (var i = 0; i < eboxs.length; ++i) {
+        Ebox ebox = eboxs[i];
+        if (ebox.lAT == "" || ebox.lNG == "") {
+          print('   ${ebox.nAME} 坐标为空');
+          continue;
+        }
+
+        MarkerOption markerOption = new MarkerOption(
+          latLng:
+              new LatLng(double.parse(ebox.lAT), double.parse(ebox.lNG)),
+          title: '${ebox.nAME}',
+          snippet: '${ebox.pROJECT}',
+          iconUri: selectImagesByType(int.parse('${ebox.tYPE}'),
+              double.parse('${ebox.firDimming ?? 0}'), 0),
+          imageConfig: createLocalImageConfiguration(_context),
+          object: json.encode(ebox),
+        );
+        markerOptions.add(markerOption);
+      }
+    } else {}
+
+    // 批量添加报警器覆盖物
+    if (alarmApparatus != null && alarmApparatus.length > 0) {
+      for (var i = 0; i < alarmApparatus.length; ++i) {
+        AlarmApparatus alarm = alarmApparatus[i];
+        if (alarm.lAT == "" || alarm.lNG == "") {
+          print('   ${alarm.nAME} 坐标为空');
+          continue;
+        }
+
+        MarkerOption markerOption = new MarkerOption(
+          latLng:
+              new LatLng(double.parse(alarm.lAT), double.parse(alarm.lNG)),
+          title: '${alarm.nAME}',
+          snippet: '${alarm.pROJECT}',
+          iconUri: Uri.parse('images/test_icon.png'),
+          imageConfig: createLocalImageConfiguration(_context),
+          object: json.encode(alarm),
+        );
+        markerOptions.add(markerOption);
+      }
+    } else {}
+
+    await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
+
+    // 修改展开状态
+    isUnfold = true;
+
+    // 重新定位
+    //   relocation();
+
+    // 缩放中心点位置
+    /*_controller?.zoomToSpan(
+      [
+        new LatLng(double.parse((items[0] as Lamp).lAT),
+            double.parse((items[0] as Lamp).lNG))
+      ],
+      padding: EdgeInsets.only(
+        top: 100,
+      ),
+    );*/
+     _controller?.setCenterCoordinate(LatLng(double.parse((items[0] as Lamp).lAT), double.parse((items[0] as Lamp).lNG)),
+       animated: false,
+       zoomLevel:19,
+     );
+
+
+
+  }
+
+  displayMarkersText(List items, eboxs, alarmApparatus)async{
+
+    // 批量添加路灯覆盖物
+    List<MarkerOption> markerOptions = List();
+    for (int i = 0; i < items.length; ++i) {
+      Lamp lamp = items[i];
+      if (lamp.lAT == "" || lamp.lNG == "") {
+        print('   ${lamp.nAME} 坐标为空');
+        continue;
+      }
+
+      // 清空当前地图覆盖物
+      _controller.clearMarkers(_markers);
+
+      MarkerOption markerOption = new MarkerOption(
+          widget: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('${lamp.nAME}',style: TextStyle(color: Colors.white),),
+            Image.asset(
+              "${selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'), lamp.warningState ?? 0)}",
+              fit: BoxFit.cover,
+            ),
+          ],
+        ),
+        latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
+        title: '${lamp.nAME}',
+        snippet: '${lamp.pROJECT}',
+        //iconUri: selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
+        imageConfig: createLocalImageConfiguration(_context),
+        object: json.encode(lamp),
+      );
+
+      markerOptions.add(markerOption);
+    }
+
+    // 批量添加电箱覆盖物
+    if (eboxs != null && eboxs.length > 0) {
+      for (var i = 0; i < eboxs.length; ++i) {
+        Ebox ebox = eboxs[i];
+        if (ebox.lAT == "" || ebox.lNG == "") {
+          print('   ${ebox.nAME} 坐标为空');
+          continue;
+        }
+
+        MarkerOption markerOption = new MarkerOption(
+          latLng:
+          new LatLng(double.parse(ebox.lAT), double.parse(ebox.lNG)),
+          title: '${ebox.nAME}',
+          snippet: '${ebox.pROJECT}',
+          iconUri: selectImagesByType(int.parse('${ebox.tYPE}'),
+              double.parse('${ebox.firDimming ?? 0}'), 0),
+          imageConfig: createLocalImageConfiguration(_context),
+          object: json.encode(ebox),
+        );
+        markerOptions.add(markerOption);
+      }
+    } else {}
+
+    // 批量添加报警器覆盖物
+    if (alarmApparatus != null && alarmApparatus.length > 0) {
+      for (var i = 0; i < alarmApparatus.length; ++i) {
+        AlarmApparatus alarm = alarmApparatus[i];
+        if (alarm.lAT == "" || alarm.lNG == "") {
+          print('   ${alarm.nAME} 坐标为空');
+          continue;
+        }
+
+        MarkerOption markerOption = new MarkerOption(
+          latLng:
+          new LatLng(double.parse(alarm.lAT), double.parse(alarm.lNG)),
+          title: '${alarm.nAME}',
+          snippet: '${alarm.pROJECT}',
+          iconUri: Uri.parse('images/test_icon.png'),
+          imageConfig: createLocalImageConfiguration(_context),
+          object: json.encode(alarm),
+        );
+        markerOptions.add(markerOption);
+      }
+    } else {}
+
+    await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
   }
 
   void relocation() async {
@@ -293,16 +397,16 @@ class ClusterManager {
       List<LatLng> bounds = new List();
       for (int i = 0; i < projects.length; ++i) {
         Project project = projects[i];
-        bounds.add(new LatLng(double.parse(project.lat), double.parse(project.lng)));
+        bounds.add(
+            new LatLng(double.parse(project.lat), double.parse(project.lng)));
       }
       return _controller?.zoomToSpan(
         bounds,
         padding: EdgeInsets.all(100),
       );
-    }else{
-      showToast('当前没有项目列表,请检查网络！',position: ToastPosition.bottom);
+    } else {
+      showToast('当前没有项目列表,请检查网络！', position: ToastPosition.bottom);
     }
-
   }
 
   addItem(var item) async {
@@ -355,11 +459,13 @@ class ClusterManager {
   }
 
   Uri selectImagesByType(int tYPE, double brightness, int warningState) {
-    if (tYPE == 1) { // 电箱
+    if (tYPE == 1) {
+      // 电箱
       return Uri.parse('images/ebox.png');
-    } else if (tYPE == 2) { // 路灯
+    } else if (tYPE == 2) {
+      // 路灯
       // 检查报警
-      if(warningState != 0){
+      if (warningState != 0) {
         return Uri.parse('images/light_warning.png');
       }
       // 检查亮灯
@@ -368,9 +474,11 @@ class ClusterManager {
       } else {
         return Uri.parse('images/light_off.png');
       }
-    } else if (tYPE == 3) {   // 未知
+    } else if (tYPE == 3) {
+      // 未知
       return Uri.parse('images/ebox.png');
-    } else {  // 报警器
+    } else {
+      // 报警器
       return Uri.parse('images/test_icon.png');
     }
   }
@@ -430,7 +538,6 @@ class ClusterManager {
     );
   }
 
-
   /**
    *  获取项目下的报警器
    */
@@ -445,10 +552,11 @@ class ClusterManager {
       onSuccess: (String data) {
         try {
           // 解析 json
-         // print('getAlarmApparatus = ${data.toString()}');
+          // print('getAlarmApparatus = ${data.toString()}');
 
           var jsonstr = json.decode(data);
-          AlarmApparatusInfo alarmApparatusInfo = AlarmApparatusInfo.fromJson(jsonstr);
+          AlarmApparatusInfo alarmApparatusInfo =
+              AlarmApparatusInfo.fromJson(jsonstr);
           if (!alarmApparatusInfo.data.alarmApparatus?.isEmpty) {
             alarmApparatusMap[title] = alarmApparatusInfo.data.alarmApparatus;
           }
