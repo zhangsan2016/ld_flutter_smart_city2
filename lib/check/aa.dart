@@ -51,8 +51,8 @@ print('${  testList3.length}');
   print('${date1.toString()}');
 
 
-  var aa;
-  print('${String.fromCharCode(aa)}');
+  var aa ;
+  print('${aa.toString()}');
 
 
 

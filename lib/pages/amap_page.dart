@@ -204,17 +204,17 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
       onMapClicked: (LatLng coord) {},
       // 地图创建完成回调 (可选)
       onMapCreated: (controller) async {
-        SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) {
+        SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
           _controller = controller;
 
-          // 定义点聚合管理类ClusterManager
-          clusterManager = new ClusterManager(context, _controller,this);
-
           // 设置自定义地图
-          _controller?.setCustomMapStyle(
+            await _controller?.setCustomMapStyle(
             styleDataPath: 'raw/style.data',
             styleExtraPath: 'raw/style_extra.data',
           );
+
+          // 定义点聚合管理类ClusterManager
+          clusterManager = new ClusterManager(context, _controller,this);
 
           // 解析 json
           var data = json.decode(val);
