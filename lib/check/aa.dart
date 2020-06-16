@@ -39,6 +39,21 @@ print('${  testList3.length}');
   print('morePlanets $morePlanets');
   print('testList3 $testList3');*/
 
+  DateTime victoryDay = new DateTime(1585702939556);//
+  print(victoryDay.toString());
+
+  //timestamp 为毫秒时间戳
+  var date = new DateTime.fromMicrosecondsSinceEpoch(1585702939556);
+
+//unix_timestamp 为unix timestamp
+  var date1 = new DateTime.fromMicrosecondsSinceEpoch(1585702939556*1000);
+
+  print('${date1.toString()}');
+
+
+  var aa;
+  print('${String.fromCharCode(aa)}');
+
 
 
 
