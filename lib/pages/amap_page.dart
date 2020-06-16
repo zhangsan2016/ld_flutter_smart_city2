@@ -325,7 +325,8 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
                 child: IconButton(
                   icon: Image.asset('images/refresh.png'),
                   onPressed: () {
-                    clusterManager.relocation();
+                    showToast('刷新',position: ToastPosition.bottom);
+                    clusterManager.refresh();
                   },
                 ),
               ),
@@ -343,7 +344,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
                 child: IconButton(
                   icon: Image.asset('images/group.png'),
                   onPressed: () {
-                    clusterManager.relocation();
+                    showToast('分组',position: ToastPosition.bottom);
                   },
                 ),
               ),

@@ -55,21 +55,13 @@ class ClusterManager {
   }
 
   Future init() async {
+
     // marker 点击事件
     _controller?.setMarkerClickedListener((marker) async {
     //  print('${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');
 
       if (!isUnfold) {
-        String title = await marker.title;
-        // 获取项目对应的路灯列表
-        List<Lamp> lamp = lampMap[title];
-        // 获取项目对应的电箱
-        List<Ebox> ebox = eboxMap[title];
-        // 获取项目对应的报警器
-        List<AlarmApparatus> alarmApparatus = alarmApparatusMap[title];
-        // 添加覆盖物
-        await addItems(lamp, eboxs: ebox, alarmApparatus: alarmApparatus);
-        currentTitle= title;
+        await addMapMarkers(await marker.title);
       } else {
         // 展开状态
 
@@ -117,6 +109,18 @@ class ClusterManager {
         }
       },
     );
+  }
+
+  Future addMapMarkers(String title) async {
+    // 获取项目对应的路灯列表
+    List<Lamp> lamp = lampMap[title];
+    // 获取项目对应的电箱
+    List<Ebox> ebox = eboxMap[title];
+    // 获取项目对应的报警器
+    List<AlarmApparatus> alarmApparatus = alarmApparatusMap[title];
+    // 添加覆盖物
+    await addItems(lamp, eboxs: ebox, alarmApparatus: alarmApparatus);
+    currentTitle= title;
   }
 
   // 当前显示的 marker 列表
@@ -284,6 +288,11 @@ class ClusterManager {
 
     await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
 
+    // 如果已经展开，就不再重新定位
+    if(isUnfold){
+      return;
+    }
+
     // 修改展开状态
     isUnfold = true;
 
@@ -393,6 +402,9 @@ class ClusterManager {
     await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
   }
 
+  /**
+   * 重置
+   */
   void relocation() async {
     /* Stream.fromIterable(_markers)
         .asyncMap((marker) => marker.location)
@@ -419,6 +431,29 @@ class ClusterManager {
       );
     } else {
       showToast('当前没有项目列表,请检查网络！', position: ToastPosition.bottom);
+    }
+  }
+
+  /**
+   * 刷新
+   */
+  void refresh() {
+    if(isUnfold){
+      // 获取项目中的路灯
+      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+        // 解析 json
+        var data = json.decode(val);
+        LoginInfo loginInfo = LoginInfo.fromJson(data);
+        // 获取项目下的路灯
+        getDeviceLampList(currentTitle, loginInfo.data.token.token);
+        // 获取项目下的电箱
+        getDeviceEbox(currentTitle, loginInfo.data.token.token);
+        // 获取项目下的报警器
+        getAlarmApparatus(currentTitle, loginInfo.data.token.token);
+
+        addMapMarkers(currentTitle);
+
+      });
     }
   }
 
