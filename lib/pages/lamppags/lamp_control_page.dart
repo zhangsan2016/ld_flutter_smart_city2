@@ -73,7 +73,7 @@ class _LampControlPageState extends State<LampControlPage>
             child: Row(
               children: <Widget>[
                 _getText('预警状态     ', textSzie),
-                _getText('离线', textSzie),
+                _getText('离线${_lamp.warningState}', textSzie),
               ],
             ),
           ),

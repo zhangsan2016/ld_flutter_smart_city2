@@ -55,6 +55,16 @@ print('${  testList3.length}');
   print('${aa.toString()}');
 
 
+  var time =null;
+  if(time != null){
+    int t = int.parse(time.toString());
+    print('${t}');
+  }else{
+    print('object');
+  }
+
+
+
 
 
 
