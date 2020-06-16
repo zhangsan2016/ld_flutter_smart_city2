@@ -13,6 +13,7 @@ import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
+import 'package:ldfluttersmartcity2/interfaces/amap_listening.dart';
 import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
@@ -23,6 +24,7 @@ import 'overlay_item.dart';
 class ClusterManager {
   AmapController _controller;
   BuildContext _context;
+  AMapListening listening;
 
   // 是否展开
   bool isUnfold = false;
@@ -39,9 +41,15 @@ class ClusterManager {
   // 报警器集合
   var alarmApparatusMap = <String, List<AlarmApparatus>>{};
 
-  ClusterManager(BuildContext context, AmapController controller) {
+  /**
+   * context 上下文
+   * controller map 控制器
+   * listening 地图监听
+   */
+  ClusterManager(BuildContext context, AmapController controller,AMapListening listening) {
     this._context = context;
     this._controller = controller;
+    this.listening = listening;
 
     init();
   }
@@ -76,7 +84,6 @@ class ClusterManager {
           ),
         );
 
-
       }
 
       return true;
@@ -88,6 +95,7 @@ class ClusterManager {
         MapMove mapMove = move;
       },
       onMapMoveEnd: (move) async {
+
         MapMove mapMove = move;
         print('MapMoveListener move = ${move.zoom}');
 
@@ -181,6 +189,11 @@ class ClusterManager {
         // 添加地图路灯覆盖物
         await addLampMarkers(items, eboxs, alarmApparatus);
       }
+    }
+
+    // 返回 覆盖物状态回调
+    if(listening != null){
+      listening.mapMarkerStartListener(isUnfold);
     }
   }
 

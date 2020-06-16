@@ -10,6 +10,7 @@ import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
+import 'package:ldfluttersmartcity2/interfaces/amap_listening.dart';
 import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
@@ -25,9 +26,11 @@ class AmapPage extends StatefulWidget {
   createState() => AmapPageState();
 }
 
-class AmapPageState extends State<AmapPage> {
+class AmapPageState extends State<AmapPage> implements AMapListening {
   AmapController _controller;
   ClusterManager clusterManager;
+  // 覆盖物展开状态
+  bool isUnfold = false;
 
   @override
   void initState() {
@@ -205,7 +208,7 @@ class AmapPageState extends State<AmapPage> {
           _controller = controller;
 
           // 定义点聚合管理类ClusterManager
-          clusterManager = new ClusterManager(context, _controller);
+          clusterManager = new ClusterManager(context, _controller,this);
 
           // 设置自定义地图
           _controller?.setCustomMapStyle(
@@ -305,47 +308,65 @@ class AmapPageState extends State<AmapPage> {
    * 地图功能栏
    */
   Widget mapBar() {
-    return Positioned(
-      left: 1,
-      right: 1,
-      child: Container(
-        padding: EdgeInsets.only(right: ScreenUtil().setWidth(20)),
-        color: Colors.black26,
-        child: Row(
-          children: <Widget>[
-            Spacer(),
-            //Expanded(child: SizedBox()),//自动扩展挤压
+    if(isUnfold){
+      return Positioned(
+        left: 1,
+        right: 1,
+        child: Container(
+          padding: EdgeInsets.only(right: ScreenUtil().setWidth(20)),
+          color: Colors.black26,
+          child: Row(
+            children: <Widget>[
+              Spacer(),
+              //Expanded(child: SizedBox()),//自动扩展挤压
 
-            Container(
-              padding: EdgeInsets.only(left: 5.0, right: 5.0),
-              child: IconButton(
-                icon: Image.asset('images/refresh.png'),
-                onPressed: () {
-                  clusterManager.relocation();
-                },
+              Container(
+                padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                child: IconButton(
+                  icon: Image.asset('images/refresh.png'),
+                  onPressed: () {
+                    clusterManager.relocation();
+                  },
+                ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 5.0, right: 5.0),
-              child: IconButton(
-                icon: Image.asset('images/restoration.png'),
-                onPressed: () {
-                  clusterManager.relocation();
-                },
+              Container(
+                padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                child: IconButton(
+                  icon: Image.asset('images/restoration.png'),
+                  onPressed: () {
+                    clusterManager.relocation();
+                  },
+                ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 5.0, right: 5.0),
-              child: IconButton(
-                icon: Image.asset('images/group.png'),
-                onPressed: () {
-                  clusterManager.relocation();
-                },
+              Container(
+                padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                child: IconButton(
+                  icon: Image.asset('images/group.png'),
+                  onPressed: () {
+                    clusterManager.relocation();
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }else{
+      return  Container();
+    }
+
+  }
+
+  @override
+  void mapMoveListener(MapMove move) {
+  }
+
+
+  @override
+  void mapMarkerStartListener(bool isUnfold) {
+    setState(() {
+      this.isUnfold = isUnfold;
+    });
+    print('mapMarkerStartListener isUnfold $isUnfold ');
   }
 }
