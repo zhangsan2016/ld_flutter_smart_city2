@@ -57,7 +57,7 @@ class AmapPageState extends State<AmapPage> {
           body: Stack(
             children: <Widget>[
               initAMap(),
-              search(),
+              //  search(),
               mapBar(),
             ],
           ),
@@ -154,7 +154,6 @@ class AmapPageState extends State<AmapPage> {
    *  获取当前用户下的所有项目
    */
   void getProject(String token) {
-
     var param = "{\"size\":1000}";
 
     DioUtils.requestHttp(
@@ -163,7 +162,6 @@ class AmapPageState extends State<AmapPage> {
       token: token,
       method: DioUtils.POST,
       onSuccess: (String data) async {
-
         // 解析 json
         var jsonstr = json.decode(data);
         ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
@@ -210,11 +208,10 @@ class AmapPageState extends State<AmapPage> {
           clusterManager = new ClusterManager(context, _controller);
 
           // 设置自定义地图
-           _controller?.setCustomMapStyle(
+          _controller?.setCustomMapStyle(
             styleDataPath: 'raw/style.data',
             styleExtraPath: 'raw/style_extra.data',
           );
-
 
           // 解析 json
           var data = json.decode(val);
@@ -309,23 +306,45 @@ class AmapPageState extends State<AmapPage> {
    */
   Widget mapBar() {
     return Positioned(
-      bottom: 15,
-      left: 50,
-      right: 15,
-      child: Row(
-        children: <Widget>[
-          Spacer(),
-          //Expanded(child: SizedBox()),//自动扩展挤压
-          Container(
-            child: IconButton(
-              icon: Image.asset('images/restoration.png'),
-              onPressed: () {
-                clusterManager.relocation();
-              },
+      left: 1,
+      right: 1,
+      child: Container(
+        padding: EdgeInsets.only(right: ScreenUtil().setWidth(20)),
+        color: Colors.black26,
+        child: Row(
+          children: <Widget>[
+            Spacer(),
+            //Expanded(child: SizedBox()),//自动扩展挤压
+
+            Container(
+              padding: EdgeInsets.only(left: 5.0, right: 5.0),
+              child: IconButton(
+                icon: Image.asset('images/refresh.png'),
+                onPressed: () {
+                  clusterManager.relocation();
+                },
+              ),
             ),
-            // Image.asset('images/restoration.png', fit: BoxFit.fill),
-          ),
-        ],
+            Container(
+              padding: EdgeInsets.only(left: 5.0, right: 5.0),
+              child: IconButton(
+                icon: Image.asset('images/restoration.png'),
+                onPressed: () {
+                  clusterManager.relocation();
+                },
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 5.0, right: 5.0),
+              child: IconButton(
+                icon: Image.asset('images/group.png'),
+                onPressed: () {
+                  clusterManager.relocation();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

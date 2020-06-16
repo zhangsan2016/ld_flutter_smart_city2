@@ -83,6 +83,8 @@ flutter:
     - images/v-logo.png
     - images/test_icon.png
     - images/restoration.png
+    - images/refresh.png
+    - images/group.png
 
 
 
