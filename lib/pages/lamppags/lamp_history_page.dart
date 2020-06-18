@@ -17,12 +17,16 @@ class LampHistoryPage extends StatefulWidget {
   _LampHistoryPageState createState() => _LampHistoryPageState(lampInfo);
 }
 
-class _LampHistoryPageState extends State<LampHistoryPage> {
+class _LampHistoryPageState extends State<LampHistoryPage> with AutomaticKeepAliveClientMixin{
   String lampInfo;
   Lamp _lamp;
   List<String> historys =[];
 
   _LampHistoryPageState(this.lampInfo);
+
+  // 让新界面重新点击不刷新
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
