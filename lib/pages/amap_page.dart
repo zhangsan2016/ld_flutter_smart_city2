@@ -325,7 +325,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
                 child: IconButton(
                   icon: Image.asset('images/refresh.png'),
                   onPressed: () {
-                    showToast('刷新',position: ToastPosition.bottom);
+                   // showToast('刷新',position: ToastPosition.bottom);
                     clusterManager.refresh();
                   },
                 ),
