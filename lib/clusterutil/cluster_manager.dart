@@ -53,7 +53,7 @@ class ClusterManager {
 
     init();
   }
-
+  bool showText = false;
   Future init() async {
 
     // marker 点击事件
@@ -96,16 +96,21 @@ class ClusterManager {
             addItems(projects);
           }
         }else{
-         /* // 地图缩放到指定大小后显示灯杆名称
-          if(move.zoom >= 19.5 && currentTitle != null){
-            // 获取项目对应的路灯列表
-            List<Lamp> lamp = lampMap[currentTitle];
-            // 获取项目对应的电箱
-            List<Ebox> ebox = eboxMap[currentTitle];
-            // 获取项目对应的报警器
-            List<AlarmApparatus> alarmApparatus = alarmApparatusMap[currentTitle];
-            displayMarkersText(lamp,  ebox, alarmApparatus);
+
+          /*  if(move.zoom >= 19.5 && currentTitle != null && !showText){
+              showText = true;
+              // 地图缩放到指定大小后显示灯杆名称
+              print('currentTitle = $currentTitle b = $showText');
+              // 获取项目对应的路灯列表
+              List<Lamp> lamp = lampMap[currentTitle];
+              // 获取项目对应的电箱
+              List<Ebox> ebox = eboxMap[currentTitle];
+              // 获取项目对应的报警器
+              List<AlarmApparatus> alarmApparatus = alarmApparatusMap[currentTitle];
+              displayMarkersText(lamp,  ebox, alarmApparatus);
+
           }*/
+
         }
       },
     );
@@ -155,7 +160,7 @@ class ClusterManager {
               latLng:
                   LatLng(double.parse(project.lat), double.parse(project.lng)),
               title: project.title,
-              snippet: '描述',
+             // snippet: '描述',
               iconUri: Uri.parse('images/bian.png'),
               imageConfig: createLocalImageConfiguration(_context),
               width: 48,
@@ -231,13 +236,15 @@ class ClusterManager {
           ],
         ),*/
         latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
-        title: '${lamp.nAME}',
-        snippet: '${lamp.pROJECT}',
+       // title: '${lamp.nAME}',
+       // snippet: '${lamp.pROJECT}',
          iconUri: selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
         imageConfig: createLocalImageConfiguration(_context),
         object: json.encode(lamp),
       );
 
+      // 是否允许弹窗
+     // markerOption.infoWindowEnabled;
       markerOptions.add(markerOption);
     }
 
@@ -344,8 +351,8 @@ class ClusterManager {
           ],
         ),
         latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
-        title: '${lamp.nAME}',
-        snippet: '${lamp.pROJECT}',
+      //  title: '${lamp.nAME}',
+       // snippet: '${lamp.pROJECT}',
         //iconUri: selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
         imageConfig: createLocalImageConfiguration(_context),
         object: json.encode(lamp),
