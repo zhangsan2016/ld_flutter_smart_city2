@@ -343,7 +343,7 @@ class ClusterManager {
           widget: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text('${lamp.nAME}',style: TextStyle(color: Colors.white),),
+            Text('${lamp.nAME}',style: TextStyle(color: Color.fromARGB(255,0, 186, 179)),),
             Image.asset(
               "${selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'), lamp.warningState ?? 0)}",
               fit: BoxFit.contain,
@@ -356,7 +356,7 @@ class ClusterManager {
       //  title: '${lamp.nAME}',
        // snippet: '${lamp.pROJECT}',
         //iconUri: selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
-        imageConfig: createLocalImageConfiguration(_context),
+       // imageConfig: createLocalImageConfiguration(_context),
         object: json.encode(lamp),
       );
 
