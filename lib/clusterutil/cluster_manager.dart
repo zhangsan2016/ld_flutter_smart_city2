@@ -97,7 +97,7 @@ class ClusterManager {
           }
         }else{
 
-          /*  if(move.zoom >= 19.5 && currentTitle != null && !showText){
+           if(move.zoom >= 19.5 && currentTitle != null && !showText){
               showText = true;
               // 地图缩放到指定大小后显示灯杆名称
               print('currentTitle = $currentTitle b = $showText');
@@ -109,7 +109,7 @@ class ClusterManager {
               List<AlarmApparatus> alarmApparatus = alarmApparatusMap[currentTitle];
               displayMarkersText(lamp,  ebox, alarmApparatus);
 
-          }*/
+          }
 
         }
       },
@@ -346,7 +346,9 @@ class ClusterManager {
             Text('${lamp.nAME}',style: TextStyle(color: Colors.white),),
             Image.asset(
               "${selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'), lamp.warningState ?? 0)}",
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
+              width: 38,
+              height: 38,
             ),
           ],
         ),
