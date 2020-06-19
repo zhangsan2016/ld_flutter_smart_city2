@@ -69,12 +69,7 @@ class _MyGroupingPageState extends State<MyGroupingPage> {
         color: Color.fromARGB(255, 11, 29, 77),
       ),
       child: ListView(
-        children: <Widget>[
-          groupTitle('默认分组'),
-          _wrapList(),
-          groupTitle('未分组'),
-          _wrapList(),
-        ],
+        children: getGroup(),
       ),
     );
   }
@@ -166,6 +161,14 @@ class _MyGroupingPageState extends State<MyGroupingPage> {
       );
 
     });
+
+  }
+
+  getGroup() {
+    List<Widget> list = [];
+    list.add(groupTitle('默认分组'));
+    list.add(_wrapList());
+    list.add(_wrapList());
 
   }
 }
