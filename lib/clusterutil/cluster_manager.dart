@@ -626,4 +626,8 @@ class ClusterManager {
       },
     );
   }
+
+  String getCurrentTitle(){
+    return currentTitle;
+  }
 }

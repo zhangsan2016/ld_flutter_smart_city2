@@ -344,7 +344,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
                 child: IconButton(
                   icon: Image.asset('images/group.png'),
                   onPressed: () {
-                    showToast('分组',position: ToastPosition.bottom);
+                    showToast('分组 ${clusterManager.getCurrentTitle()}',position: ToastPosition.bottom);
                   },
                 ),
               ),
