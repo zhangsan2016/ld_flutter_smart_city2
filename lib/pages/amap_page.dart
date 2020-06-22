@@ -381,14 +381,31 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
     // 获取当前点击的项目名称
     String currentProject = clusterManager.getCurrentTitle();
 
-    var result = await Navigator.pushNamed(context, GroupingPage.routeName,
-        arguments: currentProject);
+   /* var result = await Navigator.pushNamed(context, GroupingPage.routeName,
+        arguments: currentProject);*/
 
-    /* var result = await Navigator.push(context, MaterialPageRoute(
+    /*  print(result.toString());
+    showToast('msg ${result.toString()}');*/
+
+   /* var result2 = await Navigator.push(context, MaterialPageRoute(
         builder: (context)=>GroupingPage()
-    ));*/
+    )).then((data){
+      //接受返回的参数
+      print('data.toString() = ${data.toString()}');
+    });*/
 
-    print(result.toString());
-    showToast('msg ${result.toString()}');
+    Navigator.push<String>(
+      context,
+      new CupertinoPageRoute(
+        builder: (BuildContext context) {
+          return new GroupingPage();
+        },
+      ),
+    ).then((data){
+      //接受返回的参数
+      print('data.toString() = ${data.toString()}');
+      showToast('data.toString() = ${data.toString()}');
+    });
+
   }
 }

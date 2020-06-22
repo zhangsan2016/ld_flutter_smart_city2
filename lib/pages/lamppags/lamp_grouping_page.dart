@@ -32,8 +32,9 @@ class _MyGroupingPageState extends State<GroupingPage> {
 
       ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     // 获取传递过来的数据
-    String str = ModalRoute.of(context).settings.arguments;
-    print('str = $str');
+    String projectTitle = ModalRoute.of(context).settings.arguments;
+    print('projectTitle = $projectTitle');
+
     return new Scaffold(
           appBar: new AppBar(
             //自定义Drawer的按钮
@@ -55,7 +56,8 @@ class _MyGroupingPageState extends State<GroupingPage> {
           body: Container(
             padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 30.0),
             decoration: new BoxDecoration(
-              color: Color.fromARGB(255, 11, 29, 77),
+              //color: Color.fromARGB(255, 11, 29, 77),
+              color: Color.fromARGB(240, 11, 29, 77),
             ),
             child: ListView(
               children: getGroup(),
