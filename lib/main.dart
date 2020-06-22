@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/material.dart';
+import 'package:ldfluttersmartcity2/pages/lamppags/lamp_grouping_page.dart';
 import 'package:ldfluttersmartcity2/pages/login_page.dart';
 import 'package:oktoast/oktoast.dart';
-
-import 'check/cc.dart';
 
 void main() async {
   runApp(MyApp());
@@ -34,6 +33,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: MyHomePage(title: '洛丁智慧城市'),
+        routes: {
+          GroupingPage.routeName: (context) => GroupingPage(),
+        },
       ),
     );
   }

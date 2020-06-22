@@ -16,6 +16,8 @@ import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
 
+import 'lamppags/lamp_grouping_page.dart';
+
 final _assetsIcon1 = Uri.parse('images/test_icon.png');
 final _assetsIcon2 = Uri.parse('images/arrow.png');
 final uuidController = TextEditingController(); // uuid输入监听
@@ -29,6 +31,7 @@ class AmapPage extends StatefulWidget {
 class AmapPageState extends State<AmapPage> implements AMapListening {
   AmapController _controller;
   ClusterManager clusterManager;
+
   // 覆盖物展开状态
   bool isUnfold = false;
 
@@ -41,116 +44,117 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     return new MaterialApp(
-        // 去掉运行时 debug 的提示
-        debugShowCheckedModeBanner: false,
-        title: '洛丁智慧照明',
-        home: new Scaffold(
-          appBar: new AppBar(
-            //自定义Drawer的按钮
-            leading: Builder(builder: (BuildContext context) {
-              return IconButton(
-                  icon: Icon(Icons.wifi_tethering),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  });
-            }),
-            title: new Text('洛丁智慧照明'),
-            backgroundColor: Colors.cyan,
-          ),
-          body: Stack(
+      // 去掉运行时 debug 的提示
+      debugShowCheckedModeBanner: false,
+      title: '洛丁智慧照明',
+      home: new Scaffold(
+        appBar: new AppBar(
+          //自定义Drawer的按钮
+          leading: Builder(builder: (BuildContext context) {
+            return IconButton(
+                icon: Icon(Icons.wifi_tethering),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                });
+          }),
+          title: new Text('洛丁智慧照明'),
+          backgroundColor: Colors.cyan,
+        ),
+        body: Stack(
+          children: <Widget>[
+            initAMap(),
+            //  search(),
+            mapBar(),
+          ],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
             children: <Widget>[
-              initAMap(),
-              //  search(),
-              mapBar(),
-            ],
-          ),
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                Container(
-                  height: 200,
-                  child: UserAccountsDrawerHeader(
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlueAccent,
-                    ),
+              Container(
+                height: 200,
+                child: UserAccountsDrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlueAccent,
                   ),
                 ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                  // leading: Icon(Icons.wifi),
-                  title: new Text('地图'),
-                  onTap: () {
-                    // 获取项目中的路灯
-                    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
-                        .then((val) async {
-                      // 解析 json
-                      var data = json.decode(val);
-                      LoginInfo loginInfo = LoginInfo.fromJson(data);
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                // leading: Icon(Icons.wifi),
+                title: new Text('地图'),
+                onTap: () {
+                  // 获取项目中的路灯
+                  SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                      .then((val) async {
+                    // 解析 json
+                    var data = json.decode(val);
+                    LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-                      var param = "{\"where\":{\"PROJECT\":\"" +
-                          "中科洛丁展示项目/深圳展厅" +
-                          "\"},\"size\":1000}";
+                    var param = "{\"where\":{\"PROJECT\":\"" +
+                        "中科洛丁展示项目/深圳展厅" +
+                        "\"},\"size\":1000}";
 
-                      DioUtils.requestHttp(
-                        servicePath['DEVICE_EBOX_URL'],
-                        parameters: param,
-                        token: loginInfo.data.token.token,
-                        method: DioUtils.POST,
-                        onSuccess: (String data) {
-                          // 解析 json
-                          var jsonstr = json.decode(data);
-                          // print('getDeviceLampList title $title = $data');
-                          print('get jsonstr = $jsonstr ');
-                        },
-                        onError: (error) {
-                          print(' DioUtils.requestHttp error = $error');
-                        },
-                      );
-                    });
-                  },
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                  title: new Text('路灯'),
-                  onTap: () {
-                    showToast('路灯');
-                    Navigator.push<String>(
-                      context,
-                      new MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          //  return new OtherPage(pwd: "123456");
-                          return new LampPage("");
-                        },
-                      ),
+                    DioUtils.requestHttp(
+                      servicePath['DEVICE_EBOX_URL'],
+                      parameters: param,
+                      token: loginInfo.data.token.token,
+                      method: DioUtils.POST,
+                      onSuccess: (String data) {
+                        // 解析 json
+                        var jsonstr = json.decode(data);
+                        // print('getDeviceLampList title $title = $data');
+                        print('get jsonstr = $jsonstr ');
+                      },
+                      onError: (error) {
+                        print(' DioUtils.requestHttp error = $error');
+                      },
                     );
-                  },
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                  title: new Text('电箱'),
-                  onTap: () {
-                    showToast('电箱');
-                  },
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                  title: new Text('项目'),
-                  onTap: () {
-                    showToast('项目');
-                  },
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                  title: new Text('报警'),
-                  onTap: () {
-                    showToast('报警');
-                  },
-                ),
-              ],
-            ),
+                  });
+                },
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                title: new Text('路灯'),
+                onTap: () {
+                  showToast('路灯');
+                  Navigator.push<String>(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        //  return new OtherPage(pwd: "123456");
+                        return new LampPage("");
+                      },
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                title: new Text('电箱'),
+                onTap: () {
+                  showToast('电箱');
+                },
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                title: new Text('项目'),
+                onTap: () {
+                  showToast('项目');
+                },
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                title: new Text('报警'),
+                onTap: () {
+                  showToast('报警');
+                },
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   /**
@@ -204,17 +208,18 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
       onMapClicked: (LatLng coord) {},
       // 地图创建完成回调 (可选)
       onMapCreated: (controller) async {
-        SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+        SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+            .then((val) async {
           _controller = controller;
 
           // 设置自定义地图
-            await _controller?.setCustomMapStyle(
+          await _controller?.setCustomMapStyle(
             styleDataPath: 'raw/style.data',
             styleExtraPath: 'raw/style_extra.data',
           );
 
           // 定义点聚合管理类ClusterManager
-          clusterManager = new ClusterManager(context, _controller,this);
+          clusterManager = new ClusterManager(context, _controller, this);
 
           // 解析 json
           var data = json.decode(val);
@@ -308,7 +313,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
    * 地图功能栏
    */
   Widget mapBar() {
-    if(isUnfold){
+    if (isUnfold) {
       return Positioned(
         left: 1,
         right: 1,
@@ -325,7 +330,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
                 child: IconButton(
                   icon: Image.asset('images/refresh.png'),
                   onPressed: () {
-                   // showToast('刷新',position: ToastPosition.bottom);
+                    // showToast('刷新',position: ToastPosition.bottom);
                     clusterManager.refresh();
                   },
                 ),
@@ -344,7 +349,8 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
                 child: IconButton(
                   icon: Image.asset('images/group.png'),
                   onPressed: () {
-                    showToast('分组 ${clusterManager.getCurrentTitle()}',position: ToastPosition.bottom);
+                    // showToast('分组 ${clusterManager.getCurrentTitle()}',position: ToastPosition.bottom);
+                    _navigateGroupingPage(context);
                   },
                 ),
               ),
@@ -352,16 +358,13 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
           ),
         ),
       );
-    }else{
-      return  Container();
+    } else {
+      return Container();
     }
-
   }
 
   @override
-  void mapMoveListener(MapMove move) {
-  }
-
+  void mapMoveListener(MapMove move) {}
 
   @override
   void mapMarkerStartListener(bool isUnfold) {
@@ -369,5 +372,23 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
       this.isUnfold = isUnfold;
     });
     print('mapMarkerStartListener isUnfold $isUnfold ');
+  }
+
+  /**
+   * 跳转到分组
+   */
+  _navigateGroupingPage(BuildContext context) async {
+    // 获取当前点击的项目名称
+    String currentProject = clusterManager.getCurrentTitle();
+
+    var result = await Navigator.pushNamed(context, GroupingPage.routeName,
+        arguments: currentProject);
+
+    /* var result = await Navigator.push(context, MaterialPageRoute(
+        builder: (context)=>GroupingPage()
+    ));*/
+
+    print(result.toString());
+    showToast('msg ${result.toString()}');
   }
 }

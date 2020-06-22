@@ -5,15 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
-import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
-import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
 class GroupingPage extends StatelessWidget {
-
+  static const String routeName = "demo/second_route";
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
+    // 获取传递过来的数据
+    String str = ModalRoute.of(context).settings.arguments;
+    print('str = $str');
     return new MaterialApp(
         // 去掉运行时 debug 的提示
         debugShowCheckedModeBanner: false,
@@ -26,7 +27,9 @@ class GroupingPage extends StatelessWidget {
                   icon: Icon(Icons.arrow_back_ios),
                   onPressed: () {
                     onPressed:
-                    () => Navigator.of(context).pop();
+                   // () => Navigator.of(context).pop();
+                    Navigator.pop(context, "这是返回的数据");
+                  // Navigator.pop(context, '55566666666666');
                   });
             }),
             title: new Text('洛丁智慧照明'),
@@ -88,7 +91,9 @@ class _MyGroupingPageState extends State<MyGroupingPage> {
       List<Widget> listWidget = lamps.map((val) {
         Lamp lamp = val;
         return InkWell(
-          onTap: () {},
+          onTap: () {
+            print('${lamp.nAME} lamp.lAT ： ${lamp.lAT} lamp.lNG ：${lamp.lNG}');
+          },
           child: Container(
             //width: ScreenUtil().setWidth(150),
             color: Color.fromARGB(255, 37, 70, 131),
@@ -125,16 +130,9 @@ class _MyGroupingPageState extends State<MyGroupingPage> {
    */
   getDeviceLampList(String title) {
 
-    // 获取项目中的路灯
-    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
-        .then((val) async {
 
       var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
 
-      // 解析 json
-      var data = json.decode(val);
-      LoginInfo loginInfo = LoginInfo.fromJson(data);
-      String token = loginInfo.data.token.token;
 
       DioUtils.requestHttp(
         servicePath['DEVICE_LAMP_LIST_URL'],
@@ -160,15 +158,16 @@ class _MyGroupingPageState extends State<MyGroupingPage> {
         },
       );
 
-    });
 
   }
 
-  getGroup() {
-    List<Widget> list = [];
+ List<Widget> getGroup() {
+    List<Widget> list =[];
     list.add(groupTitle('默认分组'));
     list.add(_wrapList());
+    list.add(groupTitle('未分组'));
     list.add(_wrapList());
+    return list;
 
   }
 }
