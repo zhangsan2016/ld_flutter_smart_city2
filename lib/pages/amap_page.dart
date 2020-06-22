@@ -402,9 +402,8 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
         },
       ),
     ).then((data){
-      //接受返回的参数
+      //接收返回的参数
       print('data.toString() = ${data.toString()}');
-      showToast('data.toString() = ${data.toString()}');
     });
 
   }
