@@ -29,7 +29,8 @@ class GroupingPage extends StatelessWidget {
                     onPressed:
                    // () => Navigator.of(context).pop();
                     Navigator.pop(context, "这是返回的数据");
-                  // Navigator.pop(context, '55566666666666');
+
+
                   });
             }),
             title: new Text('洛丁智慧照明'),
