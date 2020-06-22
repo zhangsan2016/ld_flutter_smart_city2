@@ -7,19 +7,34 @@ import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 
-class GroupingPage extends StatelessWidget {
+class GroupingPage extends StatefulWidget {
   static const String routeName = "demo/second_route";
+
+  @override
+  _MyGroupingPageState createState() => _MyGroupingPageState();
+}
+
+class _MyGroupingPageState extends State<GroupingPage> {
+  // 当前路灯数据
+  List<Lamp> lamps = [];
+  _MyGroupingPageState();
+
+  @override
+  void initState() {
+    super.initState();
+    // 网络获取当前项目路灯数据
+    getDeviceLampList('中科洛丁展示项目/深圳展厅');
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
+
+      ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     // 获取传递过来的数据
     String str = ModalRoute.of(context).settings.arguments;
     print('str = $str');
-    return new MaterialApp(
-        // 去掉运行时 debug 的提示
-        debugShowCheckedModeBanner: false,
-        title: '洛丁智慧照明',
-        home: new Scaffold(
+    return new Scaffold(
           appBar: new AppBar(
             //自定义Drawer的按钮
             leading: Builder(builder: (BuildContext context) {
@@ -27,7 +42,7 @@ class GroupingPage extends StatelessWidget {
                   icon: Icon(Icons.arrow_back_ios),
                   onPressed: () {
                     onPressed:
-                   // () => Navigator.of(context).pop();
+                    // () => Navigator.of(context).pop();
                     Navigator.pop(context, "这是返回的数据");
 
 
@@ -37,45 +52,17 @@ class GroupingPage extends StatelessWidget {
             centerTitle: true,
             backgroundColor: Colors.cyan,
           ),
-          body: MyGroupingPage(),
-        ));
-  }
-}
+          body: Container(
+            padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 30.0),
+            decoration: new BoxDecoration(
+              color: Color.fromARGB(255, 11, 29, 77),
+            ),
+            child: ListView(
+              children: getGroup(),
+            ),
+          ),
+        );
 
-class MyGroupingPage extends StatefulWidget {
-
-  @override
-  _MyGroupingPageState createState() => _MyGroupingPageState();
-}
-
-class _MyGroupingPageState extends State<MyGroupingPage> {
-  // 当前路灯数据
-  List<Lamp> lamps = [];
-
-
-  _MyGroupingPageState();
-
-
-  @override
-  void initState() {
-    super.initState();
-    // 网络获取当前项目路灯数据
-    getDeviceLampList('中科洛丁展示项目/深圳展厅');
-
-
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 30.0),
-      decoration: new BoxDecoration(
-        color: Color.fromARGB(255, 11, 29, 77),
-      ),
-      child: ListView(
-        children: getGroup(),
-      ),
-    );
   }
 
   // 设置标题
