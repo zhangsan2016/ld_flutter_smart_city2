@@ -9,6 +9,8 @@ import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/view/discrete_Setting.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../lamp_page.dart';
+
 class GroupingPage extends StatefulWidget {
   static const String routeName = "demo/second_route";
 
@@ -104,8 +106,21 @@ class _MyGroupingPageState extends State<GroupingPage> {
                     print('${lamp.nAME} ： $value');
                     switch (value) {
                       case '定位':
+
+                        Navigator.pop(context, "这是返回的数据 定位");
+
                         break;
                       case '控制':
+
+                        Navigator.push<String>(
+                          context,
+                          new CupertinoPageRoute(
+                            builder: (BuildContext context) {
+                              return new LampPage(json.encode(lamp));
+                            },
+                          ),
+                        );
+
                         break;
                     }
                   },
