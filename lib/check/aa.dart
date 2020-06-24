@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
 
 void main() {
 /*  final random = Random();
@@ -39,7 +35,7 @@ print('${  testList3.length}');
   print('morePlanets $morePlanets');
   print('testList3 $testList3');*/
 
-  DateTime victoryDay = new DateTime(1585702939556);//
+  /*DateTime victoryDay = new DateTime(1585702939556);//
   print(victoryDay.toString());
 
   //timestamp 为毫秒时间戳
@@ -63,7 +59,25 @@ print('${  testList3.length}');
     print('object');
   }
 
+  String value ='';
+  if(value.isEmpty){
+    print('非空');
+  }*/
 
+  var  lampsGroup = <String, List<String>>{};
+  var list = ['sdf', 'sdf'];
+  var list2 = ['123', '456'];
+  lampsGroup['未分组'] = list;
+  lampsGroup['未分组2'] = list2;
+
+
+  List<String> aa = lampsGroup.keys.map((item){
+    List<String> c = lampsGroup[item];
+    print('${item}');
+  }).toList();
+
+
+  List<String> keys = lampsGroup.keys.toList();
 
 
 

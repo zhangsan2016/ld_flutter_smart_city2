@@ -53,32 +53,7 @@ class HomePage22 extends StatelessWidget {
             return Container(
               alignment: Alignment.center,
              // child: Text(e, textScaleFactor: 5),
-              child: Column(children: <Widget>[
-                RaisedButton(child: Text(('网络连接')),onPressed: (){
-
-                  var param = "{\"id\": \"" + '83140000862285035977879' + "\", \"Confirm\": 260, \"options\": {\"FirDimming\", 100} }";
-
-                  print('param = ${param.toString()}');
-
-                  DioUtils.requestHttp(
-                    servicePath['DEVICE_CONTROL_URL'],
-                    parameters: param,
-                    token: '0b3b88b0-a6d4-11ea-a5b2-6fc422f708c4',
-                    method: DioUtils.POST,
-                    onSuccess: (String data) {
-                      // 解析 json
-                  //    var jsonstr = json.decode(data);
-                      // print('getDeviceLampList title $title = $data');
-                      print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx DEVICE_CONTROL_URL $data ');
-
-                    },
-                    onError: (error) {
-                      print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
-                    },
-                  );
-
-                },),
-              ],),
+              child: Text('dxxx'),
             );
           }).toList(),
         ),

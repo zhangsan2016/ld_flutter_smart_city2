@@ -344,15 +344,16 @@ class ClusterManager {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text('${lamp.nAME}',style: TextStyle(color: Color.fromARGB(255,0, 186, 179)),),
-           /* Image.asset(
+            Image.asset(
               "${selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'), lamp.warningState ?? 0)}",
               fit: BoxFit.contain,
               width: 38,
               height: 38,
-            ),*/
+            ),
           ],
         ),
         latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
+        imageConfig: createLocalImageConfiguration(_context),
       //  title: '${lamp.nAME}',
        // snippet: '${lamp.pROJECT}',
         //iconUri: selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
@@ -363,7 +364,50 @@ class ClusterManager {
       markerOptions.add(markerOption);
     }
 
+    // 批量添加电箱覆盖物
+    if (eboxs != null && eboxs.length > 0) {
+      for (var i = 0; i < eboxs.length; ++i) {
+        Ebox ebox = eboxs[i];
+        if (ebox.lAT == "" || ebox.lNG == "") {
+          print('   ${ebox.nAME} 坐标为空');
+          continue;
+        }
 
+        MarkerOption markerOption = new MarkerOption(
+          latLng:
+          new LatLng(double.parse(ebox.lAT), double.parse(ebox.lNG)),
+          title: '${ebox.nAME}',
+          snippet: '${ebox.pROJECT}',
+          iconUri: selectImagesByType(int.parse('${ebox.tYPE}'),
+              double.parse('${ebox.firDimming ?? 0}'), 0),
+          imageConfig: createLocalImageConfiguration(_context),
+          object: json.encode(ebox),
+        );
+        markerOptions.add(markerOption);
+      }
+    } else {}
+
+    // 批量添加报警器覆盖物
+    if (alarmApparatus != null && alarmApparatus.length > 0) {
+      for (var i = 0; i < alarmApparatus.length; ++i) {
+        AlarmApparatus alarm = alarmApparatus[i];
+        if (alarm.lAT == "" || alarm.lNG == "") {
+          print('   ${alarm.nAME} 坐标为空');
+          continue;
+        }
+
+        MarkerOption markerOption = new MarkerOption(
+          latLng:
+          new LatLng(double.parse(alarm.lAT), double.parse(alarm.lNG)),
+          title: '${alarm.nAME}',
+          snippet: '${alarm.pROJECT}',
+          iconUri: Uri.parse('images/test_icon.png'),
+          imageConfig: createLocalImageConfiguration(_context),
+          object: json.encode(alarm),
+        );
+        markerOptions.add(markerOption);
+      }
+    } else {}
 
      _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
   }
@@ -374,7 +418,8 @@ class ClusterManager {
   void relocation() async {
     /* Stream.fromIterable(_markers)
         .asyncMap((marker) => marker.location)
-        .toList()sj       .then((boundary) {
+        .toList()
+        .then((boundary) {
       debugPrint('boundary: $boundary');
       return _controller?.zoomToSpan(
         boundary,
