@@ -35,6 +35,8 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
   // 覆盖物展开状态
   bool isUnfold = false;
 
+  BuildContext _context;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +44,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
 
   @override
   Widget build(BuildContext context) {
+    _context = context;
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     return new MaterialApp(
       // 去掉运行时 debug 的提示
@@ -381,13 +384,13 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
     // 获取当前点击的项目名称
     String currentProject = clusterManager.getCurrentTitle();
 
-   /* var result = await Navigator.pushNamed(context, GroupingPage.routeName,
+    /* var result = await Navigator.pushNamed(context, GroupingPage.routeName,
         arguments: currentProject);*/
 
     /*  print(result.toString());
     showToast('msg ${result.toString()}');*/
 
-   /* var result2 = await Navigator.push(context, MaterialPageRoute(
+    /* var result2 = await Navigator.push(context, MaterialPageRoute(
         builder: (context)=>GroupingPage()
     )).then((data){
       //接受返回的参数
@@ -398,13 +401,21 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
       context,
       new CupertinoPageRoute(
         builder: (BuildContext context) {
-          return new GroupingPage();
+          return new GroupingPage(currentProject);
         },
       ),
-    ).then((data){
+    ).then((data) async {
+      // 定位功能
       //接收返回的参数
-      print('data.toString() = ${data.toString()}');
-    });
+      Lamp lamp = Lamp.fromJson(json.decode(data));
+      _controller?.setCenterCoordinate(
+        LatLng(double.parse(lamp.lAT),double.parse(lamp.lNG)),
+        animated: false,
+      );
 
+      // 更新图标
+      clusterManager?.updateMarkerIco('${double.parse(lamp.lAT)},${double.parse(lamp.lNG)}');
+
+    });
   }
 }

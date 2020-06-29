@@ -33,9 +33,6 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: MyHomePage(title: '洛丁智慧城市'),
-        routes: {
-          GroupingPage.routeName: (context) => GroupingPage(),
-        },
       ),
     );
   }

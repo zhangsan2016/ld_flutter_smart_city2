@@ -7,15 +7,17 @@ import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/view/discrete_Setting.dart';
-import 'package:oktoast/oktoast.dart';
 
 import '../lamp_page.dart';
 
 class GroupingPage extends StatefulWidget {
-  static const String routeName = "demo/second_route";
+  // 当前项目
+  String currentProject;
+
+  GroupingPage(this.currentProject);
 
   @override
-  _MyGroupingPageState createState() => _MyGroupingPageState();
+  _MyGroupingPageState createState() => _MyGroupingPageState(currentProject);
 }
 
 class _MyGroupingPageState extends State<GroupingPage> {
@@ -24,8 +26,10 @@ class _MyGroupingPageState extends State<GroupingPage> {
 
   // 分组后的路灯
   var lampsGroup = <String, List<Lamp>>{};
+  // 当前项目
+  String currentProject;
 
-  _MyGroupingPageState();
+  _MyGroupingPageState(this.currentProject);
 
   @override
   void initState() {
@@ -38,8 +42,8 @@ class _MyGroupingPageState extends State<GroupingPage> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     // 获取传递过来的数据
-    String projectTitle = ModalRoute.of(context).settings.arguments;
-    print('projectTitle = $projectTitle');
+  //  String projectTitle = ModalRoute.of(context).settings.arguments;
+ //   print('projectTitle = $projectTitle');
 
     return new Scaffold(
       appBar: new AppBar(
@@ -107,7 +111,8 @@ class _MyGroupingPageState extends State<GroupingPage> {
                     switch (value) {
                       case '定位':
 
-                        Navigator.pop(context, "这是返回的数据 定位");
+
+                        Navigator.pop(context, json.encode(lamp));
 
                         break;
                       case '控制':
