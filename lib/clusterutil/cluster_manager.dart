@@ -386,34 +386,67 @@ class ClusterManager {
       currentLocation = location;
     }*/
 
-   Marker preMarker = getMarker(location);
-    Lamp lamp = Lamp.fromJson(json.decode(await preMarker.object));
 
-     MarkerOption markerOption = new MarkerOption(
-      widget: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Image.asset(
-            "${Uri.parse('images/light_warning.png')}",
-            fit: BoxFit.contain,
-            width: 38,
-            height: 38,
-          ),
-        ],
-      ),
-     // iconUri: Uri.parse('images/light_warning.png'),
-      latLng: new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG)),
-      imageConfig: createLocalImageConfiguration(_context),
-      //  title: '${lamp.nAME}',
-      // snippet: '${lamp.pROJECT}',
-      //iconUri: selectImagesByType(int.parse('${lamp.tYPE}'), double.parse('${lamp.firDimming ?? 0}'),lamp.warningState??0),
-      // imageConfig: createLocalImageConfiguration(_context),
-      object: json.encode(lamp),
-    );
     List<MarkerOption> markerOptions = List();
-    markerOptions.add(markerOption);
-    _controller?.addMarkers(markerOptions);
+    if(currentLocation != location){
+      // 先把之前图标更换回来
+      Marker preMarker = getMarker(currentLocation);
+      if (preMarker != null) {
+        Lamp l = Lamp.fromJson(json.decode(await preMarker.object));
+        await preMarker.remove();
+        MarkerOption preMarkerOption = new MarkerOption(
+          widget: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Image.asset(
+                "${selectImagesByType(int.parse('${l.tYPE}'),
+                    double.parse('${l.firDimming ?? 0}'), l.warningState ?? 0)}",
+                fit: BoxFit.contain,
+                width: 38,
+                height: 38,
+              ),
+            ],
+          ),
+          latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
+          title: '${l.nAME}',
+          snippet: '${l.pROJECT}',
+         // imageConfig: createLocalImageConfiguration(_context),
+          object: json.encode(l),
+        );
+        markerOptions.add(preMarkerOption);
+      }
 
+      // 更换当前图标
+      Marker cuMarker = getMarker(location);
+      if (cuMarker != null) {
+        Lamp l = Lamp.fromJson(json.decode(await cuMarker.object));
+        await cuMarker.remove();
+        MarkerOption cuMarkerOption = new MarkerOption(
+          widget: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Image.asset(
+                "${ Uri.parse('images/bian.png')}",
+                fit: BoxFit.contain,
+                width: 38,
+                height: 38,
+              ),
+            ],
+          ),
+          title: '${l.nAME}',
+          snippet: '${l.pROJECT}',
+          latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
+         // imageConfig: createLocalImageConfiguration(_context),
+          object: json.encode(l),
+        );
+        markerOptions.add(cuMarkerOption);
+      }
+      _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
+      // 设置当前的定位的位置
+      currentLocation = location;
+    }
+
+    //_controller?.addMarkers(markerOptions);
 
 
 
