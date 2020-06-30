@@ -408,6 +408,8 @@ class ClusterManager {
 
       // 保存当前覆盖物
       _controller?.addMarkers(markerOptions)?.then((List<Marker> ml) async {
+        // 设置当前的定位的位置
+        currentLocation = location;
         _markers.addAll(ml);
         // 保存marker到键值对列表
         for(var ma in ml) {
@@ -415,9 +417,6 @@ class ClusterManager {
           _markerMap['${latLng.latitude},${latLng.longitude}'] = ma;
         }
       });
-
-      // 设置当前的定位的位置
-      currentLocation = location;
 
       print('_markerMap.length = ${_markerMap.length}  _markers.length = ${_markers.length}');
     }
