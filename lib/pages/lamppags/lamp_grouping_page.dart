@@ -37,7 +37,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
   void initState() {
     super.initState();
     // 网络获取当前项目路灯数据
-    getDeviceLampList('中科洛丁展示项目/深圳展厅');
+    getDeviceLampList(currentProject);
   }
 
   @override
