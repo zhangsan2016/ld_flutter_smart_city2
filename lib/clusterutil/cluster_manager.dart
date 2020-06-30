@@ -7,6 +7,7 @@ import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:decorated_flutter/decorated_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/alarm_apparatus_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
@@ -105,8 +106,7 @@ class ClusterManager {
             // 获取项目对应的电箱
             List<Ebox> ebox = eboxMap[currentTitle];
             // 获取项目对应的报警器
-            List<AlarmApparatus> alarmApparatus =
-                alarmApparatusMap[currentTitle];
+            List<AlarmApparatus> alarmApparatus = alarmApparatusMap[currentTitle];
             displayMarkersText(lamp, ebox, alarmApparatus);
           }
         }
@@ -425,6 +425,10 @@ class ClusterManager {
           widget: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              Text(
+                '${l.nAME}',
+                style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,),
+              ),
               Image.asset(
                 "${ Uri.parse('images/bian.png')}",
                 fit: BoxFit.contain,
@@ -441,9 +445,21 @@ class ClusterManager {
         );
         markerOptions.add(cuMarkerOption);
       }
-      _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
+
+      // 保存当前覆盖物
+      _controller?.addMarkers(markerOptions)?.then((List<Marker> ml) async {
+        _markers.addAll(ml);
+        // 保存marker到键值对列表
+        for(var ma in ml) {
+          LatLng latLng = await ma.location;
+          _markerMap['${latLng.latitude},${latLng.longitude}'] = ma;
+        }
+      });
+
       // 设置当前的定位的位置
       currentLocation = location;
+
+      print('_markerMap.length = ${_markerMap.length}  _markers.length = ${_markers.length}');
     }
 
     //_controller?.addMarkers(markerOptions);
@@ -465,7 +481,7 @@ class ClusterManager {
 
       // 清空当前地图覆盖物
       _controller.clearMarkers(_markers);
-
+      _markers.clear();
       MarkerOption markerOption = new MarkerOption(
         widget: Column(
           mainAxisSize: MainAxisSize.min,
@@ -538,6 +554,8 @@ class ClusterManager {
     } else {}
 
     _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
+    // 展开状态为 true
+    isUnfold = true;
   }
 
   /**

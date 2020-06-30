@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:decorated_flutter/decorated_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
@@ -7,6 +8,7 @@ import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/view/discrete_Setting.dart';
+import 'package:oktoast/oktoast.dart';
 
 import '../lamp_page.dart';
 
@@ -54,7 +56,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
               onPressed: () {
                 onPressed:
                 // () => Navigator.of(context).pop();
-                Navigator.pop(context, "这是返回的数据");
+                Navigator.pop(context);
               });
         }),
         title: new Text('洛丁智慧照明'),
@@ -111,8 +113,11 @@ class _MyGroupingPageState extends State<GroupingPage> {
                     switch (value) {
                       case '定位':
 
-
-                        Navigator.pop(context, json.encode(lamp));
+                        if(lamp.lNG.isNotEmpty && lamp.lNG.isNotEmpty){
+                          Navigator.pop(context, json.encode(lamp));
+                        }else{
+                          showToast('未能找到当前设备经纬度，请重新添加',position: ToastPosition.bottom);
+                        }
 
                         break;
                       case '控制':

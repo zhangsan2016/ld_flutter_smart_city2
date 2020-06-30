@@ -80,12 +80,9 @@ print('${  testList3.length}');
 
   List<String> keys = lampsGroup.keys.toList();
 
-print('${lampsGroup['未分组33']}');
 
-
-  String a ="22.635390";
-String  b ="114.003408";
-print('${double.parse(a)},${double.parse(b)}');
+  String c;
+  print('c = ${c.isNotEmpty}');
 
 
 }
