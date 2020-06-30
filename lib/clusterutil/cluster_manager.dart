@@ -347,49 +347,9 @@ class ClusterManager {
    */
   updateMarkerIco(String location) async {
 
- /*   List<MarkerOption> markerOptions = List();
-    if(currentLocation != location){
-      // 先把之前图标更换回来
-      Marker preMarker = getMarker(currentLocation);
-      if (preMarker != null) {
-        Lamp l = Lamp.fromJson(json.decode(await preMarker.object));
-        await preMarker.remove();
-        MarkerOption preMarkerOption = new MarkerOption(
-          latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
-          title: '${l.nAME}',
-          snippet: '${l.pROJECT}',
-          iconUri: selectImagesByType(int.parse('${l.tYPE}'),
-              double.parse('${l.firDimming ?? 0}'), l.warningState ?? 0),
-          imageConfig: createLocalImageConfiguration(_context),
-          object: json.encode(l),
-        );
-        markerOptions.add(preMarkerOption);
-      }
-
-      // 更换当前图标
-      Marker cuMarker = getMarker(location);
-      if (cuMarker != null) {
-        Lamp l = Lamp.fromJson(json.decode(await cuMarker.object));
-        await cuMarker.remove();
-        MarkerOption cuMarkerOption = new MarkerOption(
-          title: '${l.nAME}',
-          snippet: '${l.pROJECT}',
-          latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
-          iconUri: Uri.parse('images/bian.png'),
-          imageConfig: createLocalImageConfiguration(_context),
-          object: json.encode(l),
-        );
-        markerOptions.add(cuMarkerOption);
-      }
-      _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
-      // 设置当前的定位的位置
-      currentLocation = location;
-    }*/
-
-
     List<MarkerOption> markerOptions = List();
     if(currentLocation != location){
-      // 先把之前图标更换回来
+      // 先把上一个图标更换回来
       Marker preMarker = getMarker(currentLocation);
       if (preMarker != null) {
         Lamp l = Lamp.fromJson(json.decode(await preMarker.object));
