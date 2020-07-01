@@ -18,7 +18,8 @@ class DiscreteSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
       // color: Color.fromARGB(255, 107, 145, 214),
-      color: Colors.grey,
+     // color: Colors.grey,
+      color: Color.fromARGB(255, 100, 149, 237),
       onSelected: onSelected,
       child: Text(
         head,

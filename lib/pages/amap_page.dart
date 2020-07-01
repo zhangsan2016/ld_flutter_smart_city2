@@ -70,92 +70,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
             mapBar(),
           ],
         ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              Container(
-                height: 200,
-                child: UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.lightBlueAccent,
-                  ),
-                ),
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                // leading: Icon(Icons.wifi),
-                title: new Text('地图'),
-                onTap: () {
-                  // 获取项目中的路灯
-                  SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
-                      .then((val) async {
-                    // 解析 json
-                    var data = json.decode(val);
-                    LoginInfo loginInfo = LoginInfo.fromJson(data);
-
-                    var param = "{\"where\":{\"PROJECT\":\"" +
-                        "中科洛丁展示项目/深圳展厅" +
-                        "\"},\"size\":1000}";
-
-                    DioUtils.requestHttp(
-                      servicePath['DEVICE_EBOX_URL'],
-                      parameters: param,
-                      token: loginInfo.data.token.token,
-                      method: DioUtils.POST,
-                      onSuccess: (String data) {
-                        // 解析 json
-                        var jsonstr = json.decode(data);
-                        // print('getDeviceLampList title $title = $data');
-                        print('get jsonstr = $jsonstr ');
-                      },
-                      onError: (error) {
-                        print(' DioUtils.requestHttp error = $error');
-                      },
-                    );
-                  });
-                },
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                title: new Text('路灯'),
-                onTap: () {
-                  showToast('路灯');
-                  Navigator.push<String>(
-                    context,
-                    new MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        //  return new OtherPage(pwd: "123456");
-                        return new LampPage("");
-                      },
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                title: new Text('电箱'),
-                onTap: () {
-                  showToast('电箱');
-                },
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                title: new Text('项目'),
-                onTap: () {
-                  showToast('项目');
-                },
-              ),
-              ListTile(
-                contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                title: new Text('报警'),
-                onTap: () {
-                  showToast('报警');
-                },
-              ),
-            ],
-          ),
-        ),
+       // drawer: myDrawer(),
       ),
     );
   }
@@ -423,5 +338,97 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
 
 
     });
+  }
+
+  /**
+   *  抽屉布局
+   */
+  Widget myDrawer() {
+   return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          Container(
+            height: 200,
+            child: UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.lightBlueAccent,
+              ),
+            ),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20),
+            // leading: Icon(Icons.wifi),
+            title: new Text('地图'),
+            onTap: () {
+              // 获取项目中的路灯
+              SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                  .then((val) async {
+                // 解析 json
+                var data = json.decode(val);
+                LoginInfo loginInfo = LoginInfo.fromJson(data);
+
+                var param = "{\"where\":{\"PROJECT\":\"" +
+                    "中科洛丁展示项目/深圳展厅" +
+                    "\"},\"size\":1000}";
+
+                DioUtils.requestHttp(
+                  servicePath['DEVICE_EBOX_URL'],
+                  parameters: param,
+                  token: loginInfo.data.token.token,
+                  method: DioUtils.POST,
+                  onSuccess: (String data) {
+                    // 解析 json
+                    var jsonstr = json.decode(data);
+                    // print('getDeviceLampList title $title = $data');
+                    print('get jsonstr = $jsonstr ');
+                  },
+                  onError: (error) {
+                    print(' DioUtils.requestHttp error = $error');
+                  },
+                );
+              });
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20),
+            title: new Text('路灯'),
+            onTap: () {
+              showToast('路灯');
+              Navigator.push<String>(
+                context,
+                new MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    //  return new OtherPage(pwd: "123456");
+                    return new LampPage("");
+                  },
+                ),
+              );
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20),
+            title: new Text('电箱'),
+            onTap: () {
+              showToast('电箱');
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20),
+            title: new Text('项目'),
+            onTap: () {
+              showToast('项目');
+            },
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 20),
+            title: new Text('报警'),
+            onTap: () {
+              showToast('报警');
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

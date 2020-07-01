@@ -643,6 +643,7 @@ class ClusterManager {
       // 报警器
       return Uri.parse('images/test_icon.png');
     }
+
   }
 
   /**
