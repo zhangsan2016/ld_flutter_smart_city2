@@ -259,11 +259,17 @@ class _MyGroupingPageState extends State<GroupingPage> {
       List<Widget> listWidget = lamps.map((val) {
         Lamp lamp = val;
         return InkWell(
-          /*    onTap: () {
-            showToast('${lamp.nAME}', position: ToastPosition.bottom);
-            print('${lamp.nAME} lamp.lAT ： ${lamp.lAT} lamp.lNG ：${lamp.lNG}');
+              onTap: () {
+           /* showToast('${lamp.nAME}', position: ToastPosition.bottom);
+            print('${lamp.nAME} lamp.lAT ： ${lamp.lAT} lamp.lNG ：${lamp.lNG}');*/
+                if (lamp.lNG.isNotEmpty && lamp.lNG.isNotEmpty) {
+                  Navigator.pop(context, json.encode(lamp));
+                } else {
+                  showToast('未能找到当前设备经纬度，请重新添加',
+                      position: ToastPosition.bottom);
+                }
 
-          },*/
+          },
           child: Container(
             //width: ScreenUtil().setWidth(150),
             color: stateColor(lamp),
@@ -271,7 +277,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
             margin: EdgeInsets.only(bottom: 3.0),
             child: Column(
               children: <Widget>[
-                DiscreteSetting(
+                /*DiscreteSetting(
                   head: lamp.nAME,
                   options: ['定位', '控制'],
                   onSelected: (value) {
@@ -299,15 +305,15 @@ class _MyGroupingPageState extends State<GroupingPage> {
                         break;
                     }
                   },
-                ),
+                ),*/
 
-                /* Text(
+                 Text(
                   lamp.nAME,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       color: Colors.black, fontSize: ScreenUtil().setSp(26)),
-                ),*/
+                ),
               ],
             ),
           ),
