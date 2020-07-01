@@ -176,7 +176,6 @@ class _MyGroupingPageState extends State<GroupingPage> {
         method: DioUtils.POST,
         onSuccess: (String data) {
           // 解析 json
-          // 解析 json
           var jsonstr = json.decode(data);
           EboxInfo eboxInfo = EboxInfo.fromJson(jsonstr);
 
@@ -267,7 +266,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
           },*/
           child: Container(
             //width: ScreenUtil().setWidth(150),
-            color: Color.fromARGB(255, 37, 70, 131),
+            color: stateColor(lamp),
             padding: EdgeInsets.all(5.0),
             margin: EdgeInsets.only(bottom: 3.0),
             child: Column(
@@ -323,6 +322,31 @@ class _MyGroupingPageState extends State<GroupingPage> {
     } else {
       return Text('');
     }
+  }
+
+  Color stateColor(Lamp lamp) {
+    // int warningState,double brightness
+    // 类型 2 位路灯
+    if(lamp.tYPE == 2){
+      // 判断路灯报警状态
+      if(lamp.warningState != null && lamp.warningState != 0 ){
+        return Color.fromARGB(255, 255, 0, 0);
+      }
+      // 检查路灯是否在线
+      // 检查路灯亮灯
+      if (lamp.firDimming != null && lamp.firDimming != 0 && lamp.firDimming != '') {
+        return Color.fromARGB(255, 255, 255, 0);
+      } else {
+        return Color.fromARGB(255, 37, 70, 131);
+      }
+
+    }else{
+      return Color.fromARGB(255, 37, 70, 131);
+     // return Color.fromARGB(255, 100, 149, 237);
+    }
+
+
+
   }
 
 }
