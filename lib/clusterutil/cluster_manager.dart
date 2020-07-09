@@ -96,7 +96,7 @@ class ClusterManager {
           if (isUnfold) {
             addItems(projects);
           }
-        } /*else {
+        }/*else {
           if (move.zoom >= 19.5 && currentTitle != null && !showText) {
             showText = true;
             // 地图缩放到指定大小后显示灯杆名称
@@ -110,6 +110,8 @@ class ClusterManager {
             displayMarkersText(lamp, ebox, alarmApparatus);
           }
         }*/
+
+
       },
     );
   }

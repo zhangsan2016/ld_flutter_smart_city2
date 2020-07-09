@@ -45,6 +45,9 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
   @override
   Widget build(BuildContext context) {
     _context = context;
+
+
+
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     return new MaterialApp(
       // 去掉运行时 debug 的提示
