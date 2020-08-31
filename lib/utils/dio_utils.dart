@@ -123,7 +123,7 @@ class DioUtils {
         }
 
     } catch (e) {
-      print('请求出错：' + e.toString());
+      print('请求出错：$url ' + e.toString());
       onError(e.toString());
       throw e;
     }

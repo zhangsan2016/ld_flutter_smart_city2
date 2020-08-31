@@ -81,7 +81,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
   /**
    *  获取当前用户下的所有项目
    */
-  void getProject(String token) {
+  void getProject(String token) async{
     var param = "{\"size\":1000}";
 
     DioUtils.requestHttp(
