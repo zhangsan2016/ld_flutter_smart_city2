@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/dialog/progress_dialog.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/pages/amap_page.dart';
+import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/http_util.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
-
 
 class LoginPage extends StatefulWidget {
   @override
@@ -38,9 +39,7 @@ class _LoginPageState extends State<LoginPage> {
     _focusNodeUserName.addListener(_focusNodeListener);
     _focusNodePassWord.addListener(_focusNodeListener);
 
-    // 设置默认值
-    _userNameController.text = "ld";
-    _userPassController.text = "ld9102";
+    getUserInfo();
 
     //监听用户名框的输入改变
     _userNameController.addListener(() {
@@ -212,7 +211,6 @@ class _LoginPageState extends State<LoginPage> {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         onPressed: () {
-
           // 显示加载框
           ProgressDialog.showProgress(context);
 
@@ -226,12 +224,10 @@ class _LoginPageState extends State<LoginPage> {
 
             if (!_username.isEmpty && !_password.isEmpty) {
               // 登录
-
               var formData = {'username': _username, 'password': _password};
               request('LOGIN_URl', formData: formData).then((val) {
-
                 print("loginInfo = " + val.toString());
-                if(val == null){
+                if (val == null) {
                   // 关闭加载框
                   ProgressDialog.hideProgress(context);
                   showToast('请检查您的网络设置！', position: ToastPosition.bottom);
@@ -250,9 +246,13 @@ class _LoginPageState extends State<LoginPage> {
                   print("loginInfo = " + loginInfo.toString());
                   print("loginInfo.data.token = " + loginInfo.data.token.token);
 
-                    SharedPreferenceUtil.set(SharedPreferenceUtil.LOGIN_INFO, val.toString()).then((val){
-                     print('登录信息保存 = $val' );
-                    });
+                  // 保存登录信息
+                  // SharedPreferenceUtil.set('username', _userNameController.text);
+                  SharedPreferenceUtil.set(
+                          SharedPreferenceUtil.LOGIN_INFO, val.toString())
+                      .then((val) {
+                    print('登录信息保存 = $val');
+                  });
 
                   //导航到新路由
                   /*  Navigator.push( context,
@@ -265,9 +265,8 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.pushAndRemoveUntil(
                     context,
                     new MaterialPageRoute(builder: (context) => new AmapPage()),
-                        (route) => route == null,
+                    (route) => route == null,
                   );
-
                 } else {
                   // 登录失败
                   showToast(loginInfo.errmsg, position: ToastPosition.bottom);
@@ -327,5 +326,46 @@ class _LoginPageState extends State<LoginPage> {
             ),
           )),
     );
+  }
+
+  void getUserInfo() {
+    // 设置默认值
+    //  _userNameController.text = "ld";
+    // _userPassController.text = "ld9102";
+
+    // 获取项目中的路灯
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+      if (val == null) {
+        return;
+      }
+      // 解析 json
+      var data = json.decode(val);
+      LoginInfo loginInfo = LoginInfo.fromJson(data);
+
+      if (loginInfo != null) {
+        // 设置当前用户名
+        _userNameController.text = loginInfo.data.token.username;
+        DioUtils.requestHttp(
+          servicePath['CONTENT_TYPE_USER_TOKEN'],
+          token: loginInfo.data.token.token,
+          method: DioUtils.POST,
+          onSuccess: (String data) async {
+            // 解析 json
+            print('data ====================== $data');
+            if ('OK' == data) {
+              //跳转并关闭当前页面
+              Navigator.pushAndRemoveUntil(
+                context,
+                new MaterialPageRoute(builder: (context) => new AmapPage()),
+                    (route) => route == null,
+              );
+            }
+          },
+          onError: (error) {
+            print(' DioUtils.requestHttp error = $error');
+          },
+        );
+      }
+    });
   }
 }

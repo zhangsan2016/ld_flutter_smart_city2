@@ -81,8 +81,8 @@ print('${  testList3.length}');
   List<String> keys = lampsGroup.keys.toList();
 
 
-  String c;
-  print('c = ${c.isNotEmpty}');
 
 
+  String a = '';
+  print('${!a.isEmpty}');
 }

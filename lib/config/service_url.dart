@@ -1,7 +1,8 @@
 
 
 // base 地址
-const String URL_BASE = "https://iot.sz-luoding.com:888/api/";
+// const String URL_BASE = "https://iot.sz-luoding.com:888/api/";
+const String URL_BASE = "https://iot2.sz-luoding.com:2888/api/";
 // content-type 用户登录
 const String CONTENT_TYPE_USER_LOGIN = "user/login";
 // content-type 项目列表
@@ -22,6 +23,8 @@ const String DEVICE_CONTROL ="device/control";
 const String CLEAN_ALARM ="device/cleanAlarm";
 // content-type 历史记录
 const String HISTORY_METRICS ="device/historyMetrics";
+// content-type 检测 Token 状态
+const String CONTENT_TYPE_USER_TOKEN = "user/checkToken";
 
 
 const ServiceUrl = 'http://test.baixingliangfan.cn/baixing/';
@@ -36,6 +39,7 @@ const servicePath = {
   'DEVICE_CONTROL_URL': URL_BASE + DEVICE_CONTROL, // 设备控制
   'CLEAN_ALARM_URL': URL_BASE + DEVICE_CONTROL, // 清除报警
   'HISTORY_METRICS_URL': URL_BASE + HISTORY_METRICS, // 历史记录
+  'CONTENT_TYPE_USER_TOKEN': URL_BASE + CONTENT_TYPE_USER_TOKEN, // 检测 Token 状态
 };
 
 
