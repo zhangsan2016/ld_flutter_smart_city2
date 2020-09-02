@@ -12,8 +12,13 @@ import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
 
 class LoginPage extends StatefulWidget {
+  // 是否是重新登录
+  bool isAfresh;
+
+  LoginPage(this.isAfresh);
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState(isAfresh);
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -31,7 +36,11 @@ class _LoginPageState extends State<LoginPage> {
   var _password = ''; //用户名
   var _username = ''; //密码
   var _isShowPwd = false; //是否显示密码
-  var _isShowClear = false; //是否显示输入框尾部的清除按钮
+  var _isShowClear = false;
+
+  bool isAfresh;
+
+  _LoginPageState(this.isAfresh); //是否显示输入框尾部的清除按钮
 
   @override
   void initState() {
@@ -39,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
     _focusNodeUserName.addListener(_focusNodeListener);
     _focusNodePassWord.addListener(_focusNodeListener);
 
-    getUserInfo();
+     getUserInfo();
 
     //监听用户名框的输入改变
     _userNameController.addListener(() {
@@ -333,7 +342,7 @@ class _LoginPageState extends State<LoginPage> {
     //  _userNameController.text = "ld";
     // _userPassController.text = "ld9102";
 
-    // 获取项目中的路灯
+    // 获取上一次登录信息
     SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
       if (val == null) {
         return;
@@ -345,6 +354,11 @@ class _LoginPageState extends State<LoginPage> {
       if (loginInfo != null) {
         // 设置当前用户名
         _userNameController.text = loginInfo.data.token.username;
+
+        // 怕段是否是重新登录，如果是重新登录不许要校验 token
+        if (isAfresh) {
+          return;
+        }
         DioUtils.requestHttp(
           servicePath['CONTENT_TYPE_USER_TOKEN'],
           token: loginInfo.data.token.token,
@@ -357,7 +371,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushAndRemoveUntil(
                 context,
                 new MaterialPageRoute(builder: (context) => new AmapPage()),
-                    (route) => route == null,
+                (route) => route == null,
               );
             }
           },

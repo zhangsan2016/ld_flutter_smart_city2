@@ -12,6 +12,7 @@ import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
 import 'package:ldfluttersmartcity2/interfaces/amap_listening.dart';
 import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
+import 'package:ldfluttersmartcity2/pages/login_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
@@ -60,7 +61,36 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
             return IconButton(
                 icon: Icon(Icons.wifi_tethering),
                 onPressed: () {
-                  Scaffold.of(context).openDrawer();
+                   // 关闭抽屉布局
+                  // Scaffold.of(context).openDrawer();
+
+                  // 打开提示框
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('退出当前账号'),
+                        content: Text(('是否退出当前账号？')),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: new Text("取消"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          new FlatButton(
+                            child: new Text("确定"),
+                            onPressed: () {
+                              //跳转到登录界面
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                new MaterialPageRoute(builder: (context) => new LoginPage(true)),
+                                    (route) => route == null,
+                              );
+                            },
+                          ),
+                        ],
+                      ));
+
                 });
           }),
           title: new Text('洛丁智慧照明'),
@@ -434,4 +464,6 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
       ),
     );
   }
+
+
 }
