@@ -212,6 +212,12 @@ class ClusterManager {
         // 添加地图路灯覆盖物
         await addLampMarkers(items, eboxs, alarmApparatus);
       }
+    }else{
+        // 判断类型
+       if(items is List<Lamp>){
+         showToast('当前项目中没有路灯列表~', position: ToastPosition.bottom);
+       }
+
     }
 
     // 返回 覆盖物状态回调
