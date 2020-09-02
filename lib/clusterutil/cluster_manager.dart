@@ -217,7 +217,6 @@ class ClusterManager {
        if(items is List<Lamp>){
          showToast('当前项目中没有路灯列表~', position: ToastPosition.bottom);
        }
-
     }
 
     // 返回 覆盖物状态回调
