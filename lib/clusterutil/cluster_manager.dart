@@ -230,6 +230,8 @@ class ClusterManager {
     _controller.clearMarkers(_markers);
     _markers.clear();
 
+    // 中心点经纬度，在地图路灯集合中定位
+    LatLng centralLatLng = null;
     // 批量添加路灯覆盖物
     List<MarkerOption> markerOptions = List();
     for (int i = 0; i < items.length; ++i) {
@@ -237,6 +239,10 @@ class ClusterManager {
       if (lamp.lAT == "" || lamp.lNG == "") {
         print('   ${lamp.nAME} 坐标为空');
         continue;
+      }
+
+      if(centralLatLng == null){
+        centralLatLng = new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG));
       }
 
       MarkerOption markerOption = new MarkerOption(
@@ -331,12 +337,14 @@ class ClusterManager {
       ),
     );*/
 
-    _controller?.setCenterCoordinate(
-      LatLng(double.parse((items[0] as Lamp).lAT),
-          double.parse((items[0] as Lamp).lNG)),
-      animated: false,
-      zoomLevel: 19,
-    );
+    // 设置中心点
+    if(centralLatLng != null){
+      _controller?.setCenterCoordinate(
+        centralLatLng,
+        animated: false,
+        zoomLevel: 19,
+      );
+    }
 
     // 保存marker到键值对列表
     for(var ma in _markers) {
