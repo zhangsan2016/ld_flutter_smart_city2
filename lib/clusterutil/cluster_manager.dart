@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:amap_core_fluttify/amap_core_fluttify.dart';
@@ -64,6 +65,7 @@ class ClusterManager {
       //  print('${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');
 
       if (!isUnfold) {
+        print('marker.title = ${await marker.title}');
         await addMapMarkers(await marker.title);
       } else {
         // 展开状态
@@ -328,6 +330,7 @@ class ClusterManager {
         top: 100,
       ),
     );*/
+
     _controller?.setCenterCoordinate(
       LatLng(double.parse((items[0] as Lamp).lAT),
           double.parse((items[0] as Lamp).lNG)),
