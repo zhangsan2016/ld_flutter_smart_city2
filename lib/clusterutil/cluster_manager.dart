@@ -639,6 +639,9 @@ class ClusterManager {
     return pointList;
   }
 
+  /**
+   *  根据条件设置图标类型
+   */
   Uri selectImagesByType(int tYPE, double brightness, int warningState) {
     if (tYPE == 1) {
       // 电箱

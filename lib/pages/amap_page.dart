@@ -149,7 +149,6 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
    *  初始化地图
    */
   Widget initAMap() {
-    print('xxxxxxxxxxxxxxxxxxxxxxx initAMap 初始化地图');
     return AmapView(
       // 地图类型 (可选)
       mapType: MapType.Standard,
