@@ -183,6 +183,9 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
             styleExtraPath: 'raw/style_extra.data',
           );
 
+          // 关闭旋转手势
+          _controller?.setRotateGesturesEnabled(false);
+
           // 定义点聚合管理类ClusterManager
           clusterManager = new ClusterManager(context, _controller, this);
 
