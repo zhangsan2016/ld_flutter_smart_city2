@@ -44,6 +44,19 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
   }
 
   @override
+  void deactivate() {
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    clusterManager = null;
+    _controller.clear();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     _context = context;
 
@@ -136,6 +149,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
    *  初始化地图
    */
   Widget initAMap() {
+    print('xxxxxxxxxxxxxxxxxxxxxxx initAMap 初始化地图');
     return AmapView(
       // 地图类型 (可选)
       mapType: MapType.Standard,
@@ -178,6 +192,8 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
 
           // 获取项目列表
           getProject(loginInfo.data.token.token);
+
+          print('获取的登录信息 data = ${val.toString()}');
         });
       },
     );

@@ -60,6 +60,7 @@ class ClusterManager {
   bool showText = false;
 
   Future init() async {
+
     // marker 点击事件
     _controller?.setMarkerClickedListener((marker) async {
       //  print('${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');

@@ -28,7 +28,7 @@ class DioUtils {
 
   /// 创建 dio 实例对象
   static Dio createInstance({token}) {
-    if (dio == null) {
+   /* if (dio == null) {
       /// 全局属性：请求前缀、连接超时时间、响应超时时间
       Map<String, dynamic> httpHeaders = {
         'Accept-Encoding': 'deflate',
@@ -47,7 +47,26 @@ class DioUtils {
           headers: httpHeaders);
 
       dio = new Dio(options);
-    }
+    }*/
+
+    /// 全局属性：请求前缀、连接超时时间、响应超时时间
+    Map<String, dynamic> httpHeaders = {
+      'Accept-Encoding': 'deflate',
+      'content-type': 'application/json',
+      'X-auth-token': token
+    };
+
+    var options = BaseOptions(
+        connectTimeout: CONNECT_TIMEOUT,
+        receiveTimeout: RECEIVE_TIMEOUT,
+        responseType: ResponseType.json,
+        validateStatus: (status) {
+          // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
+          return true;
+        },
+        headers: httpHeaders);
+
+    dio = new Dio(options);
 
     return dio;
   }
