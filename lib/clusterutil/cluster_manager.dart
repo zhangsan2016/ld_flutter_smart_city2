@@ -135,7 +135,7 @@ class ClusterManager {
     List<Device> alarmApparatus = alarmApparatusMap[title];
     // 判断是否有路灯数据
     if(lamp == null){
-      showToast('当前项目中没有路灯列表~', position: ToastPosition.bottom);
+      showToast('当前${title}项目中没有路灯列表~', position: ToastPosition.bottom);
     }
     // 添加覆盖物
     await addItems(lamp, eboxs: ebox, alarmApparatus: alarmApparatus);
@@ -235,10 +235,12 @@ class ClusterManager {
           for (var i = 0; i < temporary.length; ++i) {
             Project project = temporary[i];
 
+
             ResourceRequest.deviceList(project.title, loginInfo.data.token.token,(DeviceList val){
 
               // 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
               parseDevice(val, project.title);
+
 
             });
           }
@@ -505,7 +507,7 @@ class ClusterManager {
     // 批量添加路灯覆盖物
     List<MarkerOption> markerOptions = List();
     for (int i = 0; i < items.length; ++i) {
-      Lamp lamp = items[i];
+      Device lamp = items[i];
       if (lamp.lAT == "" || lamp.lNG == "") {
         print('   ${lamp.nAME} 坐标为空');
         continue;
