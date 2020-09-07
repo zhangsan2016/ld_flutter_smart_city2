@@ -26,10 +26,6 @@ class ResourceRequest{
           DeviceList deviceList = DeviceList.fromJson(jsonstr);
           onSuccess(deviceList);
 
-          if(deviceList.device[0].pROJECT == "中科洛丁展示项目/重庆展厅"){
-            print('xxxxxxxxxx');
-          }
-
         } catch (e) {
           throw e;
           print('解析出错 ${e.toString()}');
