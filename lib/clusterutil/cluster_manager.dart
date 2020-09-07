@@ -92,6 +92,7 @@ class ClusterManager {
       return true;
     });
 
+
     // 地图移动监听
     _controller?.setMapMoveListener(
       onMapMoveStart: (move) async {
@@ -132,6 +133,10 @@ class ClusterManager {
     List<Device> ebox = eboxMap[title];
     // 获取项目对应的报警器
     List<Device> alarmApparatus = alarmApparatusMap[title];
+    // 判断是否有路灯数据
+    if(lamp == null){
+      showToast('当前项目中没有路灯列表~', position: ToastPosition.bottom);
+    }
     // 添加覆盖物
     await addItems(lamp, eboxs: ebox, alarmApparatus: alarmApparatus);
     currentTitle = title;
@@ -195,17 +200,12 @@ class ClusterManager {
         isUnfold = false;
 
         // 获取项目中的设备列表
-        getDeviceList(temporary);
+        getDeviceList(temporary: temporary);
 
       } else if (items[0] is Device) {
         // 添加地图路灯覆盖物
         await addLampMarkers(items, eboxs, alarmApparatus);
       }
-    }else{
-        // 判断类型
-       if(items is List<Lamp>){
-         showToast('当前项目中没有路灯列表~', position: ToastPosition.bottom);
-       }
     }
 
     // 返回 覆盖物状态回调
@@ -214,10 +214,12 @@ class ClusterManager {
     }
   }
 
-  /**
-   *  获取设备列表（包含路灯、电箱、报警器）
-   */
-  void getDeviceList(List temporary) {
+ /**
+  *   获取设备列表（包含路灯、电箱、报警器）
+  *   temporary 当前用户下所有的项目
+  *   title 指定项目
+  */
+  void getDeviceList({List temporary,String title}) {
      // 获取项目中的路灯
     SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
         .then((val) async {
@@ -226,50 +228,56 @@ class ClusterManager {
         var data = json.decode(val);
         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-        for (var i = 0; i < temporary.length; ++i) {
-          Project project = temporary[i];
+        if(title != null){
+          // 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
+          parseDevice(val, title);
+        }else{
+          for (var i = 0; i < temporary.length; ++i) {
+            Project project = temporary[i];
 
-         /* // 获取项目下的路灯
-          await getDeviceLampList(
-              project.title, loginInfo.data.token.token);
-          // 获取项目下的电箱
-          await getDeviceEbox(project.title, loginInfo.data.token.token);
-          // 获取项目下的报警器
-          await getAlarmApparatus(
-              project.title, loginInfo.data.token.token);*/
+            ResourceRequest.deviceList(project.title, loginInfo.data.token.token,(DeviceList val){
 
-          ResourceRequest.deviceList(project.title, loginInfo.data.token.token,(DeviceList val){
+              // 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
+              parseDevice(val, project.title);
 
-            List<Device> eboxList = new List();
-            List<Device> lampList = new List();
-            List<Device> alarmList = new List();
-
-
-              for(Device device in val.device){
-                if(device.tYPE == 1){
-                  eboxList.add(device);
-                }else if(device.tYPE == 2){
-                  lampList.add(device);
-                }else if(device.tYPE == 4){
-                  alarmList.add(device);
-                }
-              }
-
-              if(eboxList.length > 0){
-                eboxMap[project.title] = eboxList;
-              }
-              if(lampList.length > 0){
-                lampMap[project.title] = lampList;
-              }
-              if(eboxList.length > 0){
-                alarmApparatusMap[project.title] = alarmList;
-              }
-
-          });
+            });
+          }
         }
+
+
       }
     });
   }
+
+ /**
+  * 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
+  */
+ void parseDevice(DeviceList val, title) {
+   List<Device> eboxList = new List();
+   List<Device> lampList = new List();
+   List<Device> alarmList = new List();
+
+
+   for(Device device in val.device){
+     if(device.tYPE == 1){
+       eboxList.add(device);
+     }else if(device.tYPE == 2){
+       lampList.add(device);
+     }else if(device.tYPE == 4){
+       alarmList.add(device);
+     }
+   }
+
+   if(eboxList.length > 0){
+     eboxMap[title] = eboxList;
+   }
+   if(lampList.length > 0){
+     lampMap[title] = lampList;
+   }
+   if(eboxList.length > 0){
+     alarmApparatusMap[title] = alarmList;
+   }
+ }
 
   /**
    *  添加地图路灯覆盖物
@@ -285,6 +293,7 @@ class ClusterManager {
     LatLng centralLatLng = null;
     // 批量添加路灯覆盖物
     List<MarkerOption> markerOptions = List();
+
     for (int i = 0; i < items.length; ++i) {
       Device lamp = items[i];
       if (lamp.lAT == "" || lamp.lNG == "") {
@@ -617,22 +626,11 @@ class ClusterManager {
    * 刷新
    */
   void refresh() {
-    /*if (isUnfold) {
+    if (isUnfold) {
       // 获取项目中的路灯
-      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
-          .then((val) async {
-        // 解析 json
-        var data = json.decode(val);
-        LoginInfo loginInfo = LoginInfo.fromJson(data);
-        // 获取项目下的路灯
-        getDeviceLampList(currentTitle, loginInfo.data.token.token);
-        // 获取项目下的电箱
-        getDeviceEbox(currentTitle, loginInfo.data.token.token);
-        // 获取项目下的报警器
-        getAlarmApparatus(currentTitle, loginInfo.data.token.token);
+        getDeviceList(title: currentTitle);
         addMapMarkers(currentTitle);
-      });
-    }*/
+    }
   }
 
   addItem(var item) async {
