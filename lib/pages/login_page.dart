@@ -365,7 +365,6 @@ class _LoginPageState extends State<LoginPage> {
           method: DioUtils.POST,
           onSuccess: (String data) async {
             // 解析 json
-            print('data ====================== ${loginInfo.data.token.token}');
             if ('OK' == data) {
               //跳转并关闭当前页面
               Navigator.pushAndRemoveUntil(

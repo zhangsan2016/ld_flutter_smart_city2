@@ -1,17 +1,17 @@
 class DeviceList {
   int errno;
   String errmsg;
-  List<Data> data;
+  List<Device> device;
 
-  DeviceList({this.errno, this.errmsg, this.data});
+  DeviceList({this.errno, this.errmsg, this.device});
 
   DeviceList.fromJson(Map<String, dynamic> json) {
     errno = json['errno'];
     errmsg = json['errmsg'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      device = new List<Device>();
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        device.add(new Device.fromJson(v));
       });
     }
   }
@@ -20,14 +20,14 @@ class DeviceList {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['errno'] = this.errno;
     data['errmsg'] = this.errmsg;
-    if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+    if (this.device != null) {
+      data['data'] = this.device.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class Data {
+class Device {
   String uUID;
   String lAT;
   String lNG;
@@ -45,7 +45,7 @@ class Data {
   String members;
   Null config;
   String reportConfig;
-  double energy;
+  String energy;
   double firDimming;
   double illu;
   int sTATE;
@@ -73,7 +73,7 @@ class Data {
   String onvifPort;
   String manufacturer;
 
-  Data(
+  Device(
       {this.uUID,
         this.lAT,
         this.lNG,
@@ -119,7 +119,7 @@ class Data {
         this.onvifPort,
         this.manufacturer});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  Device.fromJson(Map<String, dynamic> json) {
     uUID = json['UUID'];
     lAT = json['LAT'];
     lNG = json['LNG'];
@@ -129,7 +129,7 @@ class Data {
     sUBGROUP = json['SUBGROUP'];
     aDDR = json['ADDR'];
     iPADDR = json['IPADDR'];
-    sId = json['_id'];
+    sId = json['_id'].toString();
     fUUID = json['FUUID'];
     subgroups = json['subgroups'];
     admin = json['admin'];
@@ -137,7 +137,7 @@ class Data {
     members = json['members'];
     config = json['config'];
     reportConfig = json['report_config'];
-    energy = json['Energy'];
+    energy = json['Energy'].toString();
     firDimming = json['FirDimming'];
     illu = json['Illu'];
     sTATE = json['STATE'];

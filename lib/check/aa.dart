@@ -83,6 +83,11 @@ print('${  testList3.length}');
 
 
 
-  String a;
-  print('${a.isEmpty}');
+
+  int cc;
+  cc++;
+  print('$cc');
+
+
+
 }

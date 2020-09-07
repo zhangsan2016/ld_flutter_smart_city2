@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/alarm_apparatus_info.dart';
+import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
 import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
@@ -18,12 +19,17 @@ import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
 import 'package:ldfluttersmartcity2/interfaces/amap_listening.dart';
 import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
+import 'package:ldfluttersmartcity2/utils/resource_request.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
 
 import 'overlay_item.dart';
 
 class ClusterManager {
+ static final  int DEVICE_EBOX = 1; // 电箱（集中器）
+ static final int DEVICE_LAMP = 2; // 路灯
+ static final  int DEVICE_WIRESAFE = 4; // 断缆报警器
+
   AmapController _controller;
   BuildContext _context;
   AMapListening listening;
@@ -35,13 +41,13 @@ class ClusterManager {
   String currentTitle;
 
   // 项目路灯集合
-  var lampMap = <String, List<Lamp>>{};
+  var lampMap = <String, List<Device>>{};
 
   // 项目电箱集合
-  var eboxMap = <String, List<Ebox>>{};
+  var eboxMap = <String, List<Device>>{};
 
   // 报警器集合
-  var alarmApparatusMap = <String, List<AlarmApparatus>>{};
+  var alarmApparatusMap = <String, List<Device>>{};
 
   /**
    * context 上下文
@@ -121,11 +127,11 @@ class ClusterManager {
 
   Future addMapMarkers(String title) async {
     // 获取项目对应的路灯列表
-    List<Lamp> lamp = lampMap[title];
+    List<Device> lamp = lampMap[title];
     // 获取项目对应的电箱
-    List<Ebox> ebox = eboxMap[title];
+    List<Device> ebox = eboxMap[title];
     // 获取项目对应的报警器
-    List<AlarmApparatus> alarmApparatus = alarmApparatusMap[title];
+    List<Device> alarmApparatus = alarmApparatusMap[title];
     // 添加覆盖物
     await addItems(lamp, eboxs: ebox, alarmApparatus: alarmApparatus);
     currentTitle = title;
@@ -188,28 +194,10 @@ class ClusterManager {
         // 展开状态为 false
         isUnfold = false;
 
-        // 获取项目中的路灯
-        SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
-            .then((val) async {
-          if (temporary != null && temporary.length > 0) {
-            // 解析 json
-            var data = json.decode(val);
-            LoginInfo loginInfo = LoginInfo.fromJson(data);
+        // 获取项目中的设备列表
+        getDeviceList(temporary);
 
-            for (var i = 0; i < temporary.length; ++i) {
-              Project project = temporary[i];
-              // 获取项目下的路灯
-              await getDeviceLampList(
-                  project.title, loginInfo.data.token.token);
-              // 获取项目下的电箱
-              await getDeviceEbox(project.title, loginInfo.data.token.token);
-              // 获取项目下的报警器
-              await getAlarmApparatus(
-                  project.title, loginInfo.data.token.token);
-            }
-          }
-        });
-      } else if (items[0] is Lamp) {
+      } else if (items[0] is Device) {
         // 添加地图路灯覆盖物
         await addLampMarkers(items, eboxs, alarmApparatus);
       }
@@ -227,6 +215,63 @@ class ClusterManager {
   }
 
   /**
+   *  获取设备列表（包含路灯、电箱、报警器）
+   */
+  void getDeviceList(List temporary) {
+     // 获取项目中的路灯
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+        .then((val) async {
+      if (temporary != null && temporary.length > 0) {
+        // 解析 json
+        var data = json.decode(val);
+        LoginInfo loginInfo = LoginInfo.fromJson(data);
+
+        for (var i = 0; i < temporary.length; ++i) {
+          Project project = temporary[i];
+
+         /* // 获取项目下的路灯
+          await getDeviceLampList(
+              project.title, loginInfo.data.token.token);
+          // 获取项目下的电箱
+          await getDeviceEbox(project.title, loginInfo.data.token.token);
+          // 获取项目下的报警器
+          await getAlarmApparatus(
+              project.title, loginInfo.data.token.token);*/
+
+          ResourceRequest.deviceList(project.title, loginInfo.data.token.token,(DeviceList val){
+
+            List<Device> eboxList = new List();
+            List<Device> lampList = new List();
+            List<Device> alarmList = new List();
+
+
+              for(Device device in val.device){
+                if(device.tYPE == 1){
+                  eboxList.add(device);
+                }else if(device.tYPE == 2){
+                  lampList.add(device);
+                }else if(device.tYPE == 4){
+                  alarmList.add(device);
+                }
+              }
+
+              if(eboxList.length > 0){
+                eboxMap[project.title] = eboxList;
+              }
+              if(lampList.length > 0){
+                lampMap[project.title] = lampList;
+              }
+              if(eboxList.length > 0){
+                alarmApparatusMap[project.title] = alarmList;
+              }
+
+          });
+        }
+      }
+    });
+  }
+
+  /**
    *  添加地图路灯覆盖物
    *  item 路灯列表
    *  ebox 电箱列表
@@ -241,7 +286,7 @@ class ClusterManager {
     // 批量添加路灯覆盖物
     List<MarkerOption> markerOptions = List();
     for (int i = 0; i < items.length; ++i) {
-      Lamp lamp = items[i];
+      Device lamp = items[i];
       if (lamp.lAT == "" || lamp.lNG == "") {
         print('   ${lamp.nAME} 坐标为空');
         continue;
@@ -279,7 +324,7 @@ class ClusterManager {
     // 批量添加电箱覆盖物
     if (eboxs != null && eboxs.length > 0) {
       for (var i = 0; i < eboxs.length; ++i) {
-        Ebox ebox = eboxs[i];
+        Device ebox = eboxs[i];
         if (ebox.lAT == "" || ebox.lNG == "") {
           print('   ${ebox.nAME} 坐标为空');
           continue;
@@ -301,7 +346,7 @@ class ClusterManager {
     // 批量添加报警器覆盖物
     if (alarmApparatus != null && alarmApparatus.length > 0) {
       for (var i = 0; i < alarmApparatus.length; ++i) {
-        AlarmApparatus alarm = alarmApparatus[i];
+        Device alarm = alarmApparatus[i];
         if (alarm.lAT == "" || alarm.lNG == "") {
           print('   ${alarm.nAME} 坐标为空');
           continue;
@@ -572,7 +617,7 @@ class ClusterManager {
    * 刷新
    */
   void refresh() {
-    if (isUnfold) {
+    /*if (isUnfold) {
       // 获取项目中的路灯
       SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
           .then((val) async {
@@ -585,10 +630,9 @@ class ClusterManager {
         getDeviceEbox(currentTitle, loginInfo.data.token.token);
         // 获取项目下的报警器
         getAlarmApparatus(currentTitle, loginInfo.data.token.token);
-
         addMapMarkers(currentTitle);
       });
-    }
+    }*/
   }
 
   addItem(var item) async {
@@ -668,90 +712,5 @@ class ClusterManager {
 
   }
 
-  /**
-   *  获取项目下的路灯列表
-   */
-  getDeviceLampList(String title, token) {
-    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
 
-    DioUtils.requestHttp(
-      servicePath['DEVICE_LAMP_LIST_URL'],
-      parameters: param,
-      token: token,
-      method: DioUtils.POST,
-      onSuccess: (String data) {
-        // 解析 json
-        var jsonstr = json.decode(data);
-        // print('getDeviceLampList title $title = $data');
-        print('getDeviceLampList title $title ');
-
-        LampInfo lampInfo = LampInfo.fromJson(jsonstr);
-        lampMap[title] = lampInfo.data.lamp;
-      },
-      onError: (error) {
-        print(' DioUtils.requestHttp error = $error');
-      },
-    );
-  }
-
-  /**
-   *  获取项目下的电箱
-   */
-  getDeviceEbox(String title, token) {
-    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
-
-    DioUtils.requestHttp(
-      servicePath['DEVICE_EBOX_URL'],
-      parameters: param,
-      token: token,
-      method: DioUtils.POST,
-      onSuccess: (String data) {
-        try {
-          // 解析 json
-          var jsonstr = json.decode(data);
-          EboxInfo lampInfo = EboxInfo.fromJson(jsonstr);
-          if (!lampInfo.data.ebox?.isEmpty) {
-            eboxMap[title] = lampInfo.data.ebox;
-          }
-        } catch (e) {
-          print('解析出错 ${e.toString()}');
-        }
-      },
-      onError: (error) {
-        print(' DioUtils.requestHttp error = $error');
-      },
-    );
-  }
-
-  /**
-   *  获取项目下的报警器
-   */
-  getAlarmApparatus(String title, token) {
-    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
-
-    DioUtils.requestHttp(
-      servicePath['DEVICE_WIRESAFE_LIST_URL'],
-      parameters: param,
-      token: token,
-      method: DioUtils.POST,
-      onSuccess: (String data) {
-        try {
-          // 解析 json
-          // print('getAlarmApparatus = ${data.toString()}');
-
-          var jsonstr = json.decode(data);
-          AlarmApparatusInfo alarmApparatusInfo =
-              AlarmApparatusInfo.fromJson(jsonstr);
-          if (!alarmApparatusInfo.data.alarmApparatus?.isEmpty) {
-            alarmApparatusMap[title] = alarmApparatusInfo.data.alarmApparatus;
-          }
-        } catch (e) {
-          print('解析出错 ${e.toString()}');
-        }
-      },
-      onError: (error) {
-        print(' DioUtils.requestHttp error = $error');
-      },
-    );
-  }
 }

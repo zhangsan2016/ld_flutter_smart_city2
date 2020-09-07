@@ -25,6 +25,8 @@ const String CLEAN_ALARM ="device/cleanAlarm";
 const String HISTORY_METRICS ="device/historyMetrics";
 // content-type 检测 Token 状态
 const String CONTENT_TYPE_USER_TOKEN = "user/checkToken";
+// content-type 设备列表（包含当前项目下的所有设备）
+const String CONTENT_TYPE_DEVICE_LIST = "device/list";
 
 
 const ServiceUrl = 'http://test.baixingliangfan.cn/baixing/';
@@ -40,6 +42,7 @@ const servicePath = {
   'CLEAN_ALARM_URL': URL_BASE + DEVICE_CONTROL, // 清除报警
   'HISTORY_METRICS_URL': URL_BASE + HISTORY_METRICS, // 历史记录
   'CONTENT_TYPE_USER_TOKEN': URL_BASE + CONTENT_TYPE_USER_TOKEN, // 检测 Token 状态
+  'DEVICE_LIST_URL': URL_BASE + CONTENT_TYPE_DEVICE_LIST, // 获取当前项目下的所有设备信息
 };
 
 
