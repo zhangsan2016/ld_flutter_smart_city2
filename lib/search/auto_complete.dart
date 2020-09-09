@@ -54,7 +54,6 @@ class _AutoCompleteState extends State<AutoComplete> {
             child: ListView.separated(
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                    alignment: Alignment.center,
                     child: InkWell(
                       onTap: () {
                         print('inkwell（${deviceList.device[index].nAME}） 被点击');
@@ -66,6 +65,8 @@ class _AutoCompleteState extends State<AutoComplete> {
                         margin: const EdgeInsets.all(16.0),
                         child: Image.asset('images/light_on.png', fit: BoxFit.fill),),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                         // mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Text(deviceList.device[index].nAME),
                             Text(deviceList.device[index].uUID),
@@ -131,9 +132,9 @@ class _AutoCompleteState extends State<AutoComplete> {
       onSuccess: (String data) {
         try {
           var jsonstr = json.decode(data);
-          deviceList = DeviceList.fromJson(jsonstr);
 
-          setState(() {});
+
+          setState(() { deviceList = DeviceList.fromJson(jsonstr);});
         } catch (e) {
           throw e;
           print('解析出错 ${e.toString()}');
