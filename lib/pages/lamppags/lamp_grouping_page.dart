@@ -9,6 +9,7 @@ import 'package:ldfluttersmartcity2/entity/json/alarm_apparatus_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
+import 'package:ldfluttersmartcity2/search/mysearch_delegate.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:ldfluttersmartcity2/view/discrete_Setting.dart';
@@ -29,8 +30,10 @@ class GroupingPage extends StatefulWidget {
 class _MyGroupingPageState extends State<GroupingPage> {
   // 当前路灯数据
   List<Lamp> lamps = [];
+
   // 当前电箱列表
   List<Ebox> eboxs = [];
+
   // 当前报警器列表
   List<AlarmApparatus> alarmApparatus = [];
 
@@ -48,7 +51,6 @@ class _MyGroupingPageState extends State<GroupingPage> {
 
     // 网络获取当前项目路灯数据
     getDeviceLampList(currentProject);
-
   }
 
   @override
@@ -70,6 +72,15 @@ class _MyGroupingPageState extends State<GroupingPage> {
                 Navigator.pop(context);
               });
         }),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                //  showSearch(context: context, delegate: MySearchDelegate());
+              }
+            // showSearch(context:context,delegate: searchBarDelegate()),
+          ),
+        ],
         title: new Text('洛丁智慧照明'),
         centerTitle: true,
         backgroundColor: Colors.cyan,
@@ -80,9 +91,53 @@ class _MyGroupingPageState extends State<GroupingPage> {
           //color: Color.fromARGB(255, 11, 29, 77),
           color: Color.fromARGB(240, 11, 29, 77),
         ),
-        child: ListView(
-          children: getGroup(),
+        child: Column(
+          children: <Widget>[
+            // 搜索按钮
+            buildSearchButton(),
+            // 所有分组
+            Expanded(
+              child: ListView(
+                children: getGroup(),
+              ),
+            )
+          ],
         ),
+      ),
+    );
+  }
+
+  /**
+   *  创建搜索按钮
+   */
+  Widget buildSearchButton() {
+    return Container(
+      height: 30,
+      ///外边距
+      margin:   EdgeInsets.only(top: 10.0, bottom: 10.0,left: 20.0,right: 20),
+      child: Material(
+        color: Colors.transparent,
+        child:Ink(
+          ///圆角边框
+            decoration: BoxDecoration(
+              border: new Border.all(color: Color(0xFFD6D6D6), width: 0.5), // 边色与边宽度
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: InkWell(
+              onTap: () {
+                showSearch(context: context, delegate: MySearchDelegate());
+              },
+              splashColor: const Color(0xFFD6D6D6),
+              // splashColor: Colors.white,
+              ///点击事件的圆角
+              ///表现为水波纹的圆角
+              borderRadius: BorderRadius.circular(20.0),
+              ///页面过渡动画
+              child: Container(
+                alignment: Alignment.center,
+                child: new Text('搜索',style: TextStyle(color: Color(0xff999999)),),),
+            )),
       ),
     );
   }
@@ -99,12 +154,11 @@ class _MyGroupingPageState extends State<GroupingPage> {
         ));
   }
 
-
   /**
    *  获取项目下的路灯列表
    */
   getDeviceLampList(String title) {
-    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val)  {
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) {
       // 解析 json
       var data = json.decode(val);
       LoginInfo loginInfo = LoginInfo.fromJson(data);
@@ -180,8 +234,8 @@ class _MyGroupingPageState extends State<GroupingPage> {
           EboxInfo eboxInfo = EboxInfo.fromJson(jsonstr);
 
           setState(() {
-           // eboxs = eboxInfo.data.ebox;
-            lampsGroup['电箱分组']  = LampInfo.fromJson(json.decode(data)).data.lamp;
+            // eboxs = eboxInfo.data.ebox;
+            lampsGroup['电箱分组'] = LampInfo.fromJson(json.decode(data)).data.lamp;
           });
         },
         onError: (error) {
@@ -210,11 +264,13 @@ class _MyGroupingPageState extends State<GroupingPage> {
         onSuccess: (String data) {
           // 解析 json
           var jsonstr = json.decode(data);
-          AlarmApparatusInfo alarmApparatusInfo = AlarmApparatusInfo.fromJson(jsonstr);
+          AlarmApparatusInfo alarmApparatusInfo =
+              AlarmApparatusInfo.fromJson(jsonstr);
 
           setState(() {
             // alarmApparatus = alarmApparatusInfo.data.alarmApparatus;
-            lampsGroup['报警器分组']  = LampInfo.fromJson(json.decode(data)).data.lamp;
+            lampsGroup['报警器分组'] =
+                LampInfo.fromJson(json.decode(data)).data.lamp;
           });
         },
         onError: (error) {
@@ -228,20 +284,18 @@ class _MyGroupingPageState extends State<GroupingPage> {
    *  获取分组
    */
   List<Widget> getGroup() {
-
     // 创建分组视图
-       List<Widget> list = [];
+    List<Widget> list = [];
     lampsGroup.keys.map((item) {
       List<Lamp> lamps = lampsGroup[item];
-      if(lamps.isNotEmpty){
+      if (lamps.isNotEmpty) {
         list.add(groupTitle(item));
         list.add(_wrapList(lamps));
       }
-
     }).toList();
     return list;
 
-  /*  List<Widget> list = [];
+    /*  List<Widget> list = [];
     list.add(groupTitle('默认分组'));
     List<Lamp> lampList =  lampsGroup['默认分组'];
     list.add(groupTitle('未分组'));
@@ -253,22 +307,19 @@ class _MyGroupingPageState extends State<GroupingPage> {
     return list;*/
   }
 
-
   Widget _wrapList(List<Lamp> lamps) {
     if (lamps?.length != 0) {
       List<Widget> listWidget = lamps.map((val) {
         Lamp lamp = val;
         return InkWell(
-              onTap: () {
-           /* showToast('${lamp.nAME}', position: ToastPosition.bottom);
+          onTap: () {
+            /* showToast('${lamp.nAME}', position: ToastPosition.bottom);
             print('${lamp.nAME} lamp.lAT ： ${lamp.lAT} lamp.lNG ：${lamp.lNG}');*/
-                if (lamp.lNG.isNotEmpty && lamp.lNG.isNotEmpty) {
-                  Navigator.pop(context, json.encode(lamp));
-                } else {
-                  showToast('未能找到当前设备经纬度，请重新添加',
-                      position: ToastPosition.bottom);
-                }
-
+            if (lamp.lNG.isNotEmpty && lamp.lNG.isNotEmpty) {
+              Navigator.pop(context, json.encode(lamp));
+            } else {
+              showToast('未能找到当前设备经纬度，请重新添加', position: ToastPosition.bottom);
+            }
           },
           child: Container(
             //width: ScreenUtil().setWidth(150),
@@ -307,7 +358,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
                   },
                 ),*/
 
-                 Text(
+                Text(
                   lamp.nAME,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -333,26 +384,23 @@ class _MyGroupingPageState extends State<GroupingPage> {
   Color stateColor(Lamp lamp) {
     // int warningState,double brightness
     // 类型 2 位路灯
-    if(lamp.tYPE == 2){
+    if (lamp.tYPE == 2) {
       // 判断路灯报警状态
-      if(lamp.warningState != null && lamp.warningState != 0 ){
+      if (lamp.warningState != null && lamp.warningState != 0) {
         return Color.fromARGB(255, 255, 0, 0);
       }
       // 检查路灯是否在线
       // 检查路灯亮灯
-      if (lamp.firDimming != null && lamp.firDimming != 0 && lamp.firDimming != '') {
+      if (lamp.firDimming != null &&
+          lamp.firDimming != 0 &&
+          lamp.firDimming != '') {
         return Color.fromARGB(255, 255, 255, 0);
       } else {
         return Color.fromARGB(255, 37, 70, 131);
       }
-
-    }else{
+    } else {
       return Color.fromARGB(255, 37, 70, 131);
-     // return Color.fromARGB(255, 100, 149, 237);
+      // return Color.fromARGB(255, 100, 149, 237);
     }
-
-
-
   }
-
 }

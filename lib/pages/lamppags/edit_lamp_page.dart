@@ -20,11 +20,13 @@ class _EditLampPageState extends State<EditLampPage> with AutomaticKeepAliveClie
   Lamp _lamp;
   _EditLampPageState(this.lampInfo);
 
+  // widget.lampInfo 直接获取不需要传递参数
   @override
   Widget build(BuildContext context) {
     if(lampInfo!=null){
       _lamp =  Lamp.fromJson(json.decode(lampInfo));
-      print('EditLampPage _lamp= ${_lamp.toString()}');
+      print('EditLampPage _lamp= ${
+          _lamp.toString()}');
     }
     return  SingleChildScrollView(
       child: editLampPage(),

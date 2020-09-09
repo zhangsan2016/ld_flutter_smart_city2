@@ -9,7 +9,7 @@ class ResourceRequest{
 
 
 
-  static  deviceList<T>(String title, token,Function(DeviceList) onSuccess)async{
+  static  deviceList<T>(String title, token,Function(DeviceList) onSuccess) async{
 
     var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
 
