@@ -12,6 +12,10 @@ import 'auto_complete.dart';
 class MySearchDelegate extends SearchDelegate<String>{
   StreamSubscription _searchSubscription;
 
+  var currentProject;
+
+  MySearchDelegate(this.currentProject);
+
   @override
   String get searchFieldLabel => '请输入UUID或名称';
 
@@ -80,7 +84,7 @@ class MySearchDelegate extends SearchDelegate<String>{
       this.setSearchKeyword(event.keywords);
     });
     /// 将方法作为参数传递给子组件调用，展示使用非EventBus方式通信
-    return query.isEmpty ? Suggestions() : AutoComplete(query, this.popResults, this.setSearchKeyword);
+    return query.isEmpty ? Suggestions() : AutoComplete(query, this.popResults, this.setSearchKeyword,currentProject);
   }
   /// 搜索结果展示
   void popResults(BuildContext context){

@@ -126,7 +126,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
             ),
             child: InkWell(
               onTap: () {
-                showSearch(context: context, delegate: MySearchDelegate());
+                showSearch(context: context, delegate: MySearchDelegate(currentProject));
               },
               splashColor: const Color(0xFFD6D6D6),
               // splashColor: Colors.white,
@@ -216,6 +216,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
    *  获取项目下的电箱列表
    */
   void getDeviceEbox(String title) {
+
     SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
       // 解析 json
       var data = json.decode(val);

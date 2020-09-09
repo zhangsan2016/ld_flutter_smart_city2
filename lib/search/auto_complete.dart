@@ -2,16 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
+import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
+import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
 class AutoComplete extends StatefulWidget {
   final String query;
   final Function popResults;
   final Function setSearchKeyword;
 
+  var currentProject;
+
   /// 这里通过另外一种方式实现自组件调用父组件方法
-  AutoComplete(this.query, this.popResults, this.setSearchKeyword);
+  AutoComplete(this.query, this.popResults, this.setSearchKeyword, this.currentProject);
 
   @override
   State<StatefulWidget> createState() => _AutoCompleteState();
@@ -111,21 +116,17 @@ class _AutoCompleteState extends State<AutoComplete> {
   DeviceList deviceList = null;
   /// 模拟网络延迟加载，需要依赖词包 english_words: ^3.1.0
   void _receiveList() {
-    /* Future.delayed(Duration(seconds: 1)).then((e){
-      searchList.insertAll(0,
-          ['洛丁光电','洛丁','苹果','苹果派','柠檬苹果派','海鲜','北海道海鲜','海鲜自助餐']
-      );
-      setState(() {
 
-      });
-    });*/
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+      // 解析 json
+      var data = json.decode(val);
+      LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-    var param =
-        "{\"where\":{\"PROJECT\":\"" + "Test0000" + "\"},\"size\":1000}";
+    var param = "{\"where\":{\"PROJECT\":\"" + widget.currentProject + "\"},\"size\":1000}";
     DioUtils.requestHttp(
-      'https://iot2.sz-luoding.com:2888/api/device/list',
+      servicePath['DEVICE_LIST_URL'],
       parameters: param,
-      token: 'a9207c50-f0a5-11ea-9795-33a953c27288',
+      token: loginInfo.data.token.token,
       method: DioUtils.POST,
       onSuccess: (String data) {
         try {
@@ -142,6 +143,8 @@ class _AutoCompleteState extends State<AutoComplete> {
         print(' DioUtils.requestHttp error = $error');
       },
     );
+
+    });
 
 /*   searchList.insertAll(0,
         ['洛丁光电','洛丁','苹果','苹果派','柠檬苹果派','海鲜','北海道海鲜','海鲜自助餐']
