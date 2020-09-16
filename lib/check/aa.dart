@@ -1,5 +1,7 @@
 
 
+import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
+
 void main() {
 /*  final random = Random();
 
@@ -65,29 +67,19 @@ print('${  testList3.length}');
     print('非空');
   }*/
 
-  var  lampsGroup = <String, List<String>>{};
-  var list = ['sdf', 'sdf'];
-  var list2 = ['123', '456'];
-  lampsGroup['未分组'] = list;
-  lampsGroup['未分组2'] = list2;
 
+  
+  List<Device> de = [];
+  print(' ${de.length}');
+  de.add(null);
+  print('${de.length}');
 
-  List<String> aa = lampsGroup.keys.map((item){
-    List<String> c = lampsGroup[item];
-    print('${item}');
-  }).toList();
+  de.insert(0, new Device());
 
-
-  List<String> keys = lampsGroup.keys.toList();
-
-
-
-
-
-  int cc;
-  cc++;
-  print('$cc');
-
+  print('${de.length}');
+  print('${de[0] == null} ${de[1] == null}');
 
 
 }
+
+

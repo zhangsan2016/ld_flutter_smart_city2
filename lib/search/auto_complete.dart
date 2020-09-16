@@ -16,7 +16,12 @@ class AutoComplete extends StatefulWidget {
   var currentProject;
 
   /// 这里通过另外一种方式实现自组件调用父组件方法
-  AutoComplete(this.query, this.popResults, this.setSearchKeyword, this.currentProject);
+  AutoComplete(
+    this.query,
+    this.popResults,
+    this.setSearchKeyword,
+    this.currentProject,
+  );
 
   @override
   State<StatefulWidget> createState() => _AutoCompleteState();
@@ -26,15 +31,29 @@ class _AutoCompleteState extends State<AutoComplete> {
   /// 加载时显示loading
   static const loadingTag = '##loadingTag##';
 
+  // 搜索结果
+  List<Device> searchDevice = [];
+
+  // 搜索状态
+  bool searchStart = true;
+
   @override
   void initState() {
+    print('_AutoCompleteState 初始化状态');
     super.initState();
-    _receiveList();
+
+    WidgetsBinding.instance.addPostFrameCallback((callback) {
+      _receiveList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (deviceList == null) {
+    print('_AutoCompleteState 创建 $searchStart');
+
+    if (searchStart) {
+      // 搜索关键字
+      searchKeyword();
       return Container(
         padding: const EdgeInsets.all(16.0),
         alignment: Alignment.center,
@@ -44,46 +63,56 @@ class _AutoCompleteState extends State<AutoComplete> {
             child: CircularProgressIndicator(strokeWidth: 2.0) // 加载转圈
             ),
       );
-    }
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            // ignore: missing_return
-            child: ListView.separated(
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                    child: InkWell(
-                      onTap: () {
-                        print('inkwell（${deviceList.device[index].nAME}） 被点击');
-                      },
-                      child: Row(children: <Widget>[
-                      Container(
-                        height:30.0,
-                        width: 30.0,
-                        margin: const EdgeInsets.all(16.0),
-                        child: Image.asset('images/light_on.png', fit: BoxFit.fill),),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                         // mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Text(deviceList.device[index].nAME),
-                            Text(deviceList.device[index].uUID),
-                          ],
-                        ),
-                      ],)
-                    ));
-              },
-              itemCount: deviceList.device.length,
-              separatorBuilder: (context, index) => Divider(
-                height: .0,
+    } else {
+      print('xxxxxxxxxxxx $searchStart');
+      // 搜索关键字
+      _switchState();
+      return Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              // ignore: missing_return
+              child: ListView.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  Device device = searchDevice[index];
+                  return Container(
+                      child: InkWell(
+                          onTap: () {
+                            print(
+                                'inkwell（${deviceList.device[index].nAME}） 被点击');
+                          },
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                height: 30.0,
+                                width: 30.0,
+                                margin: const EdgeInsets.all(16.0),
+                                child: Image.asset(
+                                    "${selectImagesByType(device.tYPE, device.firDimming ?? 0, device.warningState ?? 0)}",
+                                    fit: BoxFit.fill),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Text('${index + 1}.' + device.nAME),
+                                  Text(device.uUID),
+                                ],
+                              ),
+                            ],
+                          )));
+                },
+                itemCount: searchDevice.length,
+                separatorBuilder: (context, index) => Divider(
+                  height: .0,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
 
   TextSpan bold(String title, String query) {
@@ -115,42 +144,105 @@ class _AutoCompleteState extends State<AutoComplete> {
   }
 
   DeviceList deviceList = null;
-  /// 模拟网络延迟加载，需要依赖词包 english_words: ^3.1.0
-  void _receiveList() {
 
+  /// 模拟网络延迟加载，需要依赖词包 english_words: ^3.1.0
+  void _receiveList() async {
     SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
       // 解析 json
       var data = json.decode(val);
       LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-    var param = "{\"where\":{\"PROJECT\":\"" + widget.currentProject + "\"},\"size\":1000}";
-    DioUtils.requestHttp(
-      servicePath['DEVICE_LIST_URL'],
-      parameters: param,
-      token: loginInfo.data.token.token,
-      method: DioUtils.POST,
-      onSuccess: (String data) {
-        try {
-          var jsonstr = json.decode(data);
+      var param = "{\"where\":{\"PROJECT\":\"" +
+          widget.currentProject +
+          "\"},\"size\":1000}";
+      DioUtils.requestHttp(
+        servicePath['DEVICE_LIST_URL'],
+        parameters: param,
+        token: loginInfo.data.token.token,
+        method: DioUtils.POST,
+        onSuccess: (String data) {
+          try {
+            var jsonstr = json.decode(data);
 
+            deviceList = DeviceList.fromJson(jsonstr);
+             searchKeyword();
+            //setState(() {});
 
-          setState(() { deviceList = DeviceList.fromJson(jsonstr);});
-        } catch (e) {
-          throw e;
-          print('解析出错 ${e.toString()}');
-        }
-      },
-      onError: (error) {
-        print(' DioUtils.requestHttp error = $error');
-      },
-    );
-
+          } catch (e) {
+            throw e;
+            print('解析出错 ${e.toString()}');
+          }
+        },
+        onError: (error) {
+          print(' DioUtils.requestHttp error = $error');
+        },
+      );
     });
-
-/*   searchList.insertAll(0,
-        ['洛丁光电','洛丁','苹果','苹果派','柠檬苹果派','海鲜','北海道海鲜','海鲜自助餐']
-    );
-    setState(() {
-    });*/
   }
+
+  /**
+   *  根据条件设置图标类型
+   */
+  Uri selectImagesByType(int tYPE, double brightness, int warningState) {
+    if (tYPE == 1) {
+      // 电箱
+      return Uri.parse('images/ebox.png');
+    } else if (tYPE == 2) {
+      // 路灯
+      // 检查报警
+      if (warningState != 0) {
+        return Uri.parse('images/light_warning.png');
+      }
+      // 检查亮灯
+      if (brightness != 0) {
+        return Uri.parse('images/light_on.png');
+      } else {
+        return Uri.parse('images/light_off.png');
+      }
+    } else if (tYPE == 3) {
+      // 未知
+      return Uri.parse('images/ebox.png');
+    } else {
+      // 报警器
+      return Uri.parse('images/test_icon.png');
+    }
+  }
+
+  /**
+   * 根据搜索关键字匹配路灯列表
+   */
+  void searchKeyword() async {
+    searchDevice.clear();
+    if (deviceList != null) {
+      String keyword = widget.query;
+      for (Device d in deviceList.device) {
+        if (d.nAME.contains(keyword) || d.uUID.contains(keyword)) {
+          searchDevice.add(d);
+        }
+      }
+
+      Future.delayed(Duration(seconds: 1), (){
+        setState(() {
+          print('设置 =======');
+          _switchState();
+        });
+      });
+
+      // 根据字符相识度排序
+
+    } else {
+      // _receiveList();
+
+    }
+  }
+
+  _switchState() {
+    if (searchStart) {
+      searchStart = false;
+    } else {
+      searchStart = true;
+    }
+  }
+
+
 }
