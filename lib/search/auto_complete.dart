@@ -49,6 +49,7 @@ class _AutoCompleteState extends State<AutoComplete> {
 
   @override
   Widget build(BuildContext context) {
+
     print('_AutoCompleteState 创建 $searchStart');
 
     if (searchStart) {
@@ -221,7 +222,7 @@ class _AutoCompleteState extends State<AutoComplete> {
         }
       }
 
-      Future.delayed(Duration(seconds: 1), (){
+      Future.delayed(Duration(milliseconds: 200), (){
         setState(() {
           print('设置 =======');
           _switchState();
