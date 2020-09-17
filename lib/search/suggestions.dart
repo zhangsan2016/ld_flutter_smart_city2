@@ -4,6 +4,7 @@ import 'package:ldfluttersmartcity2/search/search_item_view.dart';
 
 /// 搜索词建议widget
 class Suggestions extends StatelessWidget{
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -11,12 +12,12 @@ class Suggestions extends StatelessWidget{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
+    /*      Container(
             child: Text(
                 '大家都在搜'
             ),
           ),
-          SearchItemView(isHisSearch: false,), // isHisSearch 是否历史搜索词View
+          SearchItemView(isHisSearch: false,), // isHisSearch 是否历史搜索词View*/
           Container(
             child: Text(
                 '历史搜索记录'

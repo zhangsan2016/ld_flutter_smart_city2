@@ -69,7 +69,7 @@ print('${  testList3.length}');
 
 
   
-  List<Device> de = [];
+/*  List<Device> de = [];
   print(' ${de.length}');
   de.add(null);
   print('${de.length}');
@@ -79,7 +79,43 @@ print('${  testList3.length}');
   print('${de.length}');
   print('${de[0] == null} ${de[1] == null}');
 
+ var historys = ['sdf','sdfsdfsdfsd','sdfdsfdddddd'];
+  print(historys.length);
 
+  historys.add('s996');
+  for(int j=historys.length-1; j >= 0;j--){
+    print('xxx ${historys[j]}');
+  }*/
+
+
+/*  StringBuffer builder = new StringBuffer();
+  builder.write("sdfdsf");
+  builder.write("sdfdsf2");
+  builder.write("sdfds3");
+  builder.write("sdfds4");
+
+  print('${builder.toString()}');*/
+
+
+
+  List ll = new List();
+  ll.add('dsfsdf');
+  ll.add('2222');
+  ll.add('3333');
+  ll.add('54564');
+  ll.add('344');
+
+  List ee = [];
+  for(int j=ll.length-1; j >= 0;j--){
+    ee.add(ll[j]);
+  }
+
+
+
+
+
+  print('$ll');
+  print('$ee');
 }
 
 

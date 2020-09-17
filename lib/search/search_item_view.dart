@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/common/event_bus.dart';
+import 'package:ldfluttersmartcity2/search/suggestions.dart';
+import 'package:ldfluttersmartcity2/utils/SearchServices.dart';
 
 class SearchItemView extends StatefulWidget {
   final bool isHisSearch ;
@@ -16,12 +18,7 @@ class SearchItemView extends StatefulWidget {
 
 class _SearchItemViewState extends State<SearchItemView> {
   /// 历史搜索词
-  List<dynamic> hisKeywords = [
-    '历史1',
-    '历史2',
-    '历史3',
-    '历史4',
-  ] ;
+  List<dynamic> hisKeywords = [] ;
   /// 推荐搜索词-大家都在搜
   List<dynamic> recommondKeywords = [
     '推荐1',
@@ -33,6 +30,8 @@ class _SearchItemViewState extends State<SearchItemView> {
   StreamSubscription _searchDelSubscription;
   @override
   void initState(){
+    print('SearchItemView  initState  ');
+
     super.initState();
     _getHisKeywords();
     /// 监听删除事件
@@ -43,21 +42,37 @@ class _SearchItemViewState extends State<SearchItemView> {
 
   /// 之所以定义为async，因为后续需要改造为从SharedPreferences本地获取搜索历史
   Future<void> _getHisKeywords() async {
+
+    print('_getHisKeywords 执行');
+
+    List his = await SearchServices.getHistoryList();
+    for(int j=his.length-1; j >= 0;j--){
+      hisKeywords.add(his[j]);
+    }
+    /// 刷新状态
+    setState(() {});
     return hisKeywords;
   }
 
   /// 之所以定义为async，因为后续需要改造为从SharedPreferences本地获删除
   Future<void> _delHisKeywords(String keywords) async {
+
     if(this.hisKeywords.isNotEmpty && this.hisKeywords.contains(keywords)){
       this.hisKeywords.remove(keywords);
-      /// 刷新状态
-      setState(() {
 
-      });
+      // 更新内存中的数据
+      List his = [];
+      for(int j=hisKeywords.length-1; j >= 0;j--){
+        his.add(hisKeywords[j]);
+      }
+      SearchServices.upHistoryData(his);
+      /// 刷新状态
+      setState(() {});
     }
   }
   @override
   Widget build(BuildContext context) {
+    print('SearchItem SearchItem build 执行');
     List<dynamic> items = widget.isHisSearch ? hisKeywords : recommondKeywords;
     return Padding(padding: EdgeInsets.all(10),
         child: Container(
@@ -95,6 +110,9 @@ class _SearchItemState extends State<SearchItem> {
 
   @override
   Widget build(BuildContext context) {
+
+    print('SearchItem SearchItem _SearchItemViewState 执行');
+
     /// 圆角处理
     RoundedRectangleBorder shape = RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10)

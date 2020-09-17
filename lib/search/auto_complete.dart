@@ -39,7 +39,6 @@ class _AutoCompleteState extends State<AutoComplete> {
 
   @override
   void initState() {
-    print('_AutoCompleteState 初始化状态');
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((callback) {
@@ -50,7 +49,6 @@ class _AutoCompleteState extends State<AutoComplete> {
   @override
   Widget build(BuildContext context) {
 
-    print('_AutoCompleteState 创建 $searchStart');
 
     if (searchStart) {
       // 搜索关键字
@@ -65,7 +63,6 @@ class _AutoCompleteState extends State<AutoComplete> {
             ),
       );
     } else {
-      print('xxxxxxxxxxxx $searchStart');
       // 搜索关键字
       _switchState();
       return Container(
@@ -222,9 +219,8 @@ class _AutoCompleteState extends State<AutoComplete> {
         }
       }
 
-      Future.delayed(Duration(milliseconds: 200), (){
+      Future.delayed(Duration(milliseconds: 100), (){
         setState(() {
-          print('设置 =======');
           _switchState();
         });
       });
