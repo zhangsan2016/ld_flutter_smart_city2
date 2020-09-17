@@ -498,8 +498,6 @@ class ClusterManager {
 
     //_controller?.addMarkers(markerOptions);
 
-
-
   }
 
 

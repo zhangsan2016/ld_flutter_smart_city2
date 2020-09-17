@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
+import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
@@ -56,6 +57,16 @@ class _SearchResultsState extends State<SearchResults> {
                         onTap: () {
                           print(
                               'inkwell（${device.nAME}） 被点击');
+                          // json.decode(await cuMarker.object)
+
+                          // 跳转到路灯控制界面
+                          String lampInfo = json.encode(device);
+                          Navigator.push<String>(context, new CupertinoPageRoute(
+                              builder: (BuildContext context) {
+                                return new LampPage(lampInfo);
+                              },
+                            ),
+                          );
                         },
                         child: Row(
                           children: <Widget>[
