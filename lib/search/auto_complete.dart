@@ -77,8 +77,7 @@ class _AutoCompleteState extends State<AutoComplete> {
                   return Container(
                       child: InkWell(
                           onTap: () {
-                            print(
-                                'inkwell（${deviceList.device[index].nAME}） 被点击');
+                            print('inkwell（${deviceList.device[index].nAME}） 被点击');
                           },
                           child: Row(
                             children: <Widget>[
@@ -142,7 +141,6 @@ class _AutoCompleteState extends State<AutoComplete> {
   }
 
   DeviceList deviceList = null;
-
   /// 模拟网络延迟加载，需要依赖词包 english_words: ^3.1.0
   void _receiveList() async {
     SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {

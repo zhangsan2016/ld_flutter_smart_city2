@@ -1,9 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/common/event_bus.dart';
+import 'package:ldfluttersmartcity2/config/service_url.dart';
+import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
+import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
+import 'package:ldfluttersmartcity2/search/search_results.dart';
 import 'package:ldfluttersmartcity2/search/suggestions.dart';
-import 'package:ldfluttersmartcity2/utils/SearchServices.dart';
+import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
+import 'package:ldfluttersmartcity2/utils/search_services.dart';
+import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
 import 'auto_complete.dart';
 
@@ -57,23 +64,16 @@ class MySearchDelegate extends SearchDelegate<String> {
    */
   @override
   Widget buildResults(BuildContext context) {
+    print('buildResults 执行');
     // 保存搜索历史记录
     SearchServices.setHistoryData(query);
-
     // 取消搜索侦听
     _searchSubscription.cancel();
+
     // 简单显示搜索结果，并未真正去请求网络，后面文章会继续讲解如何通过api查询
-    return Container(
-      width: 100.0,
-      height: 100.0,
-      child: Card(
-        color: Colors.redAccent,
-        child: Center(
-          child: Text(query),
-        ),
-      ),
-    );
+    return SearchResults(query,currentProject);
   }
+
 
   /**
    *  buildSuggestions 搜索的建议关键词，例如推荐热词，历史搜索词
