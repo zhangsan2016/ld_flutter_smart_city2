@@ -30,7 +30,6 @@ class MySearchDelegate extends SearchDelegate<String> {
    */
   @override
   List<Widget> buildActions(BuildContext context) {
-    print('buildActions 执行');
     return [
       IconButton(
         icon: Icon(Icons.clear),
@@ -44,7 +43,6 @@ class MySearchDelegate extends SearchDelegate<String> {
    */
   @override
   Widget buildLeading(BuildContext context) {
-    print('buildLeading 执行');
     return IconButton(
         icon: AnimatedIcon(
             icon: AnimatedIcons.menu_arrow, progress: transitionAnimation),
@@ -95,13 +93,11 @@ class MySearchDelegate extends SearchDelegate<String> {
 
   /// 搜索结果展示
   void popResults(BuildContext context) {
-    print('popResults 执行');
     showResults(context);
   }
 
   /// 设置query
   Future<void> setSearchKeyword(String searchKeyword) async {
-    print('setSearchKeyword 执行');
     query = searchKeyword;
   }
 }

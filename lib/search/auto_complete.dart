@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
+import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
@@ -78,6 +79,26 @@ class _AutoCompleteState extends State<AutoComplete> {
                       child: InkWell(
                           onTap: () {
                             print('inkwell（${deviceList.device[index].nAME}） 被点击');
+
+
+                            // 跳转到路灯控制界面
+                       /*     String lampInfo = json.encode(device);
+
+                            Navigator.pushAndRemoveUntil(context, new CupertinoPageRoute(
+                              builder: (BuildContext context) {
+                                return new LampPage(lampInfo);
+                              },
+                            ), (route) => route == null);*/
+
+
+                            //跳转并关闭当前页面
+                            String lampInfo = json.encode(device);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              new CupertinoPageRoute(builder: (context) => new LampPage(lampInfo)),
+                                  (route) => route == null,
+                            );
+
                           },
                           child: Row(
                             children: <Widget>[

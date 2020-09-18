@@ -4,7 +4,9 @@ import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/pages/lamppags/lamp_grouping_page.dart';
 import 'package:ldfluttersmartcity2/pages/login_page.dart';
+import 'package:ldfluttersmartcity2/provide/device_search_provide.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   runApp(MyApp());
@@ -17,22 +19,26 @@ void main() async {
     /*iosKey: '2691a1ff880a31cc519476070f38e69e',
     androidKey: '2691a1ff880a31cc519476070f38e69e',*/
   );
-
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return OKToast(
-      child: MaterialApp(
-        title: '洛丁智慧城市',
-        // 去掉运行时 debug 的提示
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+       ChangeNotifierProvider(create: (_) => DeviceSearchProvide()),
+      ],
+      child: OKToast(
+        child: MaterialApp(
+          title: '洛丁智慧城市',
+          // 去掉运行时 debug 的提示
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: MyHomePage(title: '洛丁智慧城市'),
         ),
-        home: MyHomePage(title: '洛丁智慧城市'),
       ),
     );
   }
@@ -56,8 +62,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),*/
 
-        body: LoginPage(false) // This trailing comma makes auto-formatting nicer for build methods.
-     // body: GroupingPage(),
+        body: LoginPage(
+            false) // This trailing comma makes auto-formatting nicer for build methods.
+        // body: GroupingPage(),
         );
   }
 }
