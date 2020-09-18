@@ -88,7 +88,7 @@ class _SearchResultsState extends State<SearchResults> {
                               ],
                             )));
                   },
-                  itemCount: Provider.of<DeviceSearchProvide>(context, listen: false).searchList.length,
+                  itemCount: searchList.length,
                   separatorBuilder: (context, index) => Divider(
                     height: .0,
                   ),
