@@ -3,14 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/common/event_bus.dart';
-import 'package:ldfluttersmartcity2/config/service_url.dart';
-import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
-import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
-import 'package:ldfluttersmartcity2/search/search_results.dart';
-import 'package:ldfluttersmartcity2/search/suggestions.dart';
-import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
+import 'package:ldfluttersmartcity2/pages/search/search_results.dart';
+import 'package:ldfluttersmartcity2/pages/search/suggestions.dart';
 import 'package:ldfluttersmartcity2/utils/search_services.dart';
-import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
 import 'auto_complete.dart';
 

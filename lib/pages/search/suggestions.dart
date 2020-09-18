@@ -1,6 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:ldfluttersmartcity2/search/search_item_view.dart';
+import 'package:ldfluttersmartcity2/pages/search/search_item_view.dart';
 
 /// 搜索词建议widget
 class Suggestions extends StatelessWidget{

@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ldfluttersmartcity2/common/event_bus.dart';
-import 'package:ldfluttersmartcity2/search/suggestions.dart';
 import 'package:ldfluttersmartcity2/utils/search_services.dart';
 
 class SearchItemView extends StatefulWidget {

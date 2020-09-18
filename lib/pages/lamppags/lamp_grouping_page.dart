@@ -9,7 +9,7 @@ import 'package:ldfluttersmartcity2/entity/json/alarm_apparatus_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
-import 'package:ldfluttersmartcity2/search/mysearch_delegate.dart';
+import 'package:ldfluttersmartcity2/pages/search/mysearch_delegate.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:ldfluttersmartcity2/view/discrete_Setting.dart';
