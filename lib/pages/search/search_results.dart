@@ -65,6 +65,7 @@ class _SearchResultsState extends State<SearchResults> {
                                   },
                                 ),
                               );
+
                             },
                             child: Row(
                               children: <Widget>[

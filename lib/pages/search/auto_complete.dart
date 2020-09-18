@@ -93,10 +93,13 @@ class _AutoCompleteState extends State<AutoComplete> {
 
                             //跳转并关闭当前页面
                             String lampInfo = json.encode(device);
-                            Navigator.pushAndRemoveUntil(
+                            Navigator.push<String>(
                               context,
-                              new CupertinoPageRoute(builder: (context) => new LampPage(lampInfo)),
-                                  (route) => route == null,
+                              new CupertinoPageRoute(
+                                builder: (BuildContext context) {
+                                  return new LampPage(lampInfo);
+                                },
+                              ),
                             );
 
                           },
