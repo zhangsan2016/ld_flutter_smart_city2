@@ -31,10 +31,8 @@ class GroupingPage extends StatefulWidget {
 }
 
 class _MyGroupingPageState extends State<GroupingPage> {
-
   // 分组后的路灯
   var lampsGroup = <String, List<Device>>{};
-
 
   @override
   void initState() {
@@ -47,10 +45,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
 
-  //  ProgressDialog.showProgress(context);
-
-    return
-    new Scaffold(
+    return new Scaffold(
       appBar: new AppBar(
         //自定义Drawer的按钮
         leading: Builder(builder: (BuildContext context) {
@@ -63,7 +58,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
               });
         }),
         // 导航栏右侧搜索图标
-    /*    actions: <Widget>[
+        /*    actions: <Widget>[
           IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
@@ -86,20 +81,12 @@ class _MyGroupingPageState extends State<GroupingPage> {
           children: <Widget>[
             // 搜索按钮
             buildSearchButton(),
-            // 所有分组
-            Expanded(
-              child: ListView(
-                children: getGroup(),
-              ),
-            )
+            getGroupView(),
           ],
         ),
       ),
     );
-
   }
-
-
 
   /**
    *  创建搜索按钮
@@ -114,7 +101,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
         color: Colors.transparent,
         child: Ink(
 
-          ///圆角边框
+            ///圆角边框
             decoration: BoxDecoration(
               border: new Border.all(color: Color(0xFFD6D6D6), width: 0.5),
               // 边色与边宽度
@@ -123,7 +110,8 @@ class _MyGroupingPageState extends State<GroupingPage> {
             ),
             child: InkWell(
               onTap: () {
-                showSearch(context: context,
+                showSearch(
+                    context: context,
                     delegate: MySearchDelegate(widget.currentProject));
               },
               splashColor: const Color(0xFFD6D6D6),
@@ -136,7 +124,10 @@ class _MyGroupingPageState extends State<GroupingPage> {
               child: Container(
                 alignment: Alignment.center,
                 child: new Text(
-                  '搜索', style: TextStyle(color: Color(0xff999999)),),),
+                  '搜索',
+                  style: TextStyle(color: Color(0xff999999)),
+                ),
+              ),
             )),
       ),
     );
@@ -153,7 +144,6 @@ class _MyGroupingPageState extends State<GroupingPage> {
           style: TextStyle(color: Colors.white),
         ));
   }
-
 
   /**
    *  获取分组
@@ -275,17 +265,15 @@ class _MyGroupingPageState extends State<GroupingPage> {
    */
   void getDeviceList(String title) async {
     // 获取项目中的路灯
-    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
-        .then((val) async {
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
       // 解析 json
       var data = json.decode(val);
       LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-
-      ResourceRequest.deviceList(
-          title, loginInfo.data.token.token, (DeviceList val) {
+      ResourceRequest.deviceList(title, loginInfo.data.token.token,
+          (DeviceList val) {
         // 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
-         parseDevice(val, title);
+        parseDevice(val, title);
       });
     });
   }
@@ -294,14 +282,12 @@ class _MyGroupingPageState extends State<GroupingPage> {
    * 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
    */
   void parseDevice(DeviceList val, title) {
-
     for (Device device in val.device) {
       if (device.tYPE == 1) {
-         // 电箱信息
+        // 电箱信息
         lampsGroup['电箱分组'] = [device];
-
       } else if (device.tYPE == 2) {
-         // 路灯信息
+        // 路灯信息
         if (device.sUBGROUP.isNotEmpty) {
           if (lampsGroup.containsKey(device.sUBGROUP)) {
             var group = lampsGroup[device.sUBGROUP].add(device);
@@ -322,13 +308,38 @@ class _MyGroupingPageState extends State<GroupingPage> {
       }
     }
 
-    if(lampsGroup.length > 0){
-       setState(() {});
-    }else{
+    if (lampsGroup.length > 0) {
+      setState(() {});
+    } else {
       showToast('当前数据为空', position: ToastPosition.bottom);
     }
-
   }
 
+  /**
+   *  获取分组视图
+   */
+  Widget getGroupView() {
+    if (lampsGroup != null && lampsGroup.length > 0) {
+      // 返回分组界面
+      return Expanded(
+        child: ListView(
+          children: getGroup(),
+        ),
+      );
+    } else {
+      return
 
+        Expanded(
+          child:  Container(
+              padding: const EdgeInsets.all(16.0),
+              alignment: Alignment.center,
+              child: SizedBox(
+                  width: ScreenUtil().setWidth(100.0),
+                  height: ScreenUtil().setWidth(100.0),
+                  child: CircularProgressIndicator(strokeWidth: 2.0) // 加载转圈
+              )),
+        );
+
+    }
+  }
 }
