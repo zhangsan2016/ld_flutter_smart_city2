@@ -50,7 +50,6 @@ class _AutoCompleteState extends State<AutoComplete> {
   @override
   Widget build(BuildContext context) {
 
-
     if (searchStart) {
       // 搜索关键字
       searchKeyword();

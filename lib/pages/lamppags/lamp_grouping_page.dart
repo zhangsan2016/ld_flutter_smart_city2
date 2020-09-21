@@ -49,8 +49,6 @@ class _MyGroupingPageState extends State<GroupingPage> {
   void initState() {
     super.initState();
 
-    // 网络获取当前项目路灯数据
-    getDeviceLampList(currentProject);
   }
 
   @override
@@ -60,7 +58,14 @@ class _MyGroupingPageState extends State<GroupingPage> {
     //  String projectTitle = ModalRoute.of(context).settings.arguments;
     //   print('projectTitle = $projectTitle');
 
-    return new Scaffold(
+    return/* FutureBuilder(
+        future:   getDeviceLampList(currentProject);,
+        builder: (context, snapshot) {
+
+        });*/
+
+
+      new Scaffold(
       appBar: new AppBar(
         //自定义Drawer的按钮
         leading: Builder(builder: (BuildContext context) {
@@ -72,7 +77,8 @@ class _MyGroupingPageState extends State<GroupingPage> {
                 Navigator.pop(context);
               });
         }),
-        actions: <Widget>[
+        // 导航栏右侧搜索图标
+       /* actions: <Widget>[
           IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
@@ -80,7 +86,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
               }
             // showSearch(context:context,delegate: searchBarDelegate()),
           ),
-        ],
+        ],*/
         title: new Text('洛丁智慧照明'),
         centerTitle: true,
         backgroundColor: Colors.cyan,
