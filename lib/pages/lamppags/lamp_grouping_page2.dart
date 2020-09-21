@@ -5,15 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
-import 'package:ldfluttersmartcity2/dialog/progress_dialog.dart';
 import 'package:ldfluttersmartcity2/entity/json/alarm_apparatus_info.dart';
-import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
 import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/pages/search/mysearch_delegate.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
-import 'package:ldfluttersmartcity2/utils/resource_request.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:ldfluttersmartcity2/view/discrete_Setting.dart';
 import 'package:oktoast/oktoast.dart';
@@ -27,30 +24,48 @@ class GroupingPage extends StatefulWidget {
   GroupingPage(this.currentProject);
 
   @override
-  _MyGroupingPageState createState() => _MyGroupingPageState();
+  _MyGroupingPageState createState() => _MyGroupingPageState(currentProject);
 }
 
 class _MyGroupingPageState extends State<GroupingPage> {
+  // 当前路灯数据
+  List<Lamp> lamps = [];
+
+  // 当前电箱列表
+  List<Ebox> eboxs = [];
+
+  // 当前报警器列表
+  List<AlarmApparatus> alarmApparatus = [];
 
   // 分组后的路灯
-  var lampsGroup = <String, List<Device>>{};
+  var lampsGroup = <String, List<Lamp>>{};
 
+  // 当前项目
+  String currentProject;
+
+  _MyGroupingPageState(this.currentProject);
 
   @override
   void initState() {
     super.initState();
-    // 获取设备信息
-    getDeviceList(widget.currentProject);
+
   }
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
+    // 获取传递过来的数据
+    //  String projectTitle = ModalRoute.of(context).settings.arguments;
+    //   print('projectTitle = $projectTitle');
 
-    ProgressDialog.showProgress(context);
+    return/* FutureBuilder(
+        future:   getDeviceLampList(currentProject);,
+        builder: (context, snapshot) {
 
-    return
-    new Scaffold(
+        });*/
+
+
+      new Scaffold(
       appBar: new AppBar(
         //自定义Drawer的按钮
         leading: Builder(builder: (BuildContext context) {
@@ -63,7 +78,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
               });
         }),
         // 导航栏右侧搜索图标
-    /*    actions: <Widget>[
+       /* actions: <Widget>[
           IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
@@ -96,10 +111,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
         ),
       ),
     );
-
   }
-
-
 
   /**
    *  创建搜索按钮
@@ -107,36 +119,30 @@ class _MyGroupingPageState extends State<GroupingPage> {
   Widget buildSearchButton() {
     return Container(
       height: 30,
-
       ///外边距
-      margin: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20),
+      margin:   EdgeInsets.only(top: 10.0, bottom: 10.0,left: 20.0,right: 20),
       child: Material(
         color: Colors.transparent,
-        child: Ink(
-
+        child:Ink(
           ///圆角边框
             decoration: BoxDecoration(
-              border: new Border.all(color: Color(0xFFD6D6D6), width: 0.5),
-              // 边色与边宽度
+              border: new Border.all(color: Color(0xFFD6D6D6), width: 0.5), // 边色与边宽度
               color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
             ),
             child: InkWell(
               onTap: () {
-                showSearch(context: context,
-                    delegate: MySearchDelegate(widget.currentProject));
+                showSearch(context: context, delegate: MySearchDelegate(currentProject));
               },
               splashColor: const Color(0xFFD6D6D6),
               // splashColor: Colors.white,
               ///点击事件的圆角
               ///表现为水波纹的圆角
               borderRadius: BorderRadius.circular(20.0),
-
               ///页面过渡动画
               child: Container(
                 alignment: Alignment.center,
-                child: new Text(
-                  '搜索', style: TextStyle(color: Color(0xff999999)),),),
+                child: new Text('搜索',style: TextStyle(color: Color(0xff999999)),),),
             )),
       ),
     );
@@ -154,6 +160,132 @@ class _MyGroupingPageState extends State<GroupingPage> {
         ));
   }
 
+  /**
+   *  获取项目下的路灯列表
+   */
+  getDeviceLampList(String title) {
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) {
+      // 解析 json
+      var data = json.decode(val);
+      LoginInfo loginInfo = LoginInfo.fromJson(data);
+
+      var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
+      DioUtils.requestHttp(
+        servicePath['DEVICE_LAMP_LIST_URL'],
+        parameters: param,
+        // token: token,
+        token: loginInfo.data.token.token,
+        method: DioUtils.POST,
+        onSuccess: (String data) {
+          // 解析 json
+          var jsonstr = json.decode(data);
+          // print('getDeviceLampList title $title = $data');
+          print('getDeviceLampList title $title ');
+
+          LampInfo lampInfo = LampInfo.fromJson(jsonstr);
+
+          lampInfo.data.lamp.forEach((lamp) {
+            print('lamp.sUBGROUP = ${lamp.sUBGROUP}');
+            if (lamp.sUBGROUP.isNotEmpty) {
+              if (lampsGroup.containsKey(lamp.sUBGROUP)) {
+                var group = lampsGroup[lamp.sUBGROUP].add(lamp);
+              } else {
+                lampsGroup[lamp.sUBGROUP] = [lamp];
+              }
+            } else {
+              // 未分组
+              if (lampsGroup.containsKey('未分组')) {
+                lampsGroup['未分组'].add(lamp);
+              } else {
+                lampsGroup['未分组'] = [lamp];
+              }
+            }
+          });
+
+          // 获取项目下的电箱
+          getDeviceEbox(currentProject);
+          // 获取项目下的报警器
+          getAlarmApparatus(currentProject);
+
+          setState(() {
+            lamps = lampInfo.data.lamp;
+          });
+        },
+        onError: (error) {
+          print(' DioUtils.requestHttp error = $error');
+        },
+      );
+    });
+  }
+
+  /**
+   *  获取项目下的电箱列表
+   */
+  void getDeviceEbox(String title) {
+
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+      // 解析 json
+      var data = json.decode(val);
+      LoginInfo loginInfo = LoginInfo.fromJson(data);
+
+      var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
+      DioUtils.requestHttp(
+        servicePath['DEVICE_EBOX_URL'],
+        parameters: param,
+        // token: token,
+        token: loginInfo.data.token.token,
+        method: DioUtils.POST,
+        onSuccess: (String data) {
+          // 解析 json
+          var jsonstr = json.decode(data);
+          EboxInfo eboxInfo = EboxInfo.fromJson(jsonstr);
+
+          setState(() {
+            // eboxs = eboxInfo.data.ebox;
+            lampsGroup['电箱分组'] = LampInfo.fromJson(json.decode(data)).data.lamp;
+          });
+        },
+        onError: (error) {
+          print(' DioUtils.requestHttp error = $error');
+        },
+      );
+    });
+  }
+
+  /**
+   *  获取项目下的报警器列表
+   */
+  void getAlarmApparatus(String title) {
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+      // 解析 json
+      var data = json.decode(val);
+      LoginInfo loginInfo = LoginInfo.fromJson(data);
+
+      var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
+      DioUtils.requestHttp(
+        servicePath['DEVICE_WIRESAFE_LIST_URL'],
+        parameters: param,
+        // token: token,
+        token: loginInfo.data.token.token,
+        method: DioUtils.POST,
+        onSuccess: (String data) {
+          // 解析 json
+          var jsonstr = json.decode(data);
+          AlarmApparatusInfo alarmApparatusInfo =
+              AlarmApparatusInfo.fromJson(jsonstr);
+
+          setState(() {
+            // alarmApparatus = alarmApparatusInfo.data.alarmApparatus;
+            lampsGroup['报警器分组'] =
+                LampInfo.fromJson(json.decode(data)).data.lamp;
+          });
+        },
+        onError: (error) {
+          print(' DioUtils.requestHttp error = $error');
+        },
+      );
+    });
+  }
 
   /**
    *  获取分组
@@ -162,19 +294,30 @@ class _MyGroupingPageState extends State<GroupingPage> {
     // 创建分组视图
     List<Widget> list = [];
     lampsGroup.keys.map((item) {
-      List<Device> lamps = lampsGroup[item];
+      List<Lamp> lamps = lampsGroup[item];
       if (lamps.isNotEmpty) {
         list.add(groupTitle(item));
         list.add(_wrapList(lamps));
       }
     }).toList();
     return list;
+
+    /*  List<Widget> list = [];
+    list.add(groupTitle('默认分组'));
+    List<Lamp> lampList =  lampsGroup['默认分组'];
+    list.add(groupTitle('未分组'));
+    list.add(_wrapLampList(lampsGroup['未分组']));
+    list.add(groupTitle('电箱分组'));
+    list.add(_wrapLampList(lampsGroup['电箱分组']));
+    list.add(groupTitle('报警器分组'));
+    list.add(_wrapLampList(lampsGroup['报警器分组']));
+    return list;*/
   }
 
-  Widget _wrapList(List<Device> lamps) {
+  Widget _wrapList(List<Lamp> lamps) {
     if (lamps?.length != 0) {
       List<Widget> listWidget = lamps.map((val) {
-        Device lamp = val;
+        Lamp lamp = val;
         return InkWell(
           onTap: () {
             /* showToast('${lamp.nAME}', position: ToastPosition.bottom);
@@ -245,7 +388,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
     }
   }
 
-  Color stateColor(Device lamp) {
+  Color stateColor(Lamp lamp) {
     // int warningState,double brightness
     // 类型 2 位路灯
     if (lamp.tYPE == 2) {
@@ -267,68 +410,4 @@ class _MyGroupingPageState extends State<GroupingPage> {
       // return Color.fromARGB(255, 100, 149, 237);
     }
   }
-
-  /**
-   *   获取设备列表（包含路灯、电箱、报警器）
-   *   temporary 当前用户下所有的项目
-   *   title 指定项目
-   */
-  void getDeviceList(String title) async {
-    // 获取项目中的路灯
-    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
-        .then((val) async {
-      // 解析 json
-      var data = json.decode(val);
-      LoginInfo loginInfo = LoginInfo.fromJson(data);
-
-
-      ResourceRequest.deviceList(
-          title, loginInfo.data.token.token, (DeviceList val) {
-        // 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
-         parseDevice(val, title);
-      });
-    });
-  }
-
-  /**
-   * 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
-   */
-  void parseDevice(DeviceList val, title) {
-
-    for (Device device in val.device) {
-      if (device.tYPE == 1) {
-         // 电箱信息
-        lampsGroup['电箱分组'] = [device];
-
-      } else if (device.tYPE == 2) {
-         // 路灯信息
-        if (device.sUBGROUP.isNotEmpty) {
-          if (lampsGroup.containsKey(device.sUBGROUP)) {
-            var group = lampsGroup[device.sUBGROUP].add(device);
-          } else {
-            lampsGroup[device.sUBGROUP] = [device];
-          }
-        } else {
-          // 未分组
-          if (lampsGroup.containsKey('未分组')) {
-            lampsGroup['未分组'].add(device);
-          } else {
-            lampsGroup['未分组'] = [device];
-          }
-        }
-      } else if (device.tYPE == 4) {
-        // 报警器信息
-        lampsGroup['报警器分组'] = [device];
-      }
-    }
-
-    if(lampsGroup.length > 0){
-       setState(() {});
-    }else{
-      showToast('当前数据为空', position: ToastPosition.bottom);
-    }
-
-  }
-
-
 }
