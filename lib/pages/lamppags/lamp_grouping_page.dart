@@ -47,7 +47,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
 
-    ProgressDialog.showProgress(context);
+  //  ProgressDialog.showProgress(context);
 
     return
     new Scaffold(

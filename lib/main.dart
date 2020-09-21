@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil.dart';
 import 'package:ldfluttersmartcity2/pages/lamppags/lamp_grouping_page.dart';
 import 'package:ldfluttersmartcity2/pages/login_page.dart';
 import 'package:ldfluttersmartcity2/provide/device_search_provide.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MultiProvider(
       providers: [
        ChangeNotifierProvider(create: (_) => DeviceSearchProvide()),

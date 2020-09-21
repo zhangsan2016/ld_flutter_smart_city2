@@ -189,8 +189,8 @@ class ClusterManager {
               // snippet: '描述',
               iconUri: Uri.parse('images/bian.png'),
               imageConfig: createLocalImageConfiguration(_context),
-              width: 48,
-              height: 48,
+              width: ScreenUtil().setWidth(48),
+              height:ScreenUtil().setHeight(48),
               object: json.encode(project.lamps),
             ),
           );
