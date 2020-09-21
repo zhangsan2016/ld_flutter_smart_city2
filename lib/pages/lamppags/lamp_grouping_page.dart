@@ -328,7 +328,6 @@ class _MyGroupingPageState extends State<GroupingPage> {
       );
     } else {
       return
-
         Expanded(
           child:  Container(
               padding: const EdgeInsets.all(16.0),
@@ -342,4 +341,5 @@ class _MyGroupingPageState extends State<GroupingPage> {
 
     }
   }
+
 }
