@@ -67,7 +67,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
       title: '洛丁智慧照明',
       home: new Scaffold(
         appBar: new AppBar(
-          //AppBar 左侧图标，点击自定义Drawer的按钮
+        /*  //AppBar 左侧图标，点击自定义Drawer的按钮
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
                 icon: Icon(Icons.wifi_tethering),
@@ -76,11 +76,11 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
                   // Scaffold.of(context).openDrawer();
 
                 });
-          }),
+          }),*/
           //  AppBar 右侧图标点击退出登录
           actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.search),
+              icon: Image.asset('images/my_user.png'),
               onPressed: () {
                 // 打开提示框
                 showDialog(
@@ -112,7 +112,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
             // showSearch(context:context,delegate: searchBarDelegate()),
           ),
         ],
-          title: new Text('洛丁智慧照明'),
+          title: Text('洛丁智慧照明', textAlign: TextAlign.center,),
           backgroundColor: Colors.cyan,
         ),
         body: Stack(
