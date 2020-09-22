@@ -37,7 +37,10 @@ class ClusterManager {
   // 是否展开
   bool isUnfold = false;
 
-  // 当前被选中（点击）的项目
+  // 当前用户下的项目数量
+  int _projectCount;
+
+ // 当前被选中（点击）的项目
   String currentTitle;
 
   // 项目路灯集合
@@ -166,6 +169,7 @@ class ClusterManager {
    * alarmApparatus ：当前项目的报警器列表
    */
   void addItems(List items, {eboxs, alarmApparatus}) async {
+
     List temporary;
     if (items != null && items.length > 0) {
       if (items[0] is Project) {
@@ -235,7 +239,6 @@ class ClusterManager {
           for (var i = 0; i < temporary.length; ++i) {
             Project project = temporary[i];
 
-
             ResourceRequest.deviceList(project.title, loginInfo.data.token.token,(DeviceList val){
 
               // 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
@@ -279,6 +282,12 @@ class ClusterManager {
    if(eboxList.length > 0){
      alarmApparatusMap[title] = alarmList;
    }
+
+   // 如果当前是唯一的项目就跳转到路灯位置
+   if(_projectCount == 1){
+      addMapMarkers(title);
+   }
+
  }
 
   /**
@@ -709,6 +718,14 @@ class ClusterManager {
     }
 
   }
+
+ /**
+  *  当前登录用户管理的项目数量
+  */
+ set projectCount(int value) {
+   _projectCount = value;
+ }
+
 
 
 }

@@ -143,6 +143,9 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
         var jsonstr = json.decode(data);
         ProjectInfo projectInfo = ProjectInfo.fromJson(jsonstr);
 
+        // 设置好项目数量
+        clusterManager.projectCount = projectInfo.data.data.length;
+        // 添加地图覆盖物
         clusterManager.addItems(projectInfo.data.data);
       },
       onError: (error) {
