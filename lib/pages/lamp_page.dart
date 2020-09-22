@@ -31,6 +31,15 @@ class LampPage extends StatelessWidget {
           child: Scaffold(
             // Tab组件必须放到Scaffold中
             appBar: AppBar(
+                actions: <Widget>[
+                  IconButton(
+                      icon: Image.asset('images/lamp_location.png'),
+                      onPressed: () {
+                        print('定位');
+                      }
+                    // showSearch(context:context,delegate: searchBarDelegate()),
+                  ),
+                ],
                 title: Column(children: <Widget>[
                   Text('${_lamp?.nAME}'),
                   Text('${_lamp?.pROJECT}',
