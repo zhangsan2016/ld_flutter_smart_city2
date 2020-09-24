@@ -178,7 +178,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
             Navigator.push<String>(
               context,
               new CupertinoPageRoute(
-                settings: RouteSettings(name:"/pageB"),
+                settings: RouteSettings(name:"/LampPage"),
                 builder: (BuildContext context) {
                   return new LampPage(lampInfo);
                 },

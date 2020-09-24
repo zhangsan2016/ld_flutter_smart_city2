@@ -74,7 +74,6 @@ class DeviceSearchProvide with ChangeNotifier {
           searchList.add(d);
         }
       }
-      print('xxxxxxxxxxxxx notifyListeners');
       notifyListeners();
     }
 

@@ -18,6 +18,11 @@ class DelSearchKeyEvent{
   DelSearchKeyEvent(this.keywords);
 }
 
+/// 地图重新定位事件
+class AmapLocation{
+  String data;
+  AmapLocation(this.data);
+}
 
 
 

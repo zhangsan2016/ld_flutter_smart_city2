@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:amap_core_fluttify/amap_core_fluttify.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:ldfluttersmartcity2/clusterutil/cluster_manager.dart';
+import 'package:ldfluttersmartcity2/common/event_bus.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
@@ -16,6 +18,7 @@ import 'package:ldfluttersmartcity2/pages/login_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
 
 import 'lamppags/lamp_grouping_page.dart';
 
@@ -33,15 +36,25 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
   static AmapController _controller;
   static ClusterManager clusterManager;
 
+
   // 覆盖物展开状态
   bool isUnfold = false;
 
+  // 异步订阅管理
+  StreamSubscription _searchDelSubscription;
   BuildContext _context;
 
   @override
   void initState() {
     super.initState();
+
+    /// 监听定位事件
+    _searchDelSubscription = eventBus.on<AmapLocation>().listen((event){
+       _locationUp(event.data);
+    });
+
   }
+
 
   @override
   void deactivate() {
@@ -51,14 +64,21 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
   @override
   void dispose() {
     super.dispose();
+    // 关闭高德地图聚合管理器
     clusterManager = null;
+    // 清理高德地图控制器
     _controller.clear();
+    // 取消监听，节省系统资源
+    _searchDelSubscription.cancel();
   }
 
 
   @override
   Widget build(BuildContext context) {
     _context = context;
+
+    // 定位变更监听
+   // _locationUp(context);
 
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: false);
     return new MaterialApp(
@@ -349,7 +369,6 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
     setState(() {
       this.isUnfold = isUnfold;
     });
-    print('mapMarkerStartListener isUnfold $isUnfold ');
   }
 
   /**
@@ -511,6 +530,28 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
       // 更新图标
       clusterManager?.updateMarkerIco('${double.parse(lamp.lAT)},${double.parse(lamp.lNG)}');
     }
+  }
+
+  /**
+   * 定位更新方法
+   */
+  _locationUp(String data){
+
+    // 定位功能
+    //接收返回的参数
+    print('接收返回的参数 = ${data}');
+    if(data != null){
+      // 1.集中器 2.路灯 4.报警器
+      Lamp lamp = Lamp.fromJson(json.decode(data));
+      _controller?.setCenterCoordinate(
+        LatLng(double.parse(lamp.lAT),double.parse(lamp.lNG)),
+        animated: false,
+      );
+
+      // 更新图标
+      clusterManager?.updateMarkerIco('${double.parse(lamp.lAT)},${double.parse(lamp.lNG)}');
+    }
+
   }
 
 

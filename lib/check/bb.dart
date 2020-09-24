@@ -1,95 +1,158 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: public_member_api_docs, lines_longer_than_80_chars
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ldfluttersmartcity2/config/service_url.dart';
-import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(check());
+/// This is an example of a counter application using `provider` + [ChangeNotifier].
+///
+/// It builds a typical `+` button, with a twist: the texts using the counter
+/// are built using the localization framework.
+///
+/// This shows how to bind our custom [ChangeNotifier] to things like [LocalizationsDelegate].
 
-class check extends StatelessWidget {
+void main() => runApp(MyApp());
+
+class Counter with ChangeNotifier {
+  int _count = 0;
+  int get count => _count;
+
+  void increment() {
+    _count++;
+    notifyListeners();
+  }
+}
+
+class MyApp extends StatelessWidget {
+
+
+  @override
+  void initState() {
+    print('initState');
+
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: MaterialApp(
-        title: 'xxx++',
-        // 去掉运行时 debug 的提示
-        debugShowCheckedModeBanner: false,
-
-        home: HomePage22(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Counter()),
+      ],
+      child: Consumer<Counter>(
+        builder: (context, counter, _) {
+          return MaterialApp(
+            supportedLocales: const [Locale('en')],
+            localizationsDelegates: [
+              DefaultMaterialLocalizations.delegate,
+              DefaultWidgetsLocalizations.delegate,
+              _ExampleLocalizationsDelegate(counter.count),
+            ],
+            home: const MyHomePage(),
+          );
+        },
       ),
     );
   }
 }
-class HomePage22 extends StatelessWidget {
+
+class ExampleLocalizations {
+  static ExampleLocalizations of(BuildContext context) {
+    return Localizations.of<ExampleLocalizations>(context, ExampleLocalizations);
+  }
+
+  const ExampleLocalizations(this._count);
+
+  final int _count;
+
+  String get title => 'Tapped $_count times';
+}
+
+class _ExampleLocalizationsDelegate extends LocalizationsDelegate<ExampleLocalizations> {
+  const _ExampleLocalizationsDelegate(this.count);
+
+  final int count;
+
+  @override
+  bool isSupported(Locale locale) => locale.languageCode == 'en';
+
+  @override
+  Future<ExampleLocalizations> load(Locale locale) {
+    return SynchronousFuture(ExampleLocalizations(count));
+  }
+
+  @override
+  bool shouldReload(_ExampleLocalizationsDelegate old) => old.count != count;
+}
+
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return getWidget(context);
-  }
-
-  Widget getWidget(BuildContext context) {
-    List tabs = ["新闻", "历史", "图片"];
-
-    return new DefaultTabController(
-      length: tabs.length,
-      child: new Scaffold(
-        appBar: AppBar(
-          title: Text("标题标题标题标题标题标题标题标题标题"),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () =>  exit(0), //Navigator.of(context).pop(),
-          ),
-          elevation: 20.0,
-          backgroundColor: Color(0xffDE331F),
-          bottom: TabBar(
-            //生成Tab菜单
-              tabs: tabs.map((e) => Tab(text: e)).toList()),
-        ),
-        body: new TabBarView(
-          children: tabs.map((e) {
-            //分别创建对应的Tab页面
-            return Container(
-              alignment: Alignment.center,
-             // child: Text(e, textScaleFactor: 5),
-              child: Text('dxxx'),
-            );
-          }).toList(),
-        ),
-      ),
+    return Scaffold(
+      /// Tons of small widgets!
+      ///
+      /// Splitting our app in small widgets like [Title] or [CounterLabel] is
+      /// useful for rebuild optimization.
+      ///
+      /// Since they are instantiated using `const`, they won't unnecessarily
+      /// rebuild when their parent changes.
+      /// But they can still have dynamic content, as they can obtain providers!
+      ///
+      /// This means only the widgets that depends on a provider to rebuild when they change.
+      /// Alternatively, we could use [Consumer] or [Selector] to achieve the
+      /// same result.
+      appBar: AppBar(title: const Title()),
+      body: const Center(child: CounterLabel()),
+      floatingActionButton: const IncrementCounterButton(),
     );
   }
+}
 
+class IncrementCounterButton extends StatelessWidget {
+  const IncrementCounterButton({Key key}) : super(key: key);
 
-  /**
-   *  获取项目下的报警器
-   */
-  getAlarmApparatus(String title, token) {
-    var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
-
-    DioUtils.requestHttp(
-      servicePath['DEVICE_WIRESAFE_LIST_URL'],
-      parameters: param,
-      token: token,
-      method: DioUtils.POST,
-      onSuccess: (String data) {
-        try {
-          // 解析 json
-        //  print('getAlarmApparatus = ${data.toString()}');
-
-          /*  var jsonstr = json.decode(data);
-          EboxInfo lampInfo = EboxInfo.fromJson(jsonstr);
-          if (!lampInfo.data.ebox?.isEmpty) {
-            eboxMap[title] = lampInfo.data.ebox;
-          }*/
-        } catch (e) {
-          print('解析出错 ${e.toString()}');
-        }
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        Provider.of<Counter>(context, listen: false).increment();
       },
-      onError: (error) {
-        print(' DioUtils.requestHttp error = $error');
-      },
+      tooltip: 'Increment',
+      child: const Icon(Icons.add),
     );
+  }
+}
+
+class CounterLabel extends StatelessWidget {
+  const CounterLabel({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final counter = Provider.of<Counter>(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text(
+          'You have pushed the button this many times:',
+        ),
+        Text(
+          '${counter.count}',
+          // ignore: deprecated_member_use
+          style: Theme.of(context).textTheme.display1,
+        ),
+      ],
+    );
+  }
+}
+
+class Title extends StatelessWidget {
+  const Title({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(ExampleLocalizations.of(context).title);
   }
 }

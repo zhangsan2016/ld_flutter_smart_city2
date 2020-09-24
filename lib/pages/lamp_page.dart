@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ldfluttersmartcity2/common/event_bus.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
-import 'package:ldfluttersmartcity2/pages/amap_page.dart';
 import 'package:oktoast/oktoast.dart';
 
 import 'lamppags/check_lamp_page.dart';
@@ -45,9 +44,14 @@ class LampPage extends StatelessWidget {
 
                         //  Navigator.popUntil(context, ModalRoute.withName('/pageC'));
                           // 设置回调
-                          AmapPageState.location(json.encode(_lamp));
-                          Navigator.pop(context, json.encode(_lamp));
-                        //  Navigator.of(context).pop();
+                       //   AmapPageState.location(json.encode(_lamp));
+                        // Navigator.pop(context, json.encode(_lamp));
+                          //        Navigator.of(context).pop();
+
+                          // 向事件总线发射一个地图定位事件
+                          eventBus.fire(AmapLocation(json.encode(_lamp)));
+                          Navigator.popUntil(context, ModalRoute.withName('/AmapPage'));
+
                         } else {
                           showToast('未能找到当前设备经纬度，请重新添加', position: ToastPosition.bottom);
                         }
