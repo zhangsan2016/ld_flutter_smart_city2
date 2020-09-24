@@ -91,85 +91,12 @@ class _AutoCompleteState extends State<AutoComplete> {
                             ), (route) => route == null);*/
 
 
-                            //跳转并关闭当前页面
-                          /*  String lampInfo = json.encode(device);
-                            Navigator.push<String>(
-                              context,
-                              new CupertinoPageRoute(
-                                builder: (BuildContext context) {
-                                  return new LampPage(lampInfo);
-                                },
-                              ),
-                            );*/
-
-
-
-                          /* //跳转并关闭当前页面
-                            String lampInfo = json.encode(device);
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              new CupertinoPageRoute(
-                                builder: (BuildContext context) {
-                                  return new LampPage(lampInfo);
-                                },
-                              ),(route) {
-                              print('route = ${route}');
-                            });*/
-
-
-                         /*   String lampInfo = json.encode(device);
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                new CupertinoPageRoute(
-                                  settings: RouteSettings(name:"/pageC"),
-                                  builder: (BuildContext context) {
-                                    return new LampPage(lampInfo);
-                                  },
-                                ),(route) {
-                              print('route = ${route}');
-                             // widget.searchDelegate.close(context, null);
-                              return false;
-                            });*/
-
-
-
-                          /*  String lampInfo = json.encode(device);
-                            Navigator.push<String>(
-                              context,
-                              new CupertinoPageRoute(
-                                settings: RouteSettings(name:"/pageC"),
-                                builder: (BuildContext context) {
-                                  return new LampPage(lampInfo);
-                                },
-                              ),
-                            );*/
-
-                      /*        String lampInfo = json.encode(device);
-                            Navigator.push<String>(
-                              context,
-                              new CupertinoPageRoute(
-                                settings: RouteSettings(name:"/pageC"),
-                                builder: (BuildContext context) {
-                                  return new LampPage(lampInfo);
-                                },
-                              ),
-                            );*/
-
                             String lampInfo = json.encode(device);
                             Navigator.of(context).pushAndRemoveUntil(
                                 CupertinoPageRoute(builder: (context) => new LampPage(lampInfo)),
                                 ModalRoute.withName('/AmapPage'));
 
 
-
-
-                            /*  // 跳转并关闭当前页面
-                            String lampInfo = json.encode(device);
-                            Navigator.pushAndRemoveUntil(context, new CupertinoPageRoute(
-                              builder: (BuildContext context) {
-                                return new LampPage(lampInfo);
-                              },
-                            ), (route) => route == null);*/
 
 
                           },
