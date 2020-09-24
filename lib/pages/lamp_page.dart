@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
+import 'package:oktoast/oktoast.dart';
 
 import 'lamppags/check_lamp_page.dart';
 import 'lamppags/edit_lamp_page.dart';
@@ -35,7 +36,25 @@ class LampPage extends StatelessWidget {
                   IconButton(
                       icon: Image.asset('images/lamp_location.png'),
                       onPressed: () {
-                        print('定位');
+
+                     //   Navigator.popUntil(context, ModalRoute.withName("auto"));
+                      //  Navigator.of(context).pushNamedAndRemoveUntil('/amapPag', (Route<dynamic> route) => false);
+                     //   Navigator.of(context).pushNamedAndRemoveUntil('/pageB', (Route<dynamic> route) => false);
+
+                      //  Navigator.of(context).popUntil(ModalRoute.withName('/amapPag'));
+
+                       // Navigator.of(context).popUntil(ModalRoute.withName('/'));
+
+                        if (_lamp.lNG.isNotEmpty && _lamp.lNG.isNotEmpty) {
+
+                       //   Navigator.of(context).pushNamedAndRemoveUntil('/amapPag', (Route<dynamic> route) => false);
+
+
+                         /* Navigator.popUntil(context, ModalRoute.withName('/pageC'));
+                          Navigator.pop(context, json.encode(_lamp));*/
+                        } else {
+                          showToast('未能找到当前设备经纬度，请重新添加', position: ToastPosition.bottom);
+                        }
                       }
                     // showSearch(context:context,delegate: searchBarDelegate()),
                   ),

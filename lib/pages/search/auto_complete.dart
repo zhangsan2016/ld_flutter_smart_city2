@@ -15,13 +15,14 @@ class AutoComplete extends StatefulWidget {
   final Function setSearchKeyword;
 
   var currentProject;
+  SearchDelegate searchDelegate;
 
   /// 这里通过另外一种方式实现自组件调用父组件方法
   AutoComplete(
     this.query,
     this.popResults,
     this.setSearchKeyword,
-    this.currentProject,
+    this.currentProject, this.searchDelegate,
   );
 
   @override
@@ -91,7 +92,7 @@ class _AutoCompleteState extends State<AutoComplete> {
 
 
                             //跳转并关闭当前页面
-                            String lampInfo = json.encode(device);
+                          /*  String lampInfo = json.encode(device);
                             Navigator.push<String>(
                               context,
                               new CupertinoPageRoute(
@@ -99,7 +100,77 @@ class _AutoCompleteState extends State<AutoComplete> {
                                   return new LampPage(lampInfo);
                                 },
                               ),
-                            );
+                            );*/
+
+
+
+                          /* //跳转并关闭当前页面
+                            String lampInfo = json.encode(device);
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              new CupertinoPageRoute(
+                                builder: (BuildContext context) {
+                                  return new LampPage(lampInfo);
+                                },
+                              ),(route) {
+                              print('route = ${route}');
+                            });*/
+
+
+                         /*   String lampInfo = json.encode(device);
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                new CupertinoPageRoute(
+                                  settings: RouteSettings(name:"/pageC"),
+                                  builder: (BuildContext context) {
+                                    return new LampPage(lampInfo);
+                                  },
+                                ),(route) {
+                              print('route = ${route}');
+                             // widget.searchDelegate.close(context, null);
+                              return false;
+                            });*/
+
+
+
+                          /*  String lampInfo = json.encode(device);
+                            Navigator.push<String>(
+                              context,
+                              new CupertinoPageRoute(
+                                settings: RouteSettings(name:"/pageC"),
+                                builder: (BuildContext context) {
+                                  return new LampPage(lampInfo);
+                                },
+                              ),
+                            );*/
+
+                      /*        String lampInfo = json.encode(device);
+                            Navigator.push<String>(
+                              context,
+                              new CupertinoPageRoute(
+                                settings: RouteSettings(name:"/pageC"),
+                                builder: (BuildContext context) {
+                                  return new LampPage(lampInfo);
+                                },
+                              ),
+                            );*/
+
+                            String lampInfo = json.encode(device);
+                            Navigator.of(context).pushAndRemoveUntil(
+                                CupertinoPageRoute(builder: (context) => new LampPage(lampInfo)),
+                                ModalRoute.withName('/AmapPage'));
+
+
+
+
+                            /*  // 跳转并关闭当前页面
+                            String lampInfo = json.encode(device);
+                            Navigator.pushAndRemoveUntil(context, new CupertinoPageRoute(
+                              builder: (BuildContext context) {
+                                return new LampPage(lampInfo);
+                              },
+                            ), (route) => route == null);*/
+
 
                           },
                           child: Row(

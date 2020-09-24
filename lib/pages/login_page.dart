@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
@@ -263,19 +264,18 @@ class _LoginPageState extends State<LoginPage> {
                     print('登录信息保存 = $val');
                   });
 
-                  //导航到新路由
-                  /*  Navigator.push( context,
-                      MaterialPageRoute(builder: (context) {
-                        return AmapPage();
-                      }));*/
 
                   //导航到新路由，并关闭当前界面
                   //跳转并关闭当前页面
+                  //跳转并关闭当前页面
                   Navigator.pushAndRemoveUntil(
                     context,
-                    new MaterialPageRoute(builder: (context) => new AmapPage()),
-                    (route) => route == null,
+                    new MaterialPageRoute(
+                        settings: RouteSettings(name:"/AmapPage"),
+                        builder: (context) => new AmapPage()),
+                        (route) => route == null,
                   );
+
                 } else {
                   // 登录失败
                   showToast(loginInfo.errmsg, position: ToastPosition.bottom);
@@ -369,7 +369,9 @@ class _LoginPageState extends State<LoginPage> {
               //跳转并关闭当前页面
               Navigator.pushAndRemoveUntil(
                 context,
-                new MaterialPageRoute(builder: (context) => new AmapPage()),
+                new MaterialPageRoute(
+                    settings: RouteSettings(name:"/AmapPage"),
+                    builder: (context) => new AmapPage()),
                 (route) => route == null,
               );
             }

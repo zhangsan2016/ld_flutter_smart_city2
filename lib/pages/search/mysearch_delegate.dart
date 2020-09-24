@@ -83,7 +83,7 @@ class MySearchDelegate extends SearchDelegate<String> {
     return query.isEmpty
         ? Suggestions()
         : AutoComplete(
-            query, this.popResults, this.setSearchKeyword, currentProject);
+            query, this.popResults, this.setSearchKeyword, currentProject,this);
   }
 
   /// 搜索结果展示

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:ldfluttersmartcity2/pages/amap_page.dart';
 import 'package:ldfluttersmartcity2/pages/lamppags/lamp_grouping_page.dart';
 import 'package:ldfluttersmartcity2/pages/login_page.dart';
 import 'package:ldfluttersmartcity2/provide/device_search_provide.dart';
@@ -40,6 +41,20 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           home: MyHomePage(title: '洛丁智慧城市'),
+
+          //    路由集合
+          routes: {
+            '/AmapPage': (context) => new AmapPage(),
+
+          },
+//      找不到路由，显示的错误页面
+          onUnknownRoute: (RouteSettings setting) {
+            String name = setting.name;
+            showToast("未匹配到路由:$name");
+            return new MaterialPageRoute(builder: (context) {
+              return null;
+            });
+          },
         ),
       ),
     );

@@ -167,13 +167,31 @@ class _MyGroupingPageState extends State<GroupingPage> {
         Device lamp = val;
         return InkWell(
           onTap: () {
-            /* showToast('${lamp.nAME}', position: ToastPosition.bottom);
-            print('${lamp.nAME} lamp.lAT ： ${lamp.lAT} lamp.lNG ：${lamp.lNG}');*/
-            if (lamp.lNG.isNotEmpty && lamp.lNG.isNotEmpty) {
+            /*  if (lamp.lNG.isNotEmpty && lamp.lNG.isNotEmpty) {
               Navigator.pop(context, json.encode(lamp));
             } else {
               showToast('未能找到当前设备经纬度，请重新添加', position: ToastPosition.bottom);
-            }
+            }*/
+
+            // 跳转到路灯控制界面
+            String lampInfo = json.encode(lamp);
+            Navigator.push<String>(
+              context,
+              new CupertinoPageRoute(
+                settings: RouteSettings(name:"/pageB"),
+                builder: (BuildContext context) {
+                  return new LampPage(lampInfo);
+                },
+              ),
+            ).then((data) async {
+              //接收返回的参数
+              if(data != null){
+                Navigator.pop(context, data);
+              }
+
+            });
+
+
           },
           child: Container(
             //width: ScreenUtil().setWidth(150),
@@ -327,19 +345,16 @@ class _MyGroupingPageState extends State<GroupingPage> {
         ),
       );
     } else {
-      return
-        Expanded(
-          child:  Container(
-              padding: const EdgeInsets.all(16.0),
-              alignment: Alignment.center,
-              child: SizedBox(
-                  width: ScreenUtil().setWidth(100.0),
-                  height: ScreenUtil().setWidth(100.0),
-                  child: CircularProgressIndicator(strokeWidth: 2.0) // 加载转圈
-              )),
-        );
-
+      return Expanded(
+        child: Container(
+            padding: const EdgeInsets.all(16.0),
+            alignment: Alignment.center,
+            child: SizedBox(
+                width: ScreenUtil().setWidth(100.0),
+                height: ScreenUtil().setWidth(100.0),
+                child: CircularProgressIndicator(strokeWidth: 2.0) // 加载转圈
+                )),
+      );
     }
   }
-
 }

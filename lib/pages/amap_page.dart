@@ -375,6 +375,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
     Navigator.push<String>(
       context,
       new CupertinoPageRoute(
+        settings: RouteSettings(name:"/GroupingPage"),
         builder: (BuildContext context) {
           return new GroupingPage(currentProject);
         },
