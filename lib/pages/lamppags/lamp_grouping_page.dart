@@ -340,6 +340,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
       // 返回分组界面
       return Expanded(
         child: ListView(
+          shrinkWrap: true,
           children: getGroup(),
         ),
       );
