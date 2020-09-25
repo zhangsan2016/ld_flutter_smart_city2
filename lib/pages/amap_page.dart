@@ -513,26 +513,6 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
   }
 
   /**
-   * 定位静态方法
-   */
-  static location(String data) async {   //接受main.dart的参数
-    // 定位功能
-    //接收返回的参数
-    print('接收返回的参数 = ${data}');
-    if(data != null){
-      // 1.集中器 2.路灯 4.报警器
-      Lamp lamp = Lamp.fromJson(json.decode(data));
-      _controller?.setCenterCoordinate(
-        LatLng(double.parse(lamp.lAT),double.parse(lamp.lNG)),
-        animated: false,
-      );
-
-      // 更新图标
-      clusterManager?.updateMarkerIco('${double.parse(lamp.lAT)},${double.parse(lamp.lNG)}');
-    }
-  }
-
-  /**
    * 定位更新方法
    */
   _locationUp(String data){

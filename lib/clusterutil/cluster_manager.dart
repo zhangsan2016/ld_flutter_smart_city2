@@ -26,9 +26,9 @@ import 'package:oktoast/oktoast.dart';
 import 'overlay_item.dart';
 
 class ClusterManager {
- static final  int DEVICE_EBOX = 1; // 电箱（集中器）
- static final int DEVICE_LAMP = 2; // 路灯
- static final  int DEVICE_WIRESAFE = 4; // 断缆报警器
+  static final int DEVICE_EBOX = 1; // 电箱（集中器）
+  static final int DEVICE_LAMP = 2; // 路灯
+  static final int DEVICE_WIRESAFE = 4; // 断缆报警器
 
   AmapController _controller;
   BuildContext _context;
@@ -40,7 +40,7 @@ class ClusterManager {
   // 当前用户下的项目数量
   int _projectCount;
 
- // 当前被选中（点击）的项目
+  // 当前被选中（点击）的项目
   String currentTitle;
 
   // 项目路灯集合
@@ -69,7 +69,6 @@ class ClusterManager {
   bool showText = false;
 
   Future init() async {
-
     // marker 点击事件
     _controller?.setMarkerClickedListener((marker) async {
       //  print('${await marker.title}, ${await marker.snippet}, ${await marker.location}, ${await marker.object} ,${lampMap.length}');
@@ -95,7 +94,6 @@ class ClusterManager {
       return true;
     });
 
-
     // 地图移动监听
     _controller?.setMapMoveListener(
       onMapMoveStart: (move) async {
@@ -109,7 +107,8 @@ class ClusterManager {
           if (isUnfold) {
             addItems(projects);
           }
-        }/*else {
+        }
+        /*else {
           if (move.zoom >= 19.5 && currentTitle != null && !showText) {
             showText = true;
             // 地图缩放到指定大小后显示灯杆名称
@@ -123,8 +122,6 @@ class ClusterManager {
             displayMarkersText(lamp, ebox, alarmApparatus);
           }
         }*/
-
-
       },
     );
   }
@@ -137,7 +134,7 @@ class ClusterManager {
     // 获取项目对应的报警器
     List<Device> alarmApparatus = alarmApparatusMap[title];
     // 判断是否有路灯数据
-    if(lamp == null){
+    if (lamp == null) {
       showToast('当前${title}项目中没有路灯列表~', position: ToastPosition.bottom);
     }
     // 添加覆盖物
@@ -169,7 +166,6 @@ class ClusterManager {
    * alarmApparatus ：当前项目的报警器列表
    */
   void addItems(List items, {eboxs, alarmApparatus}) async {
-
     List temporary;
     if (items != null && items.length > 0) {
       if (items[0] is Project) {
@@ -194,7 +190,7 @@ class ClusterManager {
               iconUri: Uri.parse('images/bian.png'),
               imageConfig: createLocalImageConfiguration(_context),
               width: ScreenUtil().setWidth(48),
-              height:ScreenUtil().setHeight(48),
+              height: ScreenUtil().setHeight(48),
               object: json.encode(project.lamps),
             ),
           );
@@ -205,7 +201,6 @@ class ClusterManager {
 
         // 获取项目中的设备列表
         getDeviceList(temporary: temporary);
-
       } else if (items[0] is Device) {
         // 添加地图路灯覆盖物
         await addLampMarkers(items, eboxs, alarmApparatus);
@@ -218,77 +213,70 @@ class ClusterManager {
     }
   }
 
- /**
-  *   获取设备列表（包含路灯、电箱、报警器）
-  *   temporary 当前用户下所有的项目
-  *   title 指定项目
-  */
-  void getDeviceList({List temporary,String title}) {
-     // 获取项目中的路灯
-    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
-        .then((val) async {
+  /**
+   *   获取设备列表（包含路灯、电箱、报警器）
+   *   temporary 当前用户下所有的项目
+   *   title 指定项目
+   */
+  void getDeviceList({List temporary, String title}) {
+    // 获取项目中的路灯
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
       if (temporary != null && temporary.length > 0) {
         // 解析 json
         var data = json.decode(val);
         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-        if(title != null){
+        if (title != null) {
           // 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
           parseDevice(val, title);
-        }else{
+        } else {
           for (var i = 0; i < temporary.length; ++i) {
             Project project = temporary[i];
 
-            ResourceRequest.deviceList(project.title, loginInfo.data.token.token,(DeviceList val){
-
+            ResourceRequest.deviceList(
+                project.title, loginInfo.data.token.token, (DeviceList val) {
               // 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
               parseDevice(val, project.title);
-
-
             });
           }
         }
-
-
       }
     });
   }
 
- /**
-  * 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
-  */
- void parseDevice(DeviceList val, title) {
-   List<Device> eboxList = new List();
-   List<Device> lampList = new List();
-   List<Device> alarmList = new List();
+  /**
+   * 解析当前项目设备，根据类型分类（包含电箱、路灯、控制器）
+   */
+  void parseDevice(DeviceList val, title) {
+    List<Device> eboxList = new List();
+    List<Device> lampList = new List();
+    List<Device> alarmList = new List();
 
+    for (Device device in val.device) {
+      if (device.tYPE == 1) {
+        eboxList.add(device);
+      } else if (device.tYPE == 2) {
+        lampList.add(device);
+      } else if (device.tYPE == 4) {
+        alarmList.add(device);
+      }
+    }
 
-   for(Device device in val.device){
-     if(device.tYPE == 1){
-       eboxList.add(device);
-     }else if(device.tYPE == 2){
-       lampList.add(device);
-     }else if(device.tYPE == 4){
-       alarmList.add(device);
-     }
-   }
+    if (eboxList.length > 0) {
+      eboxMap[title] = eboxList;
+    }
+    if (lampList.length > 0) {
+      lampMap[title] = lampList;
+    }
+    if (eboxList.length > 0) {
+      alarmApparatusMap[title] = alarmList;
+    }
 
-   if(eboxList.length > 0){
-     eboxMap[title] = eboxList;
-   }
-   if(lampList.length > 0){
-     lampMap[title] = lampList;
-   }
-   if(eboxList.length > 0){
-     alarmApparatusMap[title] = alarmList;
-   }
-
-   // 如果当前是唯一的项目就跳转到路灯位置
-   if(_projectCount == 1){
+    // 如果当前是唯一的项目就跳转到路灯位置
+    if (_projectCount == 1) {
       addMapMarkers(title);
-   }
-
- }
+    }
+  }
 
   /**
    *  添加地图路灯覆盖物
@@ -312,8 +300,9 @@ class ClusterManager {
         continue;
       }
 
-      if(centralLatLng == null){
-        centralLatLng = new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG));
+      if (centralLatLng == null) {
+        centralLatLng =
+            new LatLng(double.parse(lamp.lAT), double.parse(lamp.lNG));
       }
 
       MarkerOption markerOption = new MarkerOption(
@@ -409,7 +398,7 @@ class ClusterManager {
     );*/
 
     // 设置中心点
-    if(centralLatLng != null){
+    if (centralLatLng != null) {
       _controller?.setCenterCoordinate(
         centralLatLng,
         animated: false,
@@ -418,21 +407,20 @@ class ClusterManager {
     }
 
     // 保存marker到键值对列表
-    for(var ma in _markers) {
+    for (var ma in _markers) {
       LatLng latLng = await ma.location;
       _markerMap['${latLng.latitude},${latLng.longitude}'] = ma;
     }
-
   }
 
   String currentLocation;
+
   /**
    * 修改marker图标，string地址从键值对集合中获取
    */
   updateMarkerIco(String location) async {
-
     List<MarkerOption> markerOptions = List();
-    if(currentLocation != location){
+    if (currentLocation != location) {
       // 先把上一个图标更换回来
       Marker preMarker = getMarker(currentLocation);
       if (preMarker != null) {
@@ -443,8 +431,7 @@ class ClusterManager {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Image.asset(
-                "${selectImagesByType(int.parse('${l.tYPE}'),
-                    double.parse('${l.firDimming ?? 0}'), l.warningState ?? 0)}",
+                "${selectImagesByType(int.parse('${l.tYPE}'), double.parse('${l.firDimming ?? 0}'), l.warningState ?? 0)}",
                 fit: BoxFit.contain,
                 width: 38,
                 height: 38,
@@ -454,7 +441,7 @@ class ClusterManager {
           latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
           title: '${l.nAME}',
           snippet: '${l.pROJECT}',
-         // imageConfig: createLocalImageConfiguration(_context),
+          // imageConfig: createLocalImageConfiguration(_context),
           object: json.encode(l),
         );
         markerOptions.add(preMarkerOption);
@@ -471,10 +458,13 @@ class ClusterManager {
             children: <Widget>[
               Text(
                 '${l.nAME}',
-                style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,),
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Image.asset(
-                "${ Uri.parse('images/bian.png')}",
+                "${Uri.parse('images/bian.png')}",
                 fit: BoxFit.contain,
                 width: 38,
                 height: 38,
@@ -484,7 +474,7 @@ class ClusterManager {
           title: '${l.nAME}',
           snippet: '${l.pROJECT}',
           latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
-         // imageConfig: createLocalImageConfiguration(_context),
+          // imageConfig: createLocalImageConfiguration(_context),
           object: json.encode(l),
         );
         markerOptions.add(cuMarkerOption);
@@ -496,19 +486,26 @@ class ClusterManager {
         currentLocation = location;
         _markers.addAll(ml);
         // 保存marker到键值对列表
-        for(var ma in ml) {
+        for (var ma in ml) {
           LatLng latLng = await ma.location;
           _markerMap['${latLng.latitude},${latLng.longitude}'] = ma;
         }
       });
 
-      print('_markerMap.length = ${_markerMap.length}  _markers.length = ${_markers.length}');
+      print(
+          '_markerMap.length = ${_markerMap.length}  _markers.length = ${_markers.length}');
     }
 
     //_controller?.addMarkers(markerOptions);
-
   }
 
+  /**
+   * 设备被选中时根据设备类型设置图标
+   */
+  selectIcon(int type) {
+
+
+  }
 
   displayMarkersText(List items, eboxs, alarmApparatus) async {
     // 批量添加路灯覆盖物
@@ -637,8 +634,8 @@ class ClusterManager {
   void refresh() {
     if (isUnfold) {
       // 获取项目中的路灯
-        getDeviceList(title: currentTitle);
-        addMapMarkers(currentTitle);
+      getDeviceList(title: currentTitle);
+      addMapMarkers(currentTitle);
     }
   }
 
@@ -648,7 +645,8 @@ class ClusterManager {
         Project project = item;
         final marker = await _controller?.addMarker(
           MarkerOption(
-            latLng: LatLng(double.parse(project.lat), double.parse(project.lng)),
+            latLng:
+                LatLng(double.parse(project.lat), double.parse(project.lng)),
             title: project.title,
             snippet: '描述',
             iconUri: Uri.parse('images/bian.png'),
@@ -716,16 +714,12 @@ class ClusterManager {
       // 报警器
       return Uri.parse('images/test_icon.png');
     }
-
   }
 
- /**
-  *  当前登录用户管理的项目数量
-  */
- set projectCount(int value) {
-   _projectCount = value;
- }
-
-
-
+  /**
+   *  当前登录用户管理的项目数量
+   */
+  set projectCount(int value) {
+    _projectCount = value;
+  }
 }
