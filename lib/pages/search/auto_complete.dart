@@ -82,21 +82,21 @@ class _AutoCompleteState extends State<AutoComplete> {
 
 
                             // 跳转到路灯控制界面
-                       /*     String lampInfo = json.encode(device);
-
-                            Navigator.pushAndRemoveUntil(context, new CupertinoPageRoute(
-                              builder: (BuildContext context) {
-                                return new LampPage(lampInfo);
-                              },
-                            ), (route) => route == null);*/
+                          /*  String lampInfo = json.encode(device);
+                            Navigator.of(context).pushAndRemoveUntil(
+                                CupertinoPageRoute(builder: (context) => new LampPage(lampInfo)),
+                                ModalRoute.withName('/AmapPage'));*/
 
 
                             String lampInfo = json.encode(device);
-                            Navigator.of(context).pushAndRemoveUntil(
-                                CupertinoPageRoute(builder: (context) => new LampPage(lampInfo)),
-                                ModalRoute.withName('/AmapPage'));
-
-
+                            Navigator.push<String>(
+                              context,
+                              new CupertinoPageRoute(
+                                builder: (BuildContext context) {
+                                  return new LampPage(lampInfo);
+                                },
+                              ),
+                            );
 
 
                           },
