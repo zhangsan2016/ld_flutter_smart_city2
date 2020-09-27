@@ -214,4 +214,6 @@ class Device {
     data['manufacturer'] = this.manufacturer;
     return data;
   }
+
+
 }

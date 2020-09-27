@@ -2,13 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
-import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/provide/device_search_provide.dart';
-import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
-import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
+import 'package:ldfluttersmartcity2/utils/icon_select_util.dart';
 import 'package:provider/provider.dart';
 
 class SearchResults extends StatefulWidget {
@@ -119,30 +116,3 @@ class _SearchResultsState extends State<SearchResults> {
   }
 }
 
-/**
- *  根据条件设置图标类型
- */
-Uri selectImagesByType(int tYPE, double brightness, int warningState) {
-  if (tYPE == 1) {
-    // 电箱
-    return Uri.parse('images/ebox.png');
-  } else if (tYPE == 2) {
-    // 路灯
-    // 检查报警
-    if (warningState != 0) {
-      return Uri.parse('images/light_warning.png');
-    }
-    // 检查亮灯
-    if (brightness != 0) {
-      return Uri.parse('images/light_on.png');
-    } else {
-      return Uri.parse('images/light_off.png');
-    }
-  } else if (tYPE == 3) {
-    // 未知
-    return Uri.parse('images/ebox.png');
-  } else {
-    // 报警器
-    return Uri.parse('images/test_icon.png');
-  }
-}

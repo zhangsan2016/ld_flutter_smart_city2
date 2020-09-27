@@ -1,15 +1,10 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:math';
 
 import 'package:amap_core_fluttify/amap_core_fluttify.dart';
 import 'package:amap_map_fluttify/amap_map_fluttify.dart';
-import 'package:amap_map_fluttify/amap_map_fluttify.dart';
-import 'package:decorated_flutter/decorated_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/entity/json/alarm_apparatus_info.dart';
 import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
 import 'package:ldfluttersmartcity2/entity/json/ebox%20_info.dart';
@@ -18,12 +13,11 @@ import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/entity/json/project_info.dart';
 import 'package:ldfluttersmartcity2/interfaces/amap_listening.dart';
 import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
-import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
+import 'package:ldfluttersmartcity2/utils/icon_select_util.dart';
 import 'package:ldfluttersmartcity2/utils/resource_request.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
 
-import 'overlay_item.dart';
 
 class ClusterManager {
   static final int DEVICE_EBOX = 1; // 电箱（集中器）
@@ -361,11 +355,13 @@ class ClusterManager {
           continue;
         }
 
+        print('报警器类型 ${alarm.toString()}');
+
         MarkerOption markerOption = new MarkerOption(
           latLng: new LatLng(double.parse(alarm.lAT), double.parse(alarm.lNG)),
           title: '${alarm.nAME}',
           snippet: '${alarm.pROJECT}',
-          iconUri: Uri.parse('images/test_icon.png'),
+          iconUri: selectImagesByType(int.parse('${alarm.tYPE}'), double.parse('${alarm.firDimming ?? 0}'), alarm.warningState ?? 0),
           imageConfig: createLocalImageConfiguration(_context),
           object: json.encode(alarm),
         );
@@ -583,7 +579,7 @@ class ClusterManager {
           latLng: new LatLng(double.parse(alarm.lAT), double.parse(alarm.lNG)),
           title: '${alarm.nAME}',
           snippet: '${alarm.pROJECT}',
-          iconUri: Uri.parse('images/test_icon.png'),
+          iconUri: selectImagesByType(int.parse('${alarm.tYPE}'), 0, alarm.warningState ?? 0),
           imageConfig: createLocalImageConfiguration(_context),
           object: json.encode(alarm),
         );
@@ -688,33 +684,6 @@ class ClusterManager {
     return pointList;
   }
 
-  /**
-   *  根据条件设置图标类型
-   */
-  Uri selectImagesByType(int tYPE, double brightness, int warningState) {
-    if (tYPE == 1) {
-      // 电箱
-      return Uri.parse('images/ebox.png');
-    } else if (tYPE == 2) {
-      // 路灯
-      // 检查报警
-      if (warningState != 0) {
-        return Uri.parse('images/light_warning.png');
-      }
-      // 检查亮灯
-      if (brightness != 0) {
-        return Uri.parse('images/light_on.png');
-      } else {
-        return Uri.parse('images/light_off.png');
-      }
-    } else if (tYPE == 3) {
-      // 未知
-      return Uri.parse('images/ebox.png');
-    } else {
-      // 报警器
-      return Uri.parse('images/test_icon.png');
-    }
-  }
 
   /**
    *  当前登录用户管理的项目数量

@@ -96,6 +96,8 @@ flutter:
     - images/light_selected.png
     - images/wiresafe_selected.png
     - images/ebox_selected.png
+    - images/wiresafe_warning.png
+    - images/wiresafe.png
 
 
 

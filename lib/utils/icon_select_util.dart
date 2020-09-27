@@ -19,19 +19,21 @@ Uri selectImagesByType(int tYPE, double brightness, int warningState) {
     if (brightness != 0) {
       return Uri.parse('images/light_on.png');
     } else {
-      return Uri.parse('images/light_off.png');
+       return Uri.parse('images/light_off.png');
+     // return Uri.parse('images/light_selected.png');
     }
   } else if (tYPE == 3) {
     // 未知
     return Uri.parse('images/ebox.png');
-  } else {
+  } else  if (tYPE == 4)  {
     /// 报警器
-    return Uri.parse('images/test_icon.png');
+    if(warningState != null){
+      return Uri.parse('images/wiresafe_warning.png');
+    }else{
+      return Uri.parse('images/wiresafe.png');
+    }
   }
 }
-
-
-
 
 
 /**
