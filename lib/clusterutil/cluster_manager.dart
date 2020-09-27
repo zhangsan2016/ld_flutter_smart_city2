@@ -460,7 +460,9 @@ class ClusterManager {
                 ),
               ),
               Image.asset(
-                "${Uri.parse('images/bian.png')}",
+                "${await selectIcon(int.parse('${l.tYPE}'))}",
+              //  "${Uri.parse('images/wiresafe.png')}",
+
                 fit: BoxFit.contain,
                 width: 38,
                 height: 38,
@@ -488,19 +490,9 @@ class ClusterManager {
         }
       });
 
-      print(
-          '_markerMap.length = ${_markerMap.length}  _markers.length = ${_markers.length}');
     }
 
     //_controller?.addMarkers(markerOptions);
-  }
-
-  /**
-   * 设备被选中时根据设备类型设置图标
-   */
-  selectIcon(int type) {
-
-
   }
 
   displayMarkersText(List items, eboxs, alarmApparatus) async {
@@ -629,6 +621,8 @@ class ClusterManager {
    */
   void refresh() {
     if (isUnfold) {
+      // 清空列表
+      _markerMap.clear();
       // 获取项目中的路灯
       getDeviceList(title: currentTitle);
       addMapMarkers(currentTitle);
