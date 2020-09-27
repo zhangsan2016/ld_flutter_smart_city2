@@ -93,7 +93,9 @@ flutter:
     - images/location.png
     - images/my_user.png
     - images/lamp_location.png
-
+    - images/light_selected.png
+    - images/wiresafe_selected.png
+    - images/ebox_selected.png
 
 
 
