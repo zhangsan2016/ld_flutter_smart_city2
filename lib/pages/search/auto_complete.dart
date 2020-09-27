@@ -7,6 +7,7 @@ import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
 import 'package:ldfluttersmartcity2/pages/lamp_page.dart';
 import 'package:ldfluttersmartcity2/utils/dio_utils.dart';
+import 'package:ldfluttersmartcity2/utils/icon_select_util.dart';
 import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 
 class AutoComplete extends StatefulWidget {
@@ -197,33 +198,6 @@ class _AutoCompleteState extends State<AutoComplete> {
     });
   }
 
-  /**
-   *  根据条件设置图标类型
-   */
-  Uri selectImagesByType(int tYPE, double brightness, int warningState) {
-    if (tYPE == 1) {
-      // 电箱
-      return Uri.parse('images/ebox.png');
-    } else if (tYPE == 2) {
-      // 路灯
-      // 检查报警
-      if (warningState != 0) {
-        return Uri.parse('images/light_warning.png');
-      }
-      // 检查亮灯
-      if (brightness != 0) {
-        return Uri.parse('images/light_on.png');
-      } else {
-        return Uri.parse('images/light_off.png');
-      }
-    } else if (tYPE == 3) {
-      // 未知
-      return Uri.parse('images/ebox.png');
-    } else {
-      // 报警器
-      return Uri.parse('images/test_icon.png');
-    }
-  }
 
   /**
    * 根据搜索关键字匹配路灯列表
