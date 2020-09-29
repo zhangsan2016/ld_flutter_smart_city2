@@ -129,7 +129,7 @@ class ClusterManager {
     List<Device> alarmApparatus = alarmApparatusMap[title];
     // 判断是否有路灯数据
     if (lamp == null) {
-      showToast('当前${title}项目中没有路灯列表~', position: ToastPosition.bottom);
+      showToast('当前${title}项目没有获取到列表~', position: ToastPosition.bottom);
     }
     // 添加覆盖物
     await addItems(lamp, eboxs: ebox, alarmApparatus: alarmApparatus);
@@ -450,7 +450,6 @@ class ClusterManager {
         await cuMarker.remove();
         MarkerOption cuMarkerOption = new MarkerOption(
           widget: Column(
-            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 '${l.nAME}',
@@ -460,13 +459,14 @@ class ClusterManager {
                 ),
               ),
               Image.asset(
-                "${await selectIcon(int.parse('${l.tYPE}'))}",
-              //  "${Uri.parse('images/wiresafe.png')}",
-
+                 "${selectIcon(int.parse('${l.tYPE}'))}",
+               // "${Uri.parse('images/wiresafe_selected.png')}",
                 fit: BoxFit.contain,
                 width: 38,
                 height: 38,
+                //  fit: BoxFit.contain,
               ),
+
             ],
           ),
           title: '${l.nAME}',
@@ -475,7 +475,10 @@ class ClusterManager {
           // imageConfig: createLocalImageConfiguration(_context),
           object: json.encode(l),
         );
+
         markerOptions.add(cuMarkerOption);
+        markerOptions.add(cuMarkerOption);
+
       }
 
       // 保存当前覆盖物
@@ -486,7 +489,14 @@ class ClusterManager {
         // 保存marker到键值对列表
         for (var ma in ml) {
           LatLng latLng = await ma.location;
-          _markerMap['${latLng.latitude},${latLng.longitude}'] = ma;
+          String key = '${latLng.latitude},${latLng.longitude}';
+          if(_markerMap.containsKey(key)){
+            _markerMap[key].remove();
+            _markerMap[key] = ma;
+          }else{
+            _markerMap[key] = ma;
+          }
+
         }
       });
 

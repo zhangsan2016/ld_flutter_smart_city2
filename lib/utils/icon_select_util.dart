@@ -43,7 +43,7 @@ Uri selectIcon(int tYPE) {
   print(' 设备被选中时根据设备类型设置图标 type = ${tYPE}');
   if (tYPE == 1) {
     /// 电箱
-    return Uri.parse('images/ebox.png');
+    return Uri.parse('images/ebox_selected.png');
   } else if (tYPE == 2) {
     /// 路灯
     return Uri.parse('images/light_selected.png');

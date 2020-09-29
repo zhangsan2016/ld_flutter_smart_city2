@@ -519,7 +519,6 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
 
     // 定位功能
     //接收返回的参数
-    print('接收返回的参数 = ${data}');
     if(data != null){
       // 1.集中器 2.路灯 4.报警器
       Lamp lamp = Lamp.fromJson(json.decode(data));
