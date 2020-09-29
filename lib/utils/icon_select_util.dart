@@ -40,7 +40,6 @@ Uri selectImagesByType(int tYPE, double brightness, int warningState) {
  * 设备被选中时根据设备类型设置图标
  */
 Uri selectIcon(int tYPE) {
-  print(' 设备被选中时根据设备类型设置图标 type = ${tYPE}');
   if (tYPE == 1) {
     /// 电箱
     return Uri.parse('images/ebox_selected.png');

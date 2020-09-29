@@ -441,6 +441,7 @@ class ClusterManager {
           object: json.encode(l),
         );
         markerOptions.add(preMarkerOption);
+
       }
 
       // 更换当前图标
@@ -448,7 +449,7 @@ class ClusterManager {
       if (cuMarker != null) {
         Lamp l = Lamp.fromJson(json.decode(await cuMarker.object));
         await cuMarker.remove();
-        MarkerOption cuMarkerOption = new MarkerOption(
+     /*   MarkerOption cuMarkerOption = new MarkerOption(
           widget: Column(
             children: <Widget>[
               Text(
@@ -474,15 +475,79 @@ class ClusterManager {
           latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
           // imageConfig: createLocalImageConfiguration(_context),
           object: json.encode(l),
+        );*/
+
+        MarkerOption cuMarkerOption =   MarkerOption(
+          latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
+          widget: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+
+              Text(
+                '${l.nAME}',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              Image.asset(
+                "${selectIcon(int.parse('${l.tYPE}'))}",
+                // "${Uri.parse('images/wiresafe_selected.png')}",
+                fit: BoxFit.contain,
+                width: 38,
+                height: 38,
+                //  fit: BoxFit.contain,
+              ),
+
+            ],
+          ),
+          imageConfig: createLocalImageConfiguration(_context),
+          title: '${l.nAME}',
+          snippet: '${l.pROJECT}',
+          object: json.encode(l),
         );
 
         markerOptions.add(cuMarkerOption);
-        markerOptions.add(cuMarkerOption);
+
+
+        MarkerOption typeop =   MarkerOption(
+          latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
+          widget: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+
+
+              Image.asset(
+                "${selectIcon(int.parse('${l.tYPE}'))}",
+                // "${Uri.parse('images/wiresafe_selected.png')}",
+                fit: BoxFit.contain,
+                width: 38,
+                height: 38,
+                //  fit: BoxFit.contain,
+              ),
+
+            ],
+          ),
+          imageConfig: createLocalImageConfiguration(_context),
+          title: '${l.nAME}',
+          visible: false,
+        );
+        // bug 临时添加代码，后面会更新地图代码
+        List<MarkerOption> temp = List();
+        temp.add(typeop);
+        await _controller?.addMarkers(temp)?.then((List<Marker> ml) async {
+          for (var ma in ml) {
+            ma.remove();
+          }
+        });
 
       }
 
+
+
       // 保存当前覆盖物
-      _controller?.addMarkers(markerOptions)?.then((List<Marker> ml) async {
+     await _controller?.addMarkers(markerOptions)?.then((List<Marker> ml) async {
         // 设置当前的定位的位置
         currentLocation = location;
         _markers.addAll(ml);
@@ -490,20 +555,19 @@ class ClusterManager {
         for (var ma in ml) {
           LatLng latLng = await ma.location;
           String key = '${latLng.latitude},${latLng.longitude}';
-          if(_markerMap.containsKey(key)){
-            _markerMap[key].remove();
-            _markerMap[key] = ma;
-          }else{
-            _markerMap[key] = ma;
-          }
+          _markerMap[key] = ma;
 
         }
       });
+
 
     }
 
     //_controller?.addMarkers(markerOptions);
   }
+
+
+
 
   displayMarkersText(List items, eboxs, alarmApparatus) async {
     // 批量添加路灯覆盖物
