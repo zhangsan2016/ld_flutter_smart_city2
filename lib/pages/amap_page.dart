@@ -527,6 +527,8 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
         animated: false,
       );
 
+      print('更换图标 ${double.parse(lamp.lAT)},${double.parse(lamp.lNG)} ');
+
       // 更新图标
       clusterManager?.updateMarkerIco('${double.parse(lamp.lAT)},${double.parse(lamp.lNG)}');
     }

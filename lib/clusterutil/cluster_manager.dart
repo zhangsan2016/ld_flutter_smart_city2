@@ -46,6 +46,9 @@ class ClusterManager {
   // 报警器集合
   var alarmApparatusMap = <String, List<Device>>{};
 
+  // 当前定位的坐标（路灯详细界面定位）
+  String currentLocation;
+
   /**
    * context 上下文
    * controller map 控制器
@@ -355,8 +358,6 @@ class ClusterManager {
           continue;
         }
 
-        print('报警器类型 ${alarm.toString()}');
-
         MarkerOption markerOption = new MarkerOption(
           latLng: new LatLng(double.parse(alarm.lAT), double.parse(alarm.lNG)),
           title: '${alarm.nAME}',
@@ -368,22 +369,21 @@ class ClusterManager {
         markerOptions.add(markerOption);
       }
     } else {}
-
     await _controller?.addMarkers(markerOptions)?.then(_markers.addAll);
 
-    // 如果已经展开，就不再重新定位
-    if (isUnfold) {
-      return;
-    }
 
-    // 修改展开状态
-    isUnfold = true;
 
-    // 重新定位
-    //   relocation();
+    // 判断展开状态
+    if (!isUnfold) {
 
-    // 缩放中心点位置
-    /*_controller?.zoomToSpan(
+      // 修改展开状态
+      isUnfold = true;
+
+      // 重新定位
+      //   relocation();
+
+      // 缩放中心点位置
+      /*_controller?.zoomToSpan(
       [
         new LatLng(double.parse((items[0] as Lamp).lAT),
             double.parse((items[0] as Lamp).lNG))
@@ -393,13 +393,15 @@ class ClusterManager {
       ),
     );*/
 
-    // 设置中心点
-    if (centralLatLng != null) {
-      _controller?.setCenterCoordinate(
-        centralLatLng,
-        animated: false,
-        zoomLevel: 19,
-      );
+      // 设置中心点
+      if (centralLatLng != null) {
+        _controller?.setCenterCoordinate(
+          centralLatLng,
+          animated: false,
+          zoomLevel: 19,
+        );
+      }
+
     }
 
     // 保存marker到键值对列表
@@ -407,9 +409,12 @@ class ClusterManager {
       LatLng latLng = await ma.location;
       _markerMap['${latLng.latitude},${latLng.longitude}'] = ma;
     }
+
+
+
+
   }
 
-  String currentLocation;
 
   /**
    * 修改marker图标，string地址从键值对集合中获取
@@ -449,34 +454,6 @@ class ClusterManager {
       if (cuMarker != null) {
         Lamp l = Lamp.fromJson(json.decode(await cuMarker.object));
         await cuMarker.remove();
-     /*   MarkerOption cuMarkerOption = new MarkerOption(
-          widget: Column(
-            children: <Widget>[
-              Text(
-                '${l.nAME}',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Image.asset(
-                 "${selectIcon(int.parse('${l.tYPE}'))}",
-               // "${Uri.parse('images/wiresafe_selected.png')}",
-                fit: BoxFit.contain,
-                width: 38,
-                height: 38,
-                //  fit: BoxFit.contain,
-              ),
-
-            ],
-          ),
-          title: '${l.nAME}',
-          snippet: '${l.pROJECT}',
-          latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
-          // imageConfig: createLocalImageConfiguration(_context),
-          object: json.encode(l),
-        );*/
-
         MarkerOption cuMarkerOption =   MarkerOption(
           latLng: new LatLng(double.parse(l.lAT), double.parse(l.lNG)),
           widget: Column(
@@ -695,6 +672,8 @@ class ClusterManager {
    */
   void refresh() {
     if (isUnfold) {
+      // 清空当前定位
+      currentLocation = null;
       // 清空列表
       _markerMap.clear();
       // 获取项目中的路灯
