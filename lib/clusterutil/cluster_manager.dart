@@ -651,6 +651,10 @@ class ClusterManager {
         ),
       );
     });*/
+
+    // 清除当前定位坐标
+    currentLocation = null;
+    // 回到项目界面
     if (projects != null) {
       List<LatLng> bounds = new List();
       for (int i = 0; i < projects.length; ++i) {
