@@ -371,6 +371,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
     });
   }
 
+
   /**
    * 跳转到分组
    */
