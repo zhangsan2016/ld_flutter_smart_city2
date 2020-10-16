@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ldfluttersmartcity2/config/service_url.dart';
 import 'package:ldfluttersmartcity2/dialog/progress_dialog.dart';
 import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
     _focusNodeUserName.addListener(_focusNodeListener);
     _focusNodePassWord.addListener(_focusNodeListener);
 
-     getUserInfo();
+   //  getUserInfo();
 
     //监听用户名框的输入改变
     _userNameController.addListener(() {
@@ -316,20 +317,44 @@ class _LoginPageState extends State<LoginPage> {
 //            position: DecorationPosition.background,
             child: Container(
               padding: EdgeInsets.all(50.0),
-              child: new ListView(
+              child:
+               new ListView(
                 children: <Widget>[
                   new SizedBox(
                     height: ScreenUtil().setHeight(160),
                   ),
                   logoImageArea,
-                  new SizedBox(
+
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize:MainAxisSize.min,
+                children: <Widget>[
+                  new Padding(
+                    padding: new EdgeInsets.fromLTRB(0.0, ScreenUtil().setSp(65.0), 0.0,ScreenUtil().setSp(10.0)),
+                    child: new Center(
+                      child: SpinKitFadingCircle(
+                        color: Colors.blueAccent,
+                        size: 40.0,
+                      ),
+                    ),
+                  ),
+                  new Padding(
+                    padding: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                    child: new Center(
+                      child: new Text('正在加载中~',style: TextStyle(fontSize: ScreenUtil().setSp(36),color: Colors.white)),
+                    ),
+                  ),
+                ],
+              ),
+
+               /*   new SizedBox(
                     height: ScreenUtil().setHeight(70),
                   ),
                   inputTextArea,
                   new SizedBox(
                     height: ScreenUtil().setHeight(80),
                   ),
-                  loginButtonArea,
+                  loginButtonArea,*/
                 ],
               ),
             ),
