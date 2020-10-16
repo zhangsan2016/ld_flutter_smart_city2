@@ -17,6 +17,9 @@ class LoginPage extends StatefulWidget {
   // 是否是重新登录
   bool isAfresh;
 
+  //  根据 token 判断是否需要登录
+  bool isLogin = false;
+
   LoginPage(this.isAfresh);
 
   @override
@@ -50,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     _focusNodeUserName.addListener(_focusNodeListener);
     _focusNodePassWord.addListener(_focusNodeListener);
 
-   //  getUserInfo();
+     getUserInfo();
 
     //监听用户名框的输入改变
     _userNameController.addListener(() {
@@ -325,36 +328,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   logoImageArea,
 
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize:MainAxisSize.min,
-                children: <Widget>[
-                  new Padding(
-                    padding: new EdgeInsets.fromLTRB(0.0, ScreenUtil().setSp(65.0), 0.0,ScreenUtil().setSp(10.0)),
-                    child: new Center(
-                      child: SpinKitFadingCircle(
-                        color: Colors.blueAccent,
-                        size: 40.0,
-                      ),
-                    ),
-                  ),
-                  new Padding(
-                    padding: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                    child: new Center(
-                      child: new Text('正在加载中~',style: TextStyle(fontSize: ScreenUtil().setSp(36),color: Colors.white)),
-                    ),
-                  ),
-                ],
-              ),
+                  getLoginItem(inputTextArea,loginButtonArea),
 
-               /*   new SizedBox(
-                    height: ScreenUtil().setHeight(70),
-                  ),
-                  inputTextArea,
-                  new SizedBox(
-                    height: ScreenUtil().setHeight(80),
-                  ),
-                  loginButtonArea,*/
+
+
                 ],
               ),
             ),
@@ -380,7 +357,7 @@ class _LoginPageState extends State<LoginPage> {
         // 设置当前用户名
         _userNameController.text = loginInfo.data.token.username;
 
-        // 怕段是否是重新登录，如果是重新登录不许要校验 token
+        // 判断是否是重新登录，如果是重新登录不许要校验 token
         if (isAfresh) {
           return;
         }
@@ -399,6 +376,8 @@ class _LoginPageState extends State<LoginPage> {
                     builder: (context) => new AmapPage()),
                 (route) => route == null,
               );
+            }else{
+              widget.isLogin = true;
             }
           },
           onError: (error) {
@@ -408,4 +387,49 @@ class _LoginPageState extends State<LoginPage> {
       }
     });
   }
+
+
+  /**
+   *   根据当前登陆状态返回登录界面
+   */
+  Widget getLoginItem(Widget inputTextArea, Widget loginButtonArea) {
+
+    if(widget.isLogin){
+     return Column(children: <Widget>[
+       new SizedBox(
+         height: ScreenUtil().setHeight(70),
+       ),
+       inputTextArea,
+       new SizedBox(
+         height: ScreenUtil().setHeight(80),
+       ),
+       loginButtonArea,
+     ],);
+    }else{
+      return  Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize:MainAxisSize.min,
+        children: <Widget>[
+          new Padding(
+            padding: new EdgeInsets.fromLTRB(0.0, ScreenUtil().setSp(65.0), 0.0,ScreenUtil().setSp(10.0)),
+            child: new Center(
+              child: SpinKitFadingCircle(
+                color: Colors.blueAccent,
+                size: 40.0,
+              ),
+            ),
+          ),
+          new Padding(
+            padding: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+            child: new Center(
+              child: new Text('正在加载中~',style: TextStyle(fontSize: ScreenUtil().setSp(36),color: Colors.white)),
+            ),
+          ),
+        ],
+      );
+    }
+
+
+  }
+
 }
