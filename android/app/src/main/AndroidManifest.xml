@@ -24,7 +24,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="ldfluttersmartcity2"
+        android:label="洛丁智慧照明"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
