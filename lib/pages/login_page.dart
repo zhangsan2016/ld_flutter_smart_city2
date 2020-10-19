@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
     _focusNodeUserName.addListener(_focusNodeListener);
     _focusNodePassWord.addListener(_focusNodeListener);
 
-     getUserInfo();
+    getUserInfo();
 
     //监听用户名框的输入改变
     _userNameController.addListener(() {
@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
         child: new Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            new TextFormField(
+            TextFormField(
               controller: _userNameController,
               focusNode: _focusNodeUserName,
               //设置键盘类型
@@ -215,6 +215,7 @@ class _LoginPageState extends State<LoginPage> {
     Widget loginButtonArea = new Container(
       margin: EdgeInsets.only(left: 20, right: 20),
       height: 45.0,
+      width: double.infinity,
       child: new RaisedButton(
         color: Colors.blue[300],
         child: Text(
@@ -268,18 +269,16 @@ class _LoginPageState extends State<LoginPage> {
                     print('登录信息保存 = $val');
                   });
 
-
                   //导航到新路由，并关闭当前界面
                   //跳转并关闭当前页面
                   //跳转并关闭当前页面
                   Navigator.pushAndRemoveUntil(
                     context,
                     new MaterialPageRoute(
-                        settings: RouteSettings(name:"/AmapPage"),
+                        settings: RouteSettings(name: "/AmapPage"),
                         builder: (context) => new AmapPage()),
-                        (route) => route == null,
+                    (route) => route == null,
                   );
-
                 } else {
                   // 登录失败
                   showToast(loginInfo.errmsg, position: ToastPosition.bottom);
@@ -320,18 +319,13 @@ class _LoginPageState extends State<LoginPage> {
 //            position: DecorationPosition.background,
             child: Container(
               padding: EdgeInsets.all(50.0),
-              child:
-               new ListView(
+              child: new ListView(
                 children: <Widget>[
                   new SizedBox(
                     height: ScreenUtil().setHeight(160),
                   ),
                   logoImageArea,
-
-                  getLoginItem(inputTextArea,loginButtonArea),
-
-
-
+                  getLoginItem(inputTextArea, loginButtonArea),
                 ],
               ),
             ),
@@ -347,6 +341,7 @@ class _LoginPageState extends State<LoginPage> {
     // 获取上一次登录信息
     SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
       if (val == null) {
+        showLogin();
         return;
       }
       // 解析 json
@@ -372,12 +367,12 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushAndRemoveUntil(
                 context,
                 new MaterialPageRoute(
-                    settings: RouteSettings(name:"/AmapPage"),
+                    settings: RouteSettings(name: "/AmapPage"),
                     builder: (context) => new AmapPage()),
                 (route) => route == null,
               );
-            }else{
-              widget.isLogin = true;
+            } else {
+              showLogin();
             }
           },
           onError: (error) {
@@ -388,30 +383,37 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  void showLogin() {
+    setState(() {
+      widget.isLogin = true;
+    });
+  }
 
   /**
    *   根据当前登陆状态返回登录界面
    */
   Widget getLoginItem(Widget inputTextArea, Widget loginButtonArea) {
-
-    if(widget.isLogin){
-     return Column(children: <Widget>[
-       new SizedBox(
-         height: ScreenUtil().setHeight(70),
-       ),
-       inputTextArea,
-       new SizedBox(
-         height: ScreenUtil().setHeight(80),
-       ),
-       loginButtonArea,
-     ],);
-    }else{
-      return  Column(
+    if (widget.isLogin) {
+      return Column(
+        children: <Widget>[
+          new SizedBox(
+            height: ScreenUtil().setHeight(70),
+          ),
+          inputTextArea,
+          new SizedBox(
+            height: ScreenUtil().setHeight(80),
+          ),
+          loginButtonArea,
+        ],
+      );
+    } else {
+      return Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize:MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           new Padding(
-            padding: new EdgeInsets.fromLTRB(0.0, ScreenUtil().setSp(65.0), 0.0,ScreenUtil().setSp(10.0)),
+            padding: new EdgeInsets.fromLTRB(
+                0.0, ScreenUtil().setSp(65.0), 0.0, ScreenUtil().setSp(10.0)),
             child: new Center(
               child: SpinKitFadingCircle(
                 color: Colors.blueAccent,
@@ -422,14 +424,13 @@ class _LoginPageState extends State<LoginPage> {
           new Padding(
             padding: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
             child: new Center(
-              child: new Text('正在加载中~',style: TextStyle(fontSize: ScreenUtil().setSp(36),color: Colors.white)),
+              child: new Text('正在加载中~',
+                  style: TextStyle(
+                      fontSize: ScreenUtil().setSp(36), color: Colors.white)),
             ),
           ),
         ],
       );
     }
-
-
   }
-
 }
