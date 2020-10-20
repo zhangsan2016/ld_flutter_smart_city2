@@ -344,6 +344,13 @@ class _LoginPageState extends State<LoginPage> {
         showLogin();
         return;
       }
+
+      // 判断是否是重新登录，如果是重新登录不许要校验 token
+      if (isAfresh) {
+        showLogin();
+        return;
+      }
+
       // 解析 json
       var data = json.decode(val);
       LoginInfo loginInfo = LoginInfo.fromJson(data);
@@ -352,10 +359,6 @@ class _LoginPageState extends State<LoginPage> {
         // 设置当前用户名
         _userNameController.text = loginInfo.data.token.username;
 
-        // 判断是否是重新登录，如果是重新登录不许要校验 token
-        if (isAfresh) {
-          return;
-        }
         DioUtils.requestHttp(
           servicePath['CONTENT_TYPE_USER_TOKEN'],
           token: loginInfo.data.token.token,
