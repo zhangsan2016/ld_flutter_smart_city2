@@ -39,6 +39,7 @@ class _SearchResultsState extends State<SearchResults> {
 
       if (searchList != null) {
         return Container(
+          color: Color.fromARGB(240, 11, 29, 77),
           padding: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
@@ -79,8 +80,8 @@ class _SearchResultsState extends State<SearchResults> {
                                   CrossAxisAlignment.start,
                                   // mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
-                                    Text('${index + 1}.' + device.nAME),
-                                    Text(device.uUID),
+                                    Text('${index + 1}.' + device.nAME,style: TextStyle(color: Colors.white),),
+                                    Text(device.uUID,style: TextStyle(color: Colors.white)),
                                   ],
                                 ),
                               ],

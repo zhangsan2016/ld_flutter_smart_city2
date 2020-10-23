@@ -18,6 +18,23 @@ class MySearchDelegate extends SearchDelegate<String> {
   MySearchDelegate(this.currentProject);
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    assert(context != null);
+    final ThemeData theme = Theme.of(context);
+    assert(theme != null);
+    return theme.copyWith(
+      primaryColor: Colors.cyan,
+      primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.white),
+      primaryColorBrightness: Brightness.light,
+      primaryTextTheme: theme.textTheme,
+      cursorColor:Colors.red,
+    );
+  }
+
+
+
+
+  @override
   String get searchFieldLabel => '请输入UUID或名称';
 
   /**
@@ -26,6 +43,7 @@ class MySearchDelegate extends SearchDelegate<String> {
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
+
       IconButton(
         icon: Icon(Icons.clear),
         onPressed: () => query = '',

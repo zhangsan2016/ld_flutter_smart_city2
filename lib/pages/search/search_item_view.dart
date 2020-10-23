@@ -75,6 +75,7 @@ class _SearchItemViewState extends State<SearchItemView> {
     List<dynamic> items = widget.isHisSearch ? hisKeywords : recommondKeywords;
     return Padding(padding: EdgeInsets.all(10),
         child: Container(
+          color: Color.fromARGB(240, 11, 29, 77),
           child: Wrap(
             spacing: 10,
             children: items.map((item) {

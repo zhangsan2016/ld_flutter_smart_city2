@@ -56,6 +56,7 @@ class _AutoCompleteState extends State<AutoComplete> {
       // 搜索关键字
       searchKeyword();
       return Container(
+        color: Color.fromARGB(240, 11, 29, 77),
         padding: const EdgeInsets.all(16.0),
         alignment: Alignment.center,
         child: SizedBox(
@@ -68,6 +69,7 @@ class _AutoCompleteState extends State<AutoComplete> {
       // 搜索关键字
       _switchState();
       return Container(
+        color: Color.fromARGB(240, 11, 29, 77),
         padding: EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
@@ -115,8 +117,9 @@ class _AutoCompleteState extends State<AutoComplete> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 // mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
-                                  Text('${index + 1}.' + device.nAME),
-                                  Text(device.uUID),
+                                  Text('${index + 1}.' + device.nAME,style: TextStyle(color: Colors.white),),
+                                  Text(device.uUID,style: TextStyle(color: Colors.white),),
+
                                 ],
                               ),
                             ],
