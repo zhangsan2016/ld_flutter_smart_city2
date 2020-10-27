@@ -30,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   //焦点
   FocusNode _focusNodeUserName = new FocusNode();
   FocusNode _focusNodePassWord = new FocusNode();
+  FocusNode _focusNodeServerAddress = new FocusNode();
 
   //用户名输入框控制器，此控制器可以监听用户名输入框操作
   TextEditingController _userNameController = new TextEditingController();
@@ -37,13 +38,18 @@ class _LoginPageState extends State<LoginPage> {
 
   //表单状态
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  GlobalKey _serverKey = new GlobalKey(); //用来标记控件
+
+  List<String> _services = new List(); //历史服务器地址
 
   var _password = ''; //用户名
   var _username = ''; //密码
+  var _serviceAddress; // 服务器地址
   var _isShowPwd = false; //是否显示密码
   var _isShowClear = false;
 
   bool isAfresh;
+  bool _expand = false; //是否展示历史服务器地址
 
   _LoginPageState(this.isAfresh); //是否显示输入框尾部的清除按钮
 
@@ -53,7 +59,11 @@ class _LoginPageState extends State<LoginPage> {
     _focusNodeUserName.addListener(_focusNodeListener);
     _focusNodePassWord.addListener(_focusNodeListener);
 
+    // 获取保存的登录信息
     getUserInfo();
+
+    // 获取服务器登录信息
+    _gainServiceAddress();
 
     //监听用户名框的输入改变
     _userNameController.addListener(() {
@@ -232,6 +242,7 @@ class _LoginPageState extends State<LoginPage> {
           //点击登录按钮，解除焦点，回收键盘
           _focusNodePassWord.unfocus();
           _focusNodeUserName.unfocus();
+          _focusNodeServerAddress.unfocus();
 
           if (_formKey.currentState.validate()) {
             //只有输入通过验证，才会执行这里
@@ -306,6 +317,12 @@ class _LoginPageState extends State<LoginPage> {
             print("点击了空白区域");
             _focusNodePassWord.unfocus();
             _focusNodeUserName.unfocus();
+            _focusNodeServerAddress.unfocus();
+            // 服务器历史下拉列表状体设置为 flse;
+            setState(() {
+              _expand = false;
+            });
+
           },
           child: DecoratedBox(
             decoration: new BoxDecoration(
@@ -333,6 +350,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  /**
+   *  获取保存的登录信息
+   */
   void getUserInfo() {
     // 设置默认值
     //  _userNameController.text = "ld";
@@ -397,16 +417,25 @@ class _LoginPageState extends State<LoginPage> {
    */
   Widget getLoginItem(Widget inputTextArea, Widget loginButtonArea) {
     if (widget.isLogin) {
-      return Column(
+      return Stack(
         children: <Widget>[
-          new SizedBox(
-            height: ScreenUtil().setHeight(70),
+          Column(
+            children: <Widget>[
+              _buildServerAddress(),
+              new SizedBox(
+                height: ScreenUtil().setHeight(0),
+              ),
+              inputTextArea,
+              new SizedBox(
+                height: ScreenUtil().setHeight(80),
+              ),
+              loginButtonArea,
+            ],
           ),
-          inputTextArea,
-          new SizedBox(
-            height: ScreenUtil().setHeight(80),
+          Offstage(
+            child: downView(),
+            offstage: !_expand,
           ),
-          loginButtonArea,
         ],
       );
     } else {
@@ -436,4 +465,217 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
   }
+
+
+  Widget downView() {
+    if (_expand) {
+      List<Widget> children = _buildServiceItems();
+      if (children.length > 0) {
+        // 获取控件的坐标
+        RenderBox renderObject = _serverKey.currentContext.findRenderObject();
+
+        print('xxxxxxxxxx ${renderObject.paintBounds.size.width} : ${renderObject.paintBounds.size.height} ：${children.length} : ${_services.length} : : ${MediaQuery.of(context).size.width}');
+
+        final position = renderObject.localToGlobal(Offset.zero);
+        double screenW = MediaQuery.of(context).size.width;
+        double currentW = renderObject.paintBounds.size.width;
+        double currentH = renderObject.paintBounds.size.height;
+        double margin = (screenW - currentW) / 2;
+        double offsetY = position.dy;
+        double itemHeight = renderObject.paintBounds.size.width;
+        double dividerHeight = 2;
+
+
+        // ceshi
+        print('screenW = ${MediaQuery.of(context).size.width} screrH =${ MediaQuery.of(context).size.width} currentW= ${renderObject.paintBounds.size.width}: currentH=${currentH} ：xy：${position.dx} , ${position.dy} ');
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5.0),
+            border: Border.all(color: Colors.blue, width: 2),
+          ),
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+            children: children,
+          ),
+          width: currentW,
+          //  height:  children.length < 10?(children.length * itemHeight + (children.length - 1) * dividerHeight):(10 * itemHeight + (children.length - 1)* dividerHeight ),
+          height:  itemHeight,
+          //  margin: EdgeInsets.fromLTRB(20, currentH - dividerHeight+20, 0, 0),
+          // margin: EdgeInsets.fromLTRB(20, currentH - dividerHeight-5, 20, 0),
+          margin: EdgeInsets.fromLTRB(20, currentH - 7, 20, 0),
+        );
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 构建历史记录items
+   */
+  List<Widget> _buildServiceItems() {
+    List<Widget> list = new List();
+    for (int i = 0; i < _services.length; i++) {
+      if (_services[i] != _serviceAddress) {
+        //增加账号记录
+        list.add(_buildItem(_services[i]));
+        //增加分割线
+        /*   list.add(Divider(
+          color: Colors.grey,
+          height: 2,
+        ));*/
+      }
+    }
+    return list;
+  }
+
+  /**
+   * 构建单个历史记录item
+   */
+  Widget _buildItem(String serviceip) {
+
+    return Container(
+      child: GestureDetector(
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: Flex(
+                direction: Axis.horizontal,
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child:  Text(serviceip, maxLines: 3),
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 5),
+                      child: Icon(
+                        Icons.highlight_off,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                        _services.remove(serviceip);
+                        // SharedPreferenceUtil.delUser(user);
+                        //处理最后一个数据，假如最后一个被删掉，将Expand置为false
+                        if (!(_services.length > 1 ||
+                            _services[0] != serviceip)) {
+                          //如果个数大于1个或者唯一一个账号跟当前账号不一样才弹出历史账号
+                          _expand = false;
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Divider(
+              color: Colors.grey,
+              height: 2,
+            )
+          ],
+        ),
+        onTap: () {
+          setState(() {
+            _serviceAddress = serviceip;
+            _expand = false;
+          });
+        },
+      ),
+    );
+  }
+
+  /**
+   * 创建服务器地址输入框
+   */
+  Widget _buildServerAddress() {
+    return Container(
+      key: _serverKey,
+      margin: EdgeInsets.only(left: 20, right: 20,top: 20,bottom: 5),
+      decoration: new BoxDecoration(
+          borderRadius:BorderRadius.all(Radius.circular(10)),
+          //BorderRadius.all(Radius.circular(8)),
+          color: Colors.white),
+      child: TextFormField(
+        focusNode: _focusNodeServerAddress,
+        decoration: InputDecoration(
+          hintText: "服务器地址",
+          //    border: OutlineInputBorder(borderSide: BorderSide()),
+          //  contentPadding: EdgeInsets.only(top: 8,bottom: 8),
+          fillColor: Colors.white,
+          // filled: true,
+          prefixIcon: Icon(Icons.language),
+          suffixIcon: GestureDetector(
+            onTap: () {
+              // 点击禁止跳出输入法
+              // Unfocus all focus nodes
+              _focusNodeServerAddress.unfocus();
+              // Disable text field's focus node request
+              _focusNodeServerAddress.canRequestFocus = false;
+              //Enable the text field's focus node request after some delay
+              Future.delayed(Duration(milliseconds: 100), () {
+                _focusNodeServerAddress.canRequestFocus = true;
+              });
+
+              //如果个数大于1个或者唯一一个账号跟当前账号不一样才弹出历史账号
+              setState(() {
+                _expand = !_expand;
+              });
+            },
+            child: _expand
+                ? Icon(
+              Icons.arrow_drop_up,
+              color: Colors.red,
+            )
+                : Icon(
+              Icons.arrow_drop_down,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        controller: TextEditingController.fromValue(
+          TextEditingValue(
+            text: _serviceAddress,
+            selection: TextSelection.fromPosition(
+              TextPosition(
+                affinity: TextAffinity.downstream,
+                offset: _serviceAddress == null ? 0 : _serviceAddress.length,
+              ),
+            ),
+          ),
+        ),
+        onChanged: (value) {
+          _serviceAddress = value;
+        },
+      ),);
+  }
+
+
+
+  /**
+   * 获取服务器地址历史
+   */
+  void _gainServiceAddress() async {
+    _services.clear();
+
+    for (var i = 0; i < 16; ++i) {
+      _services.add('https://iot2.sz-luoding.com:2888/api/${i + 1}');
+      /*   if(i == 1){
+        _users.add(new User('https://iot2.sz-luoding.com:2888/api/${i + 1}', '_password'));
+      }else{
+        _users.add(new User('_username${i + 1}', '_password'));
+      }*/
+
+    }
+
+    //默认加载第一个账号
+    if (_services.length > 0) {
+      _serviceAddress = _services[0];
+    }
+  }
+
 }

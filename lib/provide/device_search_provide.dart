@@ -18,7 +18,6 @@ class DeviceSearchProvide with ChangeNotifier {
 
 
   void receiveList(String project,String query) async {
-    print('xxxxxxxxxxxx receiveList 执行');
 
     if(currentProject != project){
       currentProject = project;
