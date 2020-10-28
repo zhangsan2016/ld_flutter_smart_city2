@@ -272,7 +272,7 @@ class _LoginPageState extends State<LoginPage> {
                   print("loginInfo = " + loginInfo.toString());
                   print("loginInfo.data.token = " + loginInfo.data.token.token);
 
-                  Api.URL_BASE="zijixiugaiguo9996";
+               //   Api.instance.urlBase = '5454sdfdsf';
 
                   // 保存登录信息
                   // SharedPreferenceUtil.set('username', _userNameController.text);
@@ -382,7 +382,7 @@ class _LoginPageState extends State<LoginPage> {
         _userNameController.text = loginInfo.data.token.username;
 
         DioUtils.requestHttp(
-          Api.servicePath['CONTENT_TYPE_USER_TOKEN'],
+          Api.instance.getServicePath('CONTENT_TYPE_USER_TOKEN'),
           token: loginInfo.data.token.token,
           method: DioUtils.POST,
           onSuccess: (String data) async {

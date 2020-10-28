@@ -14,7 +14,7 @@ class ResourceRequest{
     var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
 
     DioUtils.requestHttp(
-      Api.servicePath['DEVICE_LIST_URL'],
+      Api.instance.getServicePath('DEVICE_LIST_URL'),
       parameters: param,
       token: token,
       method: DioUtils.POST,

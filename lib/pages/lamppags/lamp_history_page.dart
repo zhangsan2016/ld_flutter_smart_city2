@@ -72,7 +72,7 @@ class _LampHistoryPageState extends State<LampHistoryPage> with AutomaticKeepAli
       var param = "{\"UUID\": \"${_lamp.uUID}\"}";
 
       DioUtils.requestHttp(
-        Api.servicePath['HISTORY_METRICS_URL'],
+        Api.instance.getServicePath('HISTORY_METRICS_URL'),
         parameters: param,
         token: loginInfo.data.token.token,
         method: DioUtils.POST,

@@ -53,7 +53,6 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
        _locationUp(event.data);
     });
 
-    print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ${Api.servicePath['LOGIN_URl']}  ${Api.URL_BASE}');
   }
 
 
@@ -155,7 +154,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
     var param = "{\"size\":1000}";
 
     DioUtils.requestHttp(
-      Api.servicePath['PROJECT_LIST_URL'],
+      Api.instance.getServicePath('PROJECT_LIST_URL'),
       parameters: param,
       token: token,
       method: DioUtils.POST,
@@ -455,7 +454,7 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
                     "\"},\"size\":1000}";
 
                 DioUtils.requestHttp(
-                  Api.servicePath['DEVICE_EBOX_URL'],
+                  Api.instance.getServicePath('DEVICE_EBOX_URL'),
                   parameters: param,
                   token: loginInfo.data.token.token,
                   method: DioUtils.POST,

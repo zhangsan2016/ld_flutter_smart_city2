@@ -12,9 +12,9 @@ Future request(url, {formData}) async {
     Dio dio = new Dio();
     dio.options.contentType = "application/x-www-form-urlencoded";
     if (formData == null) {
-      response = await dio.post(Api.servicePath[url]);
+      response = await dio.post(Api.instance.getServicePath(url));
     } else {
-      response = await dio.post(Api.servicePath[url], data: formData);
+      response = await dio.post(Api.instance.getServicePath(url), data: formData);
     }
 
     if (response.statusCode == 200) {
