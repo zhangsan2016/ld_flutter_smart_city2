@@ -98,7 +98,7 @@ class _LampControlPageState extends State<LampControlPage>
                         var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"Dimming\": 100}}";
 
                         DioUtils.requestHttp(
-                          servicePath['DEVICE_CONTROL_URL'],
+                          Api.servicePath['DEVICE_CONTROL_URL'],
                           parameters: param,
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
@@ -137,7 +137,7 @@ class _LampControlPageState extends State<LampControlPage>
                         var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"Dimming\": 0}}";
 
                         DioUtils.requestHttp(
-                          servicePath['DEVICE_CONTROL_URL'],
+                          Api.servicePath['DEVICE_CONTROL_URL'],
                           parameters: param,
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
@@ -187,7 +187,7 @@ class _LampControlPageState extends State<LampControlPage>
                             var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"Dimming\": ${v.value.ceil()}}}";
 
                             DioUtils.requestHttp(
-                              servicePath['DEVICE_CONTROL_URL'],
+                              Api.servicePath['DEVICE_CONTROL_URL'],
                               parameters: param,
                               token: loginInfo.data.token.token,
                               method: DioUtils.POST,
@@ -238,7 +238,7 @@ class _LampControlPageState extends State<LampControlPage>
                             print('param = ${param.toString()}');
 
                             DioUtils.requestHttp(
-                              servicePath['DEVICE_CONTROL_URL'],
+                              Api.servicePath['DEVICE_CONTROL_URL'],
                               parameters: param,
                               token: loginInfo.data.token.token,
                               method: DioUtils.POST,
@@ -284,7 +284,7 @@ class _LampControlPageState extends State<LampControlPage>
                             var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"SecDimming\": ${v.value.ceil()}}}";
 
                             DioUtils.requestHttp(
-                              servicePath['DEVICE_CONTROL_URL'],
+                              Api.servicePath['DEVICE_CONTROL_URL'],
                               parameters: param,
                               token: loginInfo.data.token.token,
                               method: DioUtils.POST,
@@ -332,7 +332,7 @@ class _LampControlPageState extends State<LampControlPage>
                         var param = "{\"UUID\": \"${_lamp.uUID}\"}";
 
                         DioUtils.requestHttp(
-                          servicePath['CLEAN_ALARM_URL'],
+                          Api.servicePath['CLEAN_ALARM_URL'],
                           parameters: param,
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
@@ -380,7 +380,7 @@ class _LampControlPageState extends State<LampControlPage>
                         var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 270,\"options\": {\"Alarm_Light_Mode\": \"OFF\"}}";
 
                         DioUtils.requestHttp(
-                          servicePath['DEVICE_CONTROL_URL'],
+                          Api.servicePath['DEVICE_CONTROL_URL'],
                           parameters: param,
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
@@ -420,7 +420,7 @@ class _LampControlPageState extends State<LampControlPage>
                         var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 270,\"options\": {\"Alarm_Light_Mode\": \"FLASH\"}}";
 
                         DioUtils.requestHttp(
-                          servicePath['DEVICE_CONTROL_URL'],
+                          Api.servicePath['DEVICE_CONTROL_URL'],
                           parameters: param,
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
@@ -467,7 +467,7 @@ class _LampControlPageState extends State<LampControlPage>
                         var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 234,\"options\": {\"IR_Dimming_en\": 0}}";
 
                         DioUtils.requestHttp(
-                          servicePath['DEVICE_CONTROL_URL'],
+                          Api.servicePath['DEVICE_CONTROL_URL'],
                           parameters: param,
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
@@ -507,7 +507,7 @@ class _LampControlPageState extends State<LampControlPage>
                         var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 234,\"options\": {\"IR_Dimming_en\": 1}}";
 
                         DioUtils.requestHttp(
-                          servicePath['DEVICE_CONTROL_URL'],
+                          Api.servicePath['DEVICE_CONTROL_URL'],
                           parameters: param,
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
@@ -554,7 +554,7 @@ class _LampControlPageState extends State<LampControlPage>
                         var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 232}";
 
                         DioUtils.requestHttp(
-                          servicePath['DEVICE_CONTROL_URL'],
+                          Api.servicePath['DEVICE_CONTROL_URL'],
                           parameters: param,
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
@@ -616,7 +616,7 @@ class _LampControlPageState extends State<LampControlPage>
                         var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 297,\"options\": {\"accuracy\": ${accuracyController.value}}";
 
                         DioUtils.requestHttp(
-                          servicePath['DEVICE_CONTROL_URL'],
+                          Api.servicePath['DEVICE_CONTROL_URL'],
                           parameters: param,
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
@@ -724,7 +724,7 @@ class _LampControlPageState extends State<LampControlPage>
                       var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": ${orderCodeController.value}｝,\"options\": ${orderController.value}}";
 
                       DioUtils.requestHttp(
-                        servicePath['DEVICE_CONTROL_URL'],
+                        Api.servicePath['DEVICE_CONTROL_URL'],
                         parameters: param,
                         token: loginInfo.data.token.token,
                         method: DioUtils.POST,

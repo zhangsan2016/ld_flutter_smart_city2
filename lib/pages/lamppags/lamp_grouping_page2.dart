@@ -171,7 +171,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
 
       var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
       DioUtils.requestHttp(
-        servicePath['DEVICE_LAMP_LIST_URL'],
+        Api.servicePath['DEVICE_LAMP_LIST_URL'],
         parameters: param,
         // token: token,
         token: loginInfo.data.token.token,
@@ -230,7 +230,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
 
       var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
       DioUtils.requestHttp(
-        servicePath['DEVICE_EBOX_URL'],
+        Api.servicePath['DEVICE_EBOX_URL'],
         parameters: param,
         // token: token,
         token: loginInfo.data.token.token,
@@ -263,7 +263,7 @@ class _MyGroupingPageState extends State<GroupingPage> {
 
       var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
       DioUtils.requestHttp(
-        servicePath['DEVICE_WIRESAFE_LIST_URL'],
+        Api.servicePath['DEVICE_WIRESAFE_LIST_URL'],
         parameters: param,
         // token: token,
         token: loginInfo.data.token.token,

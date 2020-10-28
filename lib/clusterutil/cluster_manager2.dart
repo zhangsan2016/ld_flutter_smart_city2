@@ -225,7 +225,7 @@ class ClusterManager {
     var param = "{\"where\":{\"PROJECT\":\"" + title + "\"},\"size\":1000}";
 
     DioUtils.requestHttp(
-      servicePath['DEVICE_LAMP_LIST_URL'],
+      Api.servicePath['DEVICE_LAMP_LIST_URL'],
       parameters: param,
       token: token,
       method: DioUtils.POST,

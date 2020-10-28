@@ -35,7 +35,7 @@ class DeviceSearchProvide with ChangeNotifier {
             "\"},\"size\":1000}";
 
         DioUtils.requestHttp(
-          servicePath['DEVICE_LIST_URL'],
+          Api.servicePath['DEVICE_LIST_URL'],
           parameters: param,
           token: loginInfo.data.token.token,
           method: DioUtils.POST,
@@ -43,7 +43,6 @@ class DeviceSearchProvide with ChangeNotifier {
             try {
               var jsonstr = json.decode(data);
               deviceList = DeviceList.fromJson(jsonstr);
-              print(' xxxxxxxxxxxxxxxxxxxx search 执行');
               searchCurrentProject(query);
             } catch (e) {
               throw e;

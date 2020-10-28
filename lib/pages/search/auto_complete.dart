@@ -177,7 +177,7 @@ class _AutoCompleteState extends State<AutoComplete> {
           widget.currentProject +
           "\"},\"size\":1000}";
       DioUtils.requestHttp(
-        servicePath['DEVICE_LIST_URL'],
+        Api.servicePath['DEVICE_LIST_URL'],
         parameters: param,
         token: loginInfo.data.token.token,
         method: DioUtils.POST,
