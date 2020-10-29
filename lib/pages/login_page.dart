@@ -251,7 +251,8 @@ class _LoginPageState extends State<LoginPage> {
             if (!_username.isEmpty && !_password.isEmpty) {
               // 登录
               var formData = {'username': _username, 'password': _password};
-              request('LOGIN_URl', formData: formData).then((val) {
+              String url = _serviceAddress + Api.CONTENT_TYPE_USER_LOGIN;
+              logtinRequest(url, formData: formData).then((val) {
                 print("loginInfo = " + val.toString());
                 if (val == null) {
                   // 关闭加载框
@@ -267,12 +268,15 @@ class _LoginPageState extends State<LoginPage> {
                 var data = json.decode(val.toString());
                 LoginInfo loginInfo = LoginInfo.fromJson(data);
 
+
                 if (loginInfo.errno == 0) {
                   // 登录成功
                   print("loginInfo = " + loginInfo.toString());
+                  print("loginInfo = " + json.encode(loginInfo));
                   print("loginInfo.data.token = " + loginInfo.data.token.token);
 
-               //   Api.instance.urlBase = '5454sdfdsf';
+                  // 设置当前服务器地址
+                  Api.instance.urlBase = _serviceAddress;
 
                   // 保存登录信息
                   // SharedPreferenceUtil.set('username', _userNameController.text);

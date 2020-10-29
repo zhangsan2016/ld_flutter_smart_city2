@@ -29,6 +29,30 @@ Future request(url, {formData}) async {
   }
 }
 
+Future logtinRequest(url, {formData}) async {
+  try {
+    print('开始获取数据......');
+    Response response;
+    Dio dio = new Dio();
+    dio.options.contentType = "application/x-www-form-urlencoded";
+    if (formData == null) {
+      response = await dio.post(url);
+    } else {
+      response = await dio.post(url, data: formData);
+    }
+
+    if (response.statusCode == 200) {
+      // print('response = ' + response.toString());
+      // return response.data;
+      return  response.toString();
+    } else {
+      throw Exception('后端接口出现异常。');
+    }
+  } catch (e) {
+    return print('Error: ==============${e}');
+  }
+}
+
 
 
 
