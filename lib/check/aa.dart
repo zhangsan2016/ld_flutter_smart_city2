@@ -1,5 +1,7 @@
 
 
+import 'dart:convert';
+
 import 'package:ldfluttersmartcity2/entity/json/device_list.dart';
 
 void main() {
@@ -98,10 +100,27 @@ print('${  testList3.length}');
 
 
 
- String aa = '{"UUID":"83140000862285035951429","LAT":"43.966333","LNG":"87.655587","NAME":"米泉路#81","TYPE":2,"PROJECT":"乌鲁木齐工程","SUBGROUP":"米泉北路","ADDR":"","IPADDR":"","_id":"76791","FUUID":"","subgroups":"[\"米泉北路\",\"米泉南路\",\"未分组\",\"古牧地中路\",\"稻香路\",\"古牧地西路\",\"古牧地东路\"]","admin":"wlmq","code":"831400","members":"[\"wlmq\"]","config":null,"report_config":null,"Energy":"null","FirDimming":null,"Illu":null,"STATE":null,"Temp":null,"ts_mqtt":null,"Power":null,"Warning_state":null,"LampDiameter":null,"Power_Manufacturer":null,"Lamp_RatedCurrent":null,"Lamp_Ratedvoltage":null,"lampType":null,"Lamp_Manufacturer":null,"Lamp_Num":null,"PoleProductionDate":null,"Pole_height":null,"Rated_power":null,"Subcommunicate_mode":null,"info":null,"cam_id":null,"stream_url":null,"stream_user":null,"stream_password":null,"road_direction":null,"onvif_port":null,"manufacturer":null}';
+ List<String> c = [];
+ c.add('sdfsdfdsfsdf');
+ c.add('4554sdfsdf');
 
 
- print('${154154 / 100}');
+String myjs =  json.encode(c);
+ print('$myjs');
+
+ List list = json.decode(myjs);
+
+ print('${list[1]}');
+
+ list.add("value1");
+ list.add("value2");
+
+ print('${list[3]}  size : ${list.length}');
+ print('${list.toString()}');
+  list.insert(0, '9966');
+ print('${list[3]}  size : ${list.length}');
+ print('${list.toString()}');
+
 }
 
 

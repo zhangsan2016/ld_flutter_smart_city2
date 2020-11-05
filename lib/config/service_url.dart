@@ -49,7 +49,7 @@ class Api {
   String get urlBase => _urlBase;
   set urlBase(String value) {
     if(value != null){
-       _urlBase = value;
+       _urlBase = value + PROFILE;
       _upServicePath();
     }
   }
@@ -57,7 +57,7 @@ class Api {
   var servicePath;
   _upServicePath(){
     servicePath = {
-      'LOGIN_URl': _urlBase + PROFILE + CONTENT_TYPE_USER_LOGIN, // 登录地址
+      'LOGIN_URl': _urlBase  + CONTENT_TYPE_USER_LOGIN, // 登录地址
       'PROJECT_LIST_URL':  _urlBase + CONTENT_TYPE_PROJECT_LIST, // 获取项目列表地址
       'DEVICE_LAMP_LIST_URL': _urlBase + CONTENT_TYPE_DEVICE_LAMP_LIST, // 获取项目下路灯地址
       'DEVICE_EBOX_URL':_urlBase + DEVICE_EBOX, // 获取电箱列表地址

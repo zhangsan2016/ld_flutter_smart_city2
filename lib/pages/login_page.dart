@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GlobalKey _serverKey = new GlobalKey(); //用来标记控件
 
-  List<String> _services = new List(); //历史服务器地址
+  List _services =[]; //历史服务器地址
 
   var _password = ''; //用户名
   var _username = ''; //密码
@@ -278,11 +278,20 @@ class _LoginPageState extends State<LoginPage> {
                   Api.instance.urlBase = _serviceAddress;
 
                   // 登录成功保存当前服务地址
-                  if(loginInfo.services != null){
-                    loginInfo.services.add(_serviceAddress);
+                  if(_services != null){
+                    if(!_services.contains(_serviceAddress)){
+                      _services.insert(0, _serviceAddress);
+                    }
                   }else{
-                    loginInfo.services = new List<String>()..add(_serviceAddress);
+                 //   _services = new List<String>()..add(_serviceAddress);
+                    _services = [] ;
+                    _services.add(_serviceAddress);
                   }
+                  SharedPreferenceUtil.set(
+                      SharedPreferenceUtil.SERVICE_IP, json.encode(_services))
+                      .then((val) {
+                    print('服务器地址保存 = $val');
+                  });
 
 
                   // 保存登录信息
@@ -384,7 +393,6 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
-      print("xxxxxxxxxxxxxxxxx loginInfo = " + val);
 
       // 解析 json
       var data = json.decode(val);
@@ -414,11 +422,14 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
           onError: (error) {
+            showLogin();
             print(' DioUtils.requestHttp error = $error');
           },
         );
       }
     });
+
+
   }
 
   void showLogin() {
@@ -669,22 +680,23 @@ class _LoginPageState extends State<LoginPage> {
    * 获取服务器地址历史
    */
   void _gainServiceAddress() async {
-    _services.clear();
 
-    for (var i = 0; i < 16; ++i) {
-      _services.add('https://iot2.sz-luoding.com:2888${i + 1}');
-      /*   if(i == 1){
-        _users.add(new User('https://iot2.sz-luoding.com:2888/api/${i + 1}', '_password'));
+    SharedPreferenceUtil.get(SharedPreferenceUtil.SERVICE_IP).then((val) {
+
+      _services.clear();
+      if(val != null){
+        _services = json.decode(val);
       }else{
-        _users.add(new User('_username${i + 1}', '_password'));
-      }*/
+        _services.add('https://iot2.sz-luoding.com:2888');
+      }
 
-    }
+      //默认加载第一个账号
+      if (_services.length > 0) {
+        _serviceAddress = _services[0];
+      }
+      print('服务器地址获取 = $val');
+    });
 
-    //默认加载第一个账号
-    if (_services.length > 0) {
-      _serviceAddress = _services[0];
-    }
   }
 
 }
