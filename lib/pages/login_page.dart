@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   var _isShowClear = false;
 
   bool isAfresh;
-  bool _expand = false; //是否展示历史服务器地址
+  bool _expand = false; //是否展示历史服务器地址下拉列表
 
   _LoginPageState(this.isAfresh); //是否显示输入框尾部的清除按钮
 
@@ -251,7 +251,7 @@ class _LoginPageState extends State<LoginPage> {
             if (!_username.isEmpty && !_password.isEmpty) {
               // 登录
               var formData = {'username': _username, 'password': _password};
-              String url = _serviceAddress + Api.CONTENT_TYPE_USER_LOGIN;
+              String url = _serviceAddress + Api.PROFILE + Api.CONTENT_TYPE_USER_LOGIN;
               logtinRequest(url, formData: formData).then((val) {
                 print("loginInfo = " + val.toString());
                 if (val == null) {
@@ -272,16 +272,23 @@ class _LoginPageState extends State<LoginPage> {
                 if (loginInfo.errno == 0) {
                   // 登录成功
                   print("loginInfo = " + loginInfo.toString());
-                  print("loginInfo = " + json.encode(loginInfo));
                   print("loginInfo.data.token = " + loginInfo.data.token.token);
 
                   // 设置当前服务器地址
                   Api.instance.urlBase = _serviceAddress;
 
+                  // 登录成功保存当前服务地址
+                  if(loginInfo.services != null){
+                    loginInfo.services.add(_serviceAddress);
+                  }else{
+                    loginInfo.services = new List<String>()..add(_serviceAddress);
+                  }
+
+
                   // 保存登录信息
                   // SharedPreferenceUtil.set('username', _userNameController.text);
                   SharedPreferenceUtil.set(
-                          SharedPreferenceUtil.LOGIN_INFO, val.toString())
+                          SharedPreferenceUtil.LOGIN_INFO, json.encode(loginInfo))
                       .then((val) {
                     print('登录信息保存 = $val');
                   });
@@ -376,6 +383,8 @@ class _LoginPageState extends State<LoginPage> {
         showLogin();
         return;
       }
+
+      print("xxxxxxxxxxxxxxxxx loginInfo = " + val);
 
       // 解析 json
       var data = json.decode(val);
@@ -480,8 +489,6 @@ class _LoginPageState extends State<LoginPage> {
         // 获取控件的坐标
         RenderBox renderObject = _serverKey.currentContext.findRenderObject();
 
-        print('xxxxxxxxxx ${renderObject.paintBounds.size.width} : ${renderObject.paintBounds.size.height} ：${children.length} : ${_services.length} : : ${MediaQuery.of(context).size.width}');
-
         final position = renderObject.localToGlobal(Offset.zero);
         double screenW = MediaQuery.of(context).size.width;
         double currentW = renderObject.paintBounds.size.width;
@@ -490,10 +497,6 @@ class _LoginPageState extends State<LoginPage> {
         double offsetY = position.dy;
         double itemHeight = renderObject.paintBounds.size.width;
         double dividerHeight = 2;
-
-
-        // ceshi
-        print('screenW = ${MediaQuery.of(context).size.width} screrH =${ MediaQuery.of(context).size.width} currentW= ${renderObject.paintBounds.size.width}: currentH=${currentH} ：xy：${position.dx} , ${position.dy} ');
 
         return Container(
           decoration: BoxDecoration(
@@ -669,7 +672,7 @@ class _LoginPageState extends State<LoginPage> {
     _services.clear();
 
     for (var i = 0; i < 16; ++i) {
-      _services.add('https://iot2.sz-luoding.com:2888/api/${i + 1}');
+      _services.add('https://iot2.sz-luoding.com:2888${i + 1}');
       /*   if(i == 1){
         _users.add(new User('https://iot2.sz-luoding.com:2888/api/${i + 1}', '_password'));
       }else{

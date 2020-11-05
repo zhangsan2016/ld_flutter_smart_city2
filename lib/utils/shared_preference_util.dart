@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///数据库相关的工具
 class SharedPreferenceUtil {
   static final String LOGIN_INFO = "loginInfo";
+  static final String SERVICE_IP = "serviceip";
 
   static   Future<Object> set(String str, String setStr) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

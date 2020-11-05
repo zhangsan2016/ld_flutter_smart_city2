@@ -7,13 +7,15 @@ class LoginInfo {
   int errno;
   String errmsg;
   Data data;
+  List<String> services;
 
-  LoginInfo({this.errno, this.errmsg, this.data});
+  LoginInfo({this.errno, this.errmsg, this.data, this.services});
 
   LoginInfo.fromJson(Map<String, dynamic> json) {
     errno = json['errno'];
     errmsg = json['errmsg'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    services = json['services']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -23,6 +25,7 @@ class LoginInfo {
     if (this.data != null) {
       data['data'] = this.data.toJson();
     }
+    data['services'] = this.services;
     return data;
   }
 }
@@ -30,16 +33,14 @@ class LoginInfo {
 class Data {
   Token token;
   UserProfile userProfile;
-  List<String> grantedActions;
 
-  Data({this.token, this.userProfile, this.grantedActions});
+  Data({this.token, this.userProfile});
 
   Data.fromJson(Map<String, dynamic> json) {
     token = json['token'] != null ? new Token.fromJson(json['token']) : null;
     userProfile = json['userProfile'] != null
         ? new UserProfile.fromJson(json['userProfile'])
         : null;
-    grantedActions = json['grantedActions'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -50,7 +51,6 @@ class Data {
     if (this.userProfile != null) {
       data['userProfile'] = this.userProfile.toJson();
     }
-    data['grantedActions'] = this.grantedActions;
     return data;
   }
 }

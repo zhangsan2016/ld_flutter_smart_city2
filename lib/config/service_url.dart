@@ -17,7 +17,9 @@ class Api {
 
   // base 地址
 // const String URL_BASE = "https://iot.sz-luoding.com:888/api/";
-  String _urlBase = "https://iot2.sz-luoding.com:2888/api/";
+  String _urlBase = "https://iot2.sz-luoding.com:2888" + PROFILE;
+  // 后文件夹
+  static String  PROFILE = "/api/";
 // content-type 用户登录
   static final String CONTENT_TYPE_USER_LOGIN = "user/login";
 // content-type 项目列表
@@ -55,7 +57,7 @@ class Api {
   var servicePath;
   _upServicePath(){
     servicePath = {
-      'LOGIN_URl': _urlBase + CONTENT_TYPE_USER_LOGIN, // 登录地址
+      'LOGIN_URl': _urlBase + PROFILE + CONTENT_TYPE_USER_LOGIN, // 登录地址
       'PROJECT_LIST_URL':  _urlBase + CONTENT_TYPE_PROJECT_LIST, // 获取项目列表地址
       'DEVICE_LAMP_LIST_URL': _urlBase + CONTENT_TYPE_DEVICE_LAMP_LIST, // 获取项目下路灯地址
       'DEVICE_EBOX_URL':_urlBase + DEVICE_EBOX, // 获取电箱列表地址
