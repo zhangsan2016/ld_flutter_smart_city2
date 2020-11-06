@@ -281,6 +281,9 @@ class _LoginPageState extends State<LoginPage> {
                   if(_services != null){
                     if(!_services.contains(_serviceAddress)){
                       _services.insert(0, _serviceAddress);
+                    }else{
+                      _services.remove(_serviceAddress);
+                      _services.insert(0, _serviceAddress);
                     }
                   }else{
                  //   _services = new List<String>()..add(_serviceAddress);
