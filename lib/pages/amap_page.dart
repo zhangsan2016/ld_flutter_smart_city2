@@ -118,6 +118,10 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
                         new FlatButton(
                           child: new Text("确定"),
                           onPressed: () {
+
+                            // 清除登录数据
+                            SharedPreferenceUtil.del(SharedPreferenceUtil.LOGIN_INFO);
+
                             //跳转到登录界面
                             Navigator.pushAndRemoveUntil(
                               context,
