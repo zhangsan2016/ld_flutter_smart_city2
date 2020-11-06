@@ -35,6 +35,8 @@ class AmapPage extends StatefulWidget {
 class AmapPageState extends State<AmapPage> implements AMapListening {
   static AmapController _controller;
   static ClusterManager clusterManager;
+  // 登录信息
+  LoginInfo loginInfo;
 
 
   // 覆盖物展开状态
@@ -76,6 +78,8 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
   @override
   Widget build(BuildContext context) {
     _context = context;
+ /*   var name =  loginInfo?.data?.userProfile?.username;
+    print('name = $name');*/
 
     // 定位变更监听
    // _locationUp(context);
@@ -99,42 +103,49 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
           }),*/
           //  AppBar 右侧图标点击退出登录
           actions: <Widget>[
-          IconButton(
-              icon: Image.asset('images/my_user.png'),
-              onPressed: () {
-                // 打开提示框
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('退出当前账号'),
-                      content: Text(('是否退出当前账号？')),
-                      actions: <Widget>[
-                        new FlatButton(
-                          child: new Text("取消"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        new FlatButton(
-                          child: new Text("确定"),
-                          onPressed: () {
 
-                            // 清除登录数据
-                            SharedPreferenceUtil.del(SharedPreferenceUtil.LOGIN_INFO);
+            Row(children: <Widget>[
+              // 设置用户名
+              Text(loginInfo?.data?.userProfile?.username == null?"": loginInfo?.data?.userProfile?.username,textAlign: TextAlign.center,style: TextStyle(fontSize: ScreenUtil().setSp(38)),),
+              IconButton(
+                  icon: Image.asset('images/my_user.png'),
+                  onPressed: () {
+                    // 打开提示框
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('退出当前账号'),
+                          content: Text(('是否退出当前账号？')),
+                          actions: <Widget>[
+                            new FlatButton(
+                              child: new Text("取消"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            new FlatButton(
+                              child: new Text("确定"),
+                              onPressed: () {
 
-                            //跳转到登录界面
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              new MaterialPageRoute(builder: (context) => new LoginPage(true)),
-                                  (route) => route == null,
-                            );
-                          },
-                        ),
-                      ],
-                    ));
-              }
-            // showSearch(context:context,delegate: searchBarDelegate()),
-          ),
+                                // 清除登录数据
+                                SharedPreferenceUtil.del(SharedPreferenceUtil.LOGIN_INFO);
+
+                                //跳转到登录界面
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  new MaterialPageRoute(builder: (context) => new LoginPage(true)),
+                                      (route) => route == null,
+                                );
+                              },
+                            ),
+                          ],
+                        ));
+                  }
+                // showSearch(context:context,delegate: searchBarDelegate()),
+              ),
+            ],),
+
+
         ],
           title: Text('洛丁智慧照明', textAlign: TextAlign.center,),
           backgroundColor: Colors.cyan,
@@ -223,7 +234,10 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
 
           // 解析 json
           var data = json.decode(val);
-          LoginInfo loginInfo = LoginInfo.fromJson(data);
+          loginInfo = LoginInfo.fromJson(data);
+
+          // 设置用户名称
+          //loginInfo.data.userProfile.username
 
           // 获取项目列表
           getProject(loginInfo.data.token.token);
