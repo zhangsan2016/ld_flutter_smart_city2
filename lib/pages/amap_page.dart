@@ -434,8 +434,6 @@ class AmapPageState extends State<AmapPage> implements AMapListening {
         clusterManager?.updateMarkerIco('${double.parse(lamp.lAT)},${double.parse(lamp.lNG)}');
       }
 
-
-
     });
   }
 
