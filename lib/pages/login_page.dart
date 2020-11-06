@@ -581,6 +581,7 @@ class _LoginPageState extends State<LoginPage> {
                       setState(() {
                         _services.remove(serviceip);
                         // SharedPreferenceUtil.delUser(user);
+                        SharedPreferenceUtil.set(SharedPreferenceUtil.SERVICE_IP, json.encode(_services));
                         //处理最后一个数据，假如最后一个被删掉，将Expand置为false
                         if (!(_services.length > 1 ||
                             _services[0] != serviceip)) {
