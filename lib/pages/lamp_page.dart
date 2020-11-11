@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ldfluttersmartcity2/common/event_bus.dart';
 import 'package:ldfluttersmartcity2/entity/json/lamp_info.dart';
+import 'package:ldfluttersmartcity2/entity/json/login_Info.dart';
+import 'package:ldfluttersmartcity2/utils/shared_preference_util.dart';
 import 'package:oktoast/oktoast.dart';
 
 import 'lamppags/check_lamp_page.dart';
@@ -12,26 +14,43 @@ import 'lamppags/edit_lamp_page.dart';
 import 'lamppags/lamp_control_page.dart';
 import 'lamppags/lamp_history_page.dart';
 
-class LampPage extends StatelessWidget {
+class LampPage extends StatefulWidget {
   final String lampInfo;
-
   const LampPage(this.lampInfo, {Key key}) : super(key: key);
 
+  @override
+  _LampPageState createState() => _LampPageState();
 
+}
 
+class _LampPageState  extends State<LampPage>  with TickerProviderStateMixin, AutomaticKeepAliveClientMixin  {
+  TabController _tabController;
+  List _spList = [];
+
+  LoginInfo loginInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = null;
+    _tabController = TabController(initialIndex: 0, length: _spList.length, vsync: this); // 直接传this
+
+    // 根据权限设置 table 界面
+    initTable();
+  }
 
   @override
   Widget build(BuildContext context) {
     Lamp _lamp;
-    if (lampInfo != null) {
-      _lamp = Lamp.fromJson(json.decode(lampInfo));
+    if (widget.lampInfo != null) {
+      _lamp = Lamp.fromJson(json.decode(widget.lampInfo));
     }
     return MaterialApp(
-        // 去掉运行时 debug 的提示
+      // 去掉运行时 debug 的提示
         debugShowCheckedModeBanner: false,
         // theme: ThemeData(primaryColor: Colors.blue),
         home: DefaultTabController(
-          length: 4, // tab个数
+          length: _spList.length, // tab个数
           child: Scaffold(
             // Tab组件必须放到Scaffold中
             appBar: AppBar(
@@ -42,10 +61,10 @@ class LampPage extends StatelessWidget {
 
                         if (_lamp.lNG.isNotEmpty && _lamp.lNG.isNotEmpty) {
 
-                        //  Navigator.popUntil(context, ModalRoute.withName('/pageC'));
+                          //  Navigator.popUntil(context, ModalRoute.withName('/pageC'));
                           // 设置回调
-                       //   AmapPageState.location(json.encode(_lamp));
-                        // Navigator.pop(context, json.encode(_lamp));
+                          //   AmapPageState.location(json.encode(_lamp));
+                          // Navigator.pop(context, json.encode(_lamp));
                           //        Navigator.of(context).pop();
 
                           // 向事件总线发射一个地图定位事件
@@ -77,44 +96,65 @@ class LampPage extends StatelessWidget {
                 elevation: 20.0,
                 backgroundColor: Colors.cyan,
                 bottom: TabBar(
-                  tabs: <Widget>[
-                    Tab(
-                      text: "查看",
-                    ),
-                    Tab(
-                      text: "控制",
-                    ),
-                    Tab(
-                      text: "编辑",
-                    ),
-                    Tab(
-                      text: "历史消息",
-                    )
-                  ],
+                  tabs: _spList.isEmpty
+                      ? []: _spList.map((f) {
+                    return   Tab(
+                      text:  f,
+                    );
+
+                  }).toList(),
                 )),
             body: TabBarView(
               physics: new NeverScrollableScrollPhysics(),
               // 类似ViewPage
-              children: <Widget>[
-                CheckLampPage(lampInfo), // 路灯查看信息界面
+              children:  _spList.isEmpty
+                  ? []
+                  : _spList.map((f) {
+            /*    CheckLampPage(widget.lampInfo), // 路灯查看信息界面
 
-                LampControlPage(lampInfo), // 路灯控制界面
+                LampControlPage(widget.lampInfo), // 路灯控制界面
 
-                EditLampPage(lampInfo), // 路灯编辑界面
+                EditLampPage(widget.lampInfo), // 路灯编辑界面
 
-                LampHistoryPage(lampInfo),  // 历史记录界面
+                LampHistoryPage(widget.lampInfo),  // 历史记录界面*/
 
+                return LampHistoryPage(widget.lampInfo);
+              }).toList()),
 
-                /*  ListView(
-              children: <Widget>[
-                ListTile(title: Text("历史消息 tab")),
-                ListTile(title: Text("历史消息 tab")),
-                ListTile(title: Text("历史消息 tab"))
-              ],
-            ),*/
-              ],
             ),
           ),
-        ));
+        );
   }
+
+  void initTable() {
+
+    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+
+      // 解析 json
+      var data = json.decode(val);
+      loginInfo = LoginInfo.fromJson(data);
+
+      setState(() {
+
+        // 查看 控制 编辑 历史消息
+
+        _spList = ["查看", "控制","编辑"];
+        /*_tabController = TabController(
+            initialIndex: 1, length: _spList.length, vsync: this);
+        _tabController.animateTo(0);*/
+      });
+
+
+    });
+
+  }
+
+
+  /// 切换tab后保留tab的状态，避免initState方法重复调用
+  @override
+  bool get wantKeepAlive => true;
+
 }
+
+
+

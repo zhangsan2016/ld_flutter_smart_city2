@@ -296,7 +296,6 @@ class _LoginPageState extends State<LoginPage> {
                     print('服务器地址保存 = $val');
                   });
 
-
                   // 保存登录信息
                   // SharedPreferenceUtil.set('username', _userNameController.text);
                   SharedPreferenceUtil.set(
@@ -347,7 +346,6 @@ class _LoginPageState extends State<LoginPage> {
             setState(() {
               _expand = false;
             });
-
           },
           child: DecoratedBox(
             decoration: new BoxDecoration(
