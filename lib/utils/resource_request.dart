@@ -20,16 +20,10 @@ class ResourceRequest{
       method: DioUtils.POST,
       onSuccess: (String data) {
 
-        try {
+        var jsonstr = json.decode(data);
+        DeviceList deviceList = DeviceList.fromJson(jsonstr);
+        onSuccess(deviceList);
 
-          var jsonstr = json.decode(data);
-          DeviceList deviceList = DeviceList.fromJson(jsonstr);
-          onSuccess(deviceList);
-
-        } catch (e) {
-          throw e;
-          print('解析出错 ${e.toString()}');
-        }
       },
       onError: (error) {
         print(' DioUtils.requestHttp error = $error');

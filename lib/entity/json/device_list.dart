@@ -46,12 +46,12 @@ class Device {
   Null config;
   String reportConfig;
   String energy;
-  double firDimming;
-  double illu;
+  var firDimming;
+  var illu;
   int sTATE;
-  double temp;
+  var temp;
   int tsMqtt;
-  double power;
+  var power;
   int warningState;
   String lampDiameter;
   String powerManufacturer;
@@ -120,6 +120,13 @@ class Device {
         this.manufacturer});
 
   Device.fromJson(Map<String, dynamic> json) {
+
+    print('>>>>>>>>>>>>>>>>>>>>  ${json['NAME']}');
+    if('测试灯1'== json['NAME']){
+      print('>>>>>>>>>>>>>>>>>>>>>>>> ');
+    }
+
+
     uUID = json['UUID'];
     lAT = json['LAT'];
     lNG = json['LNG'];
@@ -164,6 +171,18 @@ class Device {
     roadDirection = json['road_direction'];
     onvifPort = json['onvif_port'];
     manufacturer = json['manufacturer'];
+
+
+   /* try {
+
+
+
+    } catch (e) {
+      throw e;
+
+    }*/
+
+
   }
 
   Map<String, dynamic> toJson() {
