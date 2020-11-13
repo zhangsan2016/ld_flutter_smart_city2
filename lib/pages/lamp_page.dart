@@ -26,7 +26,7 @@ class LampPage extends StatefulWidget {
 class _LampPageState extends State<LampPage>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController _tabController;
-  List _spList = [];
+  Map _spList = new Map();
 
   LoginInfo loginInfo;
 
@@ -101,7 +101,7 @@ class _LampPageState extends State<LampPage>
               bottom: TabBar(
                 tabs: _spList.isEmpty
                     ? []
-                    : _spList.map((f) {
+                    : _spList.keys.map((f) {
                         return Tab(
                           text: f,
                         );
@@ -112,15 +112,15 @@ class _LampPageState extends State<LampPage>
               // 类似ViewPage
               children: _spList.isEmpty
                   ? []
-                  : _spList.map((f) {
+                  : _spList.values.map<Widget>((f) {
 
 
-        /*        CheckLampPage(widget.lampInfo), // 路灯查看信息界面
+        /*      CheckLampPage(widget.lampInfo), // 路灯查看信息界面
                 LampControlPage(widget.lampInfo), // 路灯控制界面
                 EditLampPage(widget.lampInfo), // 路灯编辑界面
                 LampHistoryPage(widget.lampInfo),  // 历史记录界面*/
 
-
+/*
                       // 查看 控制 编辑 历史消息
                       if ('查看' == f) {
                         return CheckLampPage(widget.lampInfo); // 路灯查看信息界面
@@ -130,8 +130,8 @@ class _LampPageState extends State<LampPage>
                         return EditLampPage(widget.lampInfo); // 路灯编辑界面
                       } else if ('历史消息' == f) {
                         return LampHistoryPage(widget.lampInfo); // 历史记录界面
-                      }
-                      return null;
+                      }*/
+                      return f;
 
                     }).toList()),
         ),
@@ -152,17 +152,24 @@ class _LampPageState extends State<LampPage>
         "v_device_lamp/edit",
         "v_device_lamp/metrics",*/
 
+             /* CheckLampPage(widget.lampInfo), // 路灯查看信息界面
+                LampControlPage(widget.lampInfo), // 路灯控制界面
+                EditLampPage(widget.lampInfo), // 路灯编辑界面
+                LampHistoryPage(widget.lampInfo),  // 历史记录界面*/
+
+
+        // 根据当前权限显示界面
         if (loginInfo.data.grantedActions.contains('v_device_lamp/view')) {
-          _spList.add("查看");
+          _spList['查看'] = CheckLampPage(widget.lampInfo);  // 路灯查看信息界面
         }
         if (loginInfo.data.grantedActions.contains('v_device_lamp/control')) {
-          _spList.add("控制");
+          _spList['控制'] = LampControlPage(widget.lampInfo);  // 路灯控制界面
         }
         if (loginInfo.data.grantedActions.contains('v_device_lamp/edit')) {
-          _spList.add("编辑");
+          _spList['编辑'] = EditLampPage(widget.lampInfo);   // 路灯编辑界面
         }
         if (loginInfo.data.grantedActions.contains('v_device_lamp/metrics')) {
-          _spList.add("历史消息");
+          _spList['历史消息'] = LampHistoryPage(widget.lampInfo);   // 历史记录界面
         }
 
         /*_tabController = TabController(
