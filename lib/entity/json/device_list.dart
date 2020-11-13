@@ -121,12 +121,6 @@ class Device {
 
   Device.fromJson(Map<String, dynamic> json) {
 
-    print('>>>>>>>>>>>>>>>>>>>>  ${json['NAME']}');
-    if('测试灯1'== json['NAME']){
-      print('>>>>>>>>>>>>>>>>>>>>>>>> ');
-    }
-
-
     uUID = json['UUID'];
     lAT = json['LAT'];
     lNG = json['LNG'];

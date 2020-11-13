@@ -33,14 +33,16 @@ class LoginInfo {
 class Data {
   Token token;
   UserProfile userProfile;
+  List<String> grantedActions;
 
-  Data({this.token, this.userProfile});
+  Data({this.token, this.userProfile, this.grantedActions});
 
   Data.fromJson(Map<String, dynamic> json) {
     token = json['token'] != null ? new Token.fromJson(json['token']) : null;
     userProfile = json['userProfile'] != null
         ? new UserProfile.fromJson(json['userProfile'])
         : null;
+    grantedActions = json['grantedActions']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -51,6 +53,7 @@ class Data {
     if (this.userProfile != null) {
       data['userProfile'] = this.userProfile.toJson();
     }
+    data['grantedActions'] = this.grantedActions;
     return data;
   }
 }
@@ -83,8 +86,9 @@ class UserProfile {
   String phone;
   String fullname;
   String roles;
+  String openid;
 
-  UserProfile({this.iId, this.username, this.phone, this.fullname, this.roles});
+  UserProfile({this.iId, this.username, this.phone, this.fullname, this.roles,this.openid});
 
   UserProfile.fromJson(Map<String, dynamic> json) {
     iId = json['_id'];
@@ -92,6 +96,7 @@ class UserProfile {
     phone = json['phone'];
     fullname = json['fullname'];
     roles = json['roles'];
+    openid = json['openid'];
   }
 
   Map<String, dynamic> toJson() {
@@ -101,6 +106,7 @@ class UserProfile {
     data['phone'] = this.phone;
     data['fullname'] = this.fullname;
     data['roles'] = this.roles;
+    data['openid'] = this.openid;
     return data;
   }
 }
