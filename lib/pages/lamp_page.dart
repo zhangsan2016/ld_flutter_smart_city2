@@ -114,23 +114,6 @@ class _LampPageState extends State<LampPage>
                   ? []
                   : _spList.values.map<Widget>((f) {
 
-
-        /*      CheckLampPage(widget.lampInfo), // 路灯查看信息界面
-                LampControlPage(widget.lampInfo), // 路灯控制界面
-                EditLampPage(widget.lampInfo), // 路灯编辑界面
-                LampHistoryPage(widget.lampInfo),  // 历史记录界面*/
-
-/*
-                      // 查看 控制 编辑 历史消息
-                      if ('查看' == f) {
-                        return CheckLampPage(widget.lampInfo); // 路灯查看信息界面
-                      } else if ('控制' == f) {
-                        return LampControlPage(widget.lampInfo); // 路灯控制界面
-                      } else if ('编辑' == f) {
-                        return EditLampPage(widget.lampInfo); // 路灯编辑界面
-                      } else if ('历史消息' == f) {
-                        return LampHistoryPage(widget.lampInfo); // 历史记录界面
-                      }*/
                       return f;
 
                     }).toList()),
@@ -146,6 +129,7 @@ class _LampPageState extends State<LampPage>
       loginInfo = LoginInfo.fromJson(data);
 
       setState(() {
+
         // 查看 控制 编辑 历史消息
         /*"v_device_lamp/view",
         "v_device_lamp/control",
@@ -175,6 +159,7 @@ class _LampPageState extends State<LampPage>
         /*_tabController = TabController(
             initialIndex: 1, length: _spList.length, vsync: this);
         _tabController.animateTo(0);*/
+
       });
     });
   }
