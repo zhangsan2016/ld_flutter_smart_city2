@@ -48,9 +48,7 @@ dependencies:
   provider: ^4.0.5+1
   # 加载样式插件  flutter_spinkit: "^2.1.0"
   flutter_spinkit: "^4.1.2"
-  # 可拖动进度条
-  flutter_seekbar:
-    git: https://github.com/LiuC520/flutter_seekbar.git
+
 
 
 
