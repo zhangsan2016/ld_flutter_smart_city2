@@ -46,8 +46,10 @@ class _LampControlPageState extends State<LampControlPage>
 
   final uuidController = TextEditingController(); //输入监听
   final projectController = TextEditingController(); //输入监听
-  final TextEditingController accuracyController = TextEditingController(); // 角度校准监听
-  final TextEditingController orderCodeController = TextEditingController(); // 指令码监听
+  final TextEditingController accuracyController =
+      TextEditingController(); // 角度校准监听
+  final TextEditingController orderCodeController =
+      TextEditingController(); // 指令码监听
   final TextEditingController orderController = TextEditingController(); // 指令监听
 
   /**
@@ -73,7 +75,7 @@ class _LampControlPageState extends State<LampControlPage>
             child: Row(
               children: <Widget>[
                 _getText('预警状态     ', textSzie),
-                _getText('离线${_lamp.warningState}', textSzie),
+                _getText('${_getWarningStart(_lamp.warningState)}', textSzie),
               ],
             ),
           ),
@@ -90,12 +92,14 @@ class _LampControlPageState extends State<LampControlPage>
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                          .then((val) async {
                         // 解析 json
                         var data = json.decode(val);
                         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-                        var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"Dimming\": 100}}";
+                        var param =
+                            "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"Dimming\": 100}}";
 
                         DioUtils.requestHttp(
                           Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -103,7 +107,6 @@ class _LampControlPageState extends State<LampControlPage>
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
                           onSuccess: (String data) {
-
                             showToast('指令已发送', position: ToastPosition.bottom);
 
                             /*  if(data.toString() == 'OK'){
@@ -111,11 +114,11 @@ class _LampControlPageState extends State<LampControlPage>
                                 }*/
                           },
                           onError: (error) {
-                            print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                            print(
+                                ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                           },
                         );
                       });
-
                     },
                   ),
                 ),
@@ -128,13 +131,14 @@ class _LampControlPageState extends State<LampControlPage>
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-
-                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                          .then((val) async {
                         // 解析 json
                         var data = json.decode(val);
                         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-                        var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"Dimming\": 0}}";
+                        var param =
+                            "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"Dimming\": 0}}";
 
                         DioUtils.requestHttp(
                           Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -142,7 +146,6 @@ class _LampControlPageState extends State<LampControlPage>
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
                           onSuccess: (String data) {
-
                             showToast('指令已发送', position: ToastPosition.bottom);
 
                             /*  if(data.toString() == 'OK'){
@@ -150,11 +153,11 @@ class _LampControlPageState extends State<LampControlPage>
                                 }*/
                           },
                           onError: (error) {
-                            print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                            print(
+                                ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                           },
                         );
                       });
-
                     },
                   ),
                 ),
@@ -176,15 +179,17 @@ class _LampControlPageState extends State<LampControlPage>
                         max: 100,
                         hideBubble: false,
                         onValueChanged: (v) {
-
                           // 获取项目中的路灯
-                          SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                          SharedPreferenceUtil.get(
+                                  SharedPreferenceUtil.LOGIN_INFO)
+                              .then((val) async {
                             // 解析 json
                             var data = json.decode(val);
                             LoginInfo loginInfo = LoginInfo.fromJson(data);
 
                             //     var param =  "{\"UUID\": \"83140000862285035977879\",\"Confirm\": 260,\"options\": {\"FirDimming\": 0}}";
-                            var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"Dimming\": ${v.value.ceil()}}}";
+                            var param =
+                                "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"Dimming\": ${v.value.ceil()}}}";
 
                             DioUtils.requestHttp(
                               Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -192,19 +197,19 @@ class _LampControlPageState extends State<LampControlPage>
                               token: loginInfo.data.token.token,
                               method: DioUtils.POST,
                               onSuccess: (String data) {
-
-                                showToast('指令已发送', position: ToastPosition.bottom);
+                                showToast('指令已发送',
+                                    position: ToastPosition.bottom);
 
                                 /*  if(data.toString() == 'OK'){
                                   showToast('指令发送成功！',position: ToastPosition.bottom);
                                 }*/
                               },
                               onError: (error) {
-                                print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                                print(
+                                    ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                               },
                             );
                           });
-
                         })),
               ],
             ),
@@ -227,13 +232,16 @@ class _LampControlPageState extends State<LampControlPage>
                           // 主灯控制
 
                           // 获取项目中的路灯
-                          SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                          SharedPreferenceUtil.get(
+                                  SharedPreferenceUtil.LOGIN_INFO)
+                              .then((val) async {
                             // 解析 json
                             var data = json.decode(val);
                             LoginInfo loginInfo = LoginInfo.fromJson(data);
 
                             //     var param =  "{\"UUID\": \"83140000862285035977879\",\"Confirm\": 260,\"options\": {\"FirDimming\": 0}}";
-                            var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"FirDimming\": ${v.value.ceil()}}}";
+                            var param =
+                                "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"FirDimming\": ${v.value.ceil()}}}";
 
                             print('param = ${param.toString()}');
 
@@ -243,15 +251,16 @@ class _LampControlPageState extends State<LampControlPage>
                               token: loginInfo.data.token.token,
                               method: DioUtils.POST,
                               onSuccess: (String data) {
-
-                                showToast('指令已发送', position: ToastPosition.bottom);
+                                showToast('指令已发送',
+                                    position: ToastPosition.bottom);
 
                                 /*  if(data.toString() == 'OK'){
                                   showToast('指令发送成功！',position: ToastPosition.bottom);
                                 }*/
                               },
                               onError: (error) {
-                                print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                                print(
+                                    ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                               },
                             );
                           });
@@ -274,14 +283,16 @@ class _LampControlPageState extends State<LampControlPage>
                         max: 100,
                         hideBubble: false,
                         onValueChanged: (v) {
-
-                          SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                          SharedPreferenceUtil.get(
+                                  SharedPreferenceUtil.LOGIN_INFO)
+                              .then((val) async {
                             // 解析 json
                             var data = json.decode(val);
                             LoginInfo loginInfo = LoginInfo.fromJson(data);
 
                             //     var param =  "{\"UUID\": \"83140000862285035977879\",\"Confirm\": 260,\"options\": {\"FirDimming\": 0}}";
-                            var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"SecDimming\": ${v.value.ceil()}}}";
+                            var param =
+                                "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 260,\"options\": {\"SecDimming\": ${v.value.ceil()}}}";
 
                             DioUtils.requestHttp(
                               Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -289,19 +300,19 @@ class _LampControlPageState extends State<LampControlPage>
                               token: loginInfo.data.token.token,
                               method: DioUtils.POST,
                               onSuccess: (String data) {
-
-                                showToast('指令已发送', position: ToastPosition.bottom);
+                                showToast('指令已发送',
+                                    position: ToastPosition.bottom);
 
                                 /*  if(data.toString() == 'OK'){
                                   showToast('指令发送成功！',position: ToastPosition.bottom);
                                 }*/
                               },
                               onError: (error) {
-                                print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                                print(
+                                    ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                               },
                             );
                           });
-
                         })),
               ],
             ),
@@ -322,8 +333,8 @@ class _LampControlPageState extends State<LampControlPage>
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-
-                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                          .then((val) async {
                         // 解析 json
                         var data = json.decode(val);
                         LoginInfo loginInfo = LoginInfo.fromJson(data);
@@ -337,7 +348,6 @@ class _LampControlPageState extends State<LampControlPage>
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
                           onSuccess: (String data) {
-
                             showToast('指令已发送', position: ToastPosition.bottom);
 
                             /*  if(data.toString() == 'OK'){
@@ -345,12 +355,11 @@ class _LampControlPageState extends State<LampControlPage>
                                 }*/
                           },
                           onError: (error) {
-                            print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                            print(
+                                ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                           },
                         );
                       });
-
-
                     },
                   ),
                 ),
@@ -370,14 +379,15 @@ class _LampControlPageState extends State<LampControlPage>
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-
-                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                          .then((val) async {
                         // 解析 json
                         var data = json.decode(val);
                         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
                         //     var param =  "{\"UUID\": \"83140000862285035977879\",\"Confirm\": 260,\"options\": {\"FirDimming\": 0}}";
-                        var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 270,\"options\": {\"Alarm_Light_Mode\": \"OFF\"}}";
+                        var param =
+                            "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 270,\"options\": {\"Alarm_Light_Mode\": \"OFF\"}}";
 
                         DioUtils.requestHttp(
                           Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -385,7 +395,6 @@ class _LampControlPageState extends State<LampControlPage>
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
                           onSuccess: (String data) {
-
                             showToast('指令已发送', position: ToastPosition.bottom);
 
                             /*  if(data.toString() == 'OK'){
@@ -393,11 +402,11 @@ class _LampControlPageState extends State<LampControlPage>
                                 }*/
                           },
                           onError: (error) {
-                            print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                            print(
+                                ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                           },
                         );
                       });
-
                     },
                   ),
                 ),
@@ -410,14 +419,15 @@ class _LampControlPageState extends State<LampControlPage>
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-
-                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                          .then((val) async {
                         // 解析 json
                         var data = json.decode(val);
                         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
                         //     var param =  "{\"UUID\": \"83140000862285035977879\",\"Confirm\": 260,\"options\": {\"FirDimming\": 0}}";
-                        var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 270,\"options\": {\"Alarm_Light_Mode\": \"FLASH\"}}";
+                        var param =
+                            "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 270,\"options\": {\"Alarm_Light_Mode\": \"FLASH\"}}";
 
                         DioUtils.requestHttp(
                           Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -425,7 +435,6 @@ class _LampControlPageState extends State<LampControlPage>
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
                           onSuccess: (String data) {
-
                             showToast('指令已发送', position: ToastPosition.bottom);
 
                             /*  if(data.toString() == 'OK'){
@@ -433,11 +442,11 @@ class _LampControlPageState extends State<LampControlPage>
                                 }*/
                           },
                           onError: (error) {
-                            print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                            print(
+                                ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                           },
                         );
                       });
-
                     },
                   ),
                 ),
@@ -457,14 +466,15 @@ class _LampControlPageState extends State<LampControlPage>
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-
-                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                          .then((val) async {
                         // 解析 json
                         var data = json.decode(val);
                         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
                         //     var param =  "{\"UUID\": \"83140000862285035977879\",\"Confirm\": 260,\"options\": {\"FirDimming\": 0}}";
-                        var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 234,\"options\": {\"IR_Dimming_en\": 0}}";
+                        var param =
+                            "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 234,\"options\": {\"IR_Dimming_en\": 0}}";
 
                         DioUtils.requestHttp(
                           Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -472,7 +482,6 @@ class _LampControlPageState extends State<LampControlPage>
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
                           onSuccess: (String data) {
-
                             showToast('指令已发送', position: ToastPosition.bottom);
 
                             /*  if(data.toString() == 'OK'){
@@ -480,11 +489,11 @@ class _LampControlPageState extends State<LampControlPage>
                                 }*/
                           },
                           onError: (error) {
-                            print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                            print(
+                                ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                           },
                         );
                       });
-
                     },
                   ),
                 ),
@@ -497,14 +506,15 @@ class _LampControlPageState extends State<LampControlPage>
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-
-                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                          .then((val) async {
                         // 解析 json
                         var data = json.decode(val);
                         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
                         //     var param =  "{\"UUID\": \"83140000862285035977879\",\"Confirm\": 260,\"options\": {\"FirDimming\": 0}}";
-                        var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 234,\"options\": {\"IR_Dimming_en\": 1}}";
+                        var param =
+                            "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 234,\"options\": {\"IR_Dimming_en\": 1}}";
 
                         DioUtils.requestHttp(
                           Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -512,7 +522,6 @@ class _LampControlPageState extends State<LampControlPage>
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
                           onSuccess: (String data) {
-
                             showToast('指令已发送', position: ToastPosition.bottom);
 
                             /*  if(data.toString() == 'OK'){
@@ -520,11 +529,11 @@ class _LampControlPageState extends State<LampControlPage>
                                 }*/
                           },
                           onError: (error) {
-                            print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                            print(
+                                ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                           },
                         );
                       });
-
                     },
                   ),
                 ),
@@ -544,14 +553,15 @@ class _LampControlPageState extends State<LampControlPage>
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-
-                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                          .then((val) async {
                         // 解析 json
                         var data = json.decode(val);
                         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
                         //     var param =  "{\"UUID\": \"83140000862285035977879\",\"Confirm\": 260,\"options\": {\"FirDimming\": 0}}";
-                        var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 232}";
+                        var param =
+                            "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 232}";
 
                         DioUtils.requestHttp(
                           Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -559,17 +569,14 @@ class _LampControlPageState extends State<LampControlPage>
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
                           onSuccess: (String data) {
-
                             showToast('指令已发送', position: ToastPosition.bottom);
-
                           },
                           onError: (error) {
-                            print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                            print(
+                                ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                           },
                         );
                       });
-
-
                     },
                   ),
                 ),
@@ -607,13 +614,14 @@ class _LampControlPageState extends State<LampControlPage>
                     color: Colors.blue,
                     textColor: Colors.white,
                     onPressed: () {
-
-                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                      SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                          .then((val) async {
                         // 解析 json
                         var data = json.decode(val);
                         LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-                        var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 297,\"options\": {\"accuracy\": ${accuracyController.value}}";
+                        var param =
+                            "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": 297,\"options\": {\"accuracy\": ${accuracyController.value}}";
 
                         DioUtils.requestHttp(
                           Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -621,7 +629,6 @@ class _LampControlPageState extends State<LampControlPage>
                           token: loginInfo.data.token.token,
                           method: DioUtils.POST,
                           onSuccess: (String data) {
-
                             showToast('指令已发送', position: ToastPosition.bottom);
 
                             /*  if(data.toString() == 'OK'){
@@ -629,11 +636,11 @@ class _LampControlPageState extends State<LampControlPage>
                                 }*/
                           },
                           onError: (error) {
-                            print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                            print(
+                                ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                           },
                         );
                       });
-
                     },
                   ),
                 ),
@@ -659,7 +666,8 @@ class _LampControlPageState extends State<LampControlPage>
                     cursorColor: Colors.purple,
                     cursorWidth: 6,
                     cursorRadius: Radius.elliptical(2, 8),
-                    style: TextStyle(fontSize: ScreenUtil().setSp(26), color: Colors.white),
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(26), color: Colors.white),
                   ),
                 ),
               ],
@@ -706,7 +714,8 @@ class _LampControlPageState extends State<LampControlPage>
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               new Container(
-                margin: EdgeInsets.fromLTRB(0.0, 10, ScreenUtil().setWidth(70), 0),
+                margin:
+                    EdgeInsets.fromLTRB(0.0, 10, ScreenUtil().setWidth(70), 0),
                 alignment: Alignment.centerRight,
                 height: ScreenUtil().setHeight(50),
                 width: ScreenUtil().setWidth(180),
@@ -715,13 +724,14 @@ class _LampControlPageState extends State<LampControlPage>
                   color: Colors.blue,
                   textColor: Colors.white,
                   onPressed: () {
-
-                    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO).then((val) async {
+                    SharedPreferenceUtil.get(SharedPreferenceUtil.LOGIN_INFO)
+                        .then((val) async {
                       // 解析 json
                       var data = json.decode(val);
                       LoginInfo loginInfo = LoginInfo.fromJson(data);
 
-                      var param = "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": ${orderCodeController.value}｝,\"options\": ${orderController.value}}";
+                      var param =
+                          "{\"UUID\": \"${_lamp.uUID}\",\"Confirm\": ${orderCodeController.value}｝,\"options\": ${orderController.value}}";
 
                       DioUtils.requestHttp(
                         Api.instance.getServicePath('DEVICE_CONTROL_URL'),
@@ -729,7 +739,6 @@ class _LampControlPageState extends State<LampControlPage>
                         token: loginInfo.data.token.token,
                         method: DioUtils.POST,
                         onSuccess: (String data) {
-
                           showToast('指令已发送', position: ToastPosition.bottom);
 
                           /*  if(data.toString() == 'OK'){
@@ -737,11 +746,11 @@ class _LampControlPageState extends State<LampControlPage>
                                 }*/
                         },
                         onError: (error) {
-                          print(' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
+                          print(
+                              ' DEVICE_CONTROL_URL DioUtils.requestHttp error = $error');
                         },
                       );
                     });
-
                   },
                 ),
               ),
@@ -759,4 +768,29 @@ class _LampControlPageState extends State<LampControlPage>
             fontSize: textSzie,
             color: Colors.white));
   }
+
+    String _getWarningStart(var warningState) {
+    //  1: 电参异常.2:离线3: "断缆4: .灯杆倒塌.5:.灯杆碰撞5: .漏电保护7: .温度异常
+    String state = "";
+    if(warningState == 0){
+       state = "正常";
+    }else if(warningState == 1) {
+      state = '电参异常';
+    }else if(warningState == 2){
+      state = '离线';
+    }else if(warningState == 3){
+      state = '断缆';
+    }else if(warningState == 4){
+      state = '灯杆倒塌';
+    }else if(warningState == 5){
+      state = '灯杆碰撞';
+    }else if(warningState == 6){
+      state = '漏电保护';
+    }else if(warningState == 7){
+      state = '温度异常';
+    }
+    return state;
+
+  }
+
 }
