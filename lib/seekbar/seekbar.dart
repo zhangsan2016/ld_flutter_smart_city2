@@ -124,6 +124,9 @@ abstract class BasicSeekbar extends StatefulWidget {
   final ValueChanged<ProgressValue> onValueChanged;
   // final void Function(double) onValueChanged;
 
+  ///点击或者触摸拖动结束时回调
+  final ValueChanged<ProgressValue> onContactChanged;
+
   ///进度条是否是圆角的，还是方形的，默认是圆角的
   final bool isRound;
 
@@ -152,7 +155,7 @@ abstract class BasicSeekbar extends StatefulWidget {
       this.indicatorRadius,
       this.indicatorColor,
       this.onValueChanged,
-      this.isRound})
+      this.isRound, this.onContactChanged})
       : super(key: key);
 
   Color _getBackgroundColor(BuildContext context) =>
@@ -566,6 +569,7 @@ class SeekBar extends BasicSeekbar {
   SeekBar({
     Key key,
     ValueChanged<ProgressValue> onValueChanged,
+    ValueChanged<ProgressValue>  onContactChanged,
     double min = 0.0,
     double max = 100.0,
     double progresseight,
@@ -618,6 +622,7 @@ class SeekBar extends BasicSeekbar {
         super(
           key: key,
           onValueChanged: onValueChanged,
+          onContactChanged:onContactChanged,
           min: min,
           max: max,
           progresseight: progresseight,
@@ -775,6 +780,7 @@ class _SeekBarState extends State<SeekBar> {
           renderBox.globalToLocal(tapDetails.globalPosition).dx, 0.0);
       _value = touchPoint.dx / context.size.width;
       _setValue();
+      _setContactValue();
       if (widget.alwaysShowBubble != null && widget.alwaysShowBubble
           ? false
           : true) {
@@ -842,6 +848,7 @@ class _SeekBarState extends State<SeekBar> {
 
   void _onPanEnd(DragEndDetails dragDetails) {
     setState(() {
+      _setContactValue();
       if (widget.alwaysShowBubble != null && widget.alwaysShowBubble
           ? false
           : true) {
@@ -879,6 +886,35 @@ class _SeekBarState extends State<SeekBar> {
     if (widget.onValueChanged != null) {
       ProgressValue v = ProgressValue(progress: _value, value: realValue);
       widget.onValueChanged(v);
+    }
+  }
+
+  void _setContactValue(){
+    //这个是当前的进度 从0-1
+    //这个�����值��能在这个地方获取，如果没有指定，就是容器的��度
+    if (sectionCount > 1) {
+      for (var i = 0; i < sectionCount; i++) {
+        if (_value >= i * e && _value <= (i + 1) * e) {
+          start = i * e;
+          if (i == sectionCount) {
+            end = sectionCount * e;
+          } else {
+            end = (i + 1) * e;
+          }
+          break;
+        }
+      }
+      if (_value >= start + e / 2) {
+        _value = end;
+      } else {
+        _value = start;
+      }
+    }
+    double realValue = length * _value + widget.min; //真实的值
+
+    if (widget.onContactChanged != null) {
+      ProgressValue v = ProgressValue(progress: _value, value: realValue);
+      widget.onContactChanged(v);
     }
   }
 

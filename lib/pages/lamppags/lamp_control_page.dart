@@ -178,7 +178,7 @@ class _LampControlPageState extends State<LampControlPage>
                         min: 0,
                         max: 100,
                         hideBubble: false,
-                        onValueChanged: (v) {
+                        onContactChanged: (v) {
                           // 获取项目中的路灯
                           SharedPreferenceUtil.get(
                                   SharedPreferenceUtil.LOGIN_INFO)
@@ -228,7 +228,7 @@ class _LampControlPageState extends State<LampControlPage>
                         min: 0,
                         max: 100,
                         hideBubble: false,
-                        onValueChanged: (v) {
+                        onContactChanged: (v) {
                           // 主灯控制
 
                           // 获取项目中的路灯
@@ -282,7 +282,7 @@ class _LampControlPageState extends State<LampControlPage>
                         min: 0,
                         max: 100,
                         hideBubble: false,
-                        onValueChanged: (v) {
+                        onContactChanged: (v) {
                           SharedPreferenceUtil.get(
                                   SharedPreferenceUtil.LOGIN_INFO)
                               .then((val) async {
